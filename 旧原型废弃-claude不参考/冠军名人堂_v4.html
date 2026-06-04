@@ -1,0 +1,4635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biubiu 冠军名人堂</title>
+    <style>
+        :root {
+            --gold: #978363;
+            --gold-light: #e1d0ad;
+            --gold-bright: #ba9f81;
+            --gold-dark: #63533c;
+            --gold-glow: rgba(188, 167, 130, 0.25);
+            --bg: #0c0a08;
+            --bg-card: #181410;
+            --bg-card-light: #201c16;
+            --text-white: #f0e6d0;
+            --text-light: rgba(240, 230, 208, 0.88);
+            --text-muted: rgba(208, 196, 172, 0.5);
+            --border: rgba(170, 150, 113, 0.33);
+            --border-bright: rgba(200, 178, 140, 0.52);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --radius-full: 100px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #050404;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+        }
+
+        .app {
+            width: 1400px;
+            height: 800px;
+            position: relative;
+        }
+
+        .view {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.45s ease;
+        }
+
+        .view.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ========================================== */
+        /* HALL OF FAME VIEW */
+        /* ========================================== */
+        .hall-page {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at top, #231d18 0%, #171312 45%, var(--bg) 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+        }
+
+        .bg-light {
+            position: absolute;
+            top: -180px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1100px;
+            height: 600px;
+            background: radial-gradient(ellipse, rgba(170, 150, 113, 0.16) 0%, rgba(170, 150, 113, 0.05) 40%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .bg-light-secondary {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(200, 178, 140, 0.07) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .bg-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 180px;
+            background: linear-gradient(0deg, rgba(17, 13, 7, 0.7), transparent);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: 0 0 4px var(--gold);
+            animation: rise linear infinite;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.15; }
+            100% { transform: translateY(-700px); opacity: 0; }
+        }
+
+        .hall-header {
+            position: relative;
+            z-index: 10;
+            padding: 20px 32px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 32px;
+            z-index: 50;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border);
+            background: rgba(12, 10, 8, 0.6);
+            backdrop-filter: blur(6px);
+            transition: all 0.25s;
+        }
+
+        .back-btn:hover {
+            color: var(--gold-light);
+            border-color: var(--gold);
+            background: rgba(170, 150, 113, 0.06);
+        }
+
+        .title-area {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding-top: 56px;
+        }
+
+        .title-main {
+            font-size: 44px;
+            font-weight: 800;
+            letter-spacing: 6px;
+            background: linear-gradient(180deg, #ebe4d4 0%, var(--gold-light) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.2s forwards;
+        }
+
+        .title-sub {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--gold-light);
+            letter-spacing: 14px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.35s forwards;
+        }
+
+        .title-bar {
+            width: 240px;
+            height: 1px;
+            margin: 18px auto 0;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.5s forwards;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .champions {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 40px;
+        }
+
+        .champ-left-text {
+            text-align: right;
+            padding-top: 4px;
+            padding-right: 28px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.5s forwards;
+        }
+
+        .champ-right-text {
+            text-align: left;
+            padding-top: 4px;
+            padding-left: 28px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.65s forwards;
+        }
+
+        .cards-group {
+            display: flex;
+            gap: 16px;
+            opacity: 0;
+            animation: fadeUp 0.6s ease 0.5s forwards;
+        }
+
+        .card-wrapper { cursor: pointer; }
+
+        .card-wrapper:hover .card {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(170, 150, 113, 0.25), 0 0 0 1.5px var(--gold-light), inset 0 1px 0 rgba(225, 208, 173, 0.15);
+        }
+
+        .card-wrapper:hover .card::after { opacity: 1; }
+
+        .card {
+            width: 240px;
+            height: 310px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-bright);
+            background: linear-gradient(160deg, #1f1d1a 0%, var(--bg-card-light) 50%, var(--bg-card) 100%);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s ease;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(225, 208, 173, 0.1);
+            flex-shrink: 0;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 15%;
+            right: 15%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center 30%, rgba(170, 150, 113, 0.08) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .card-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-img {
+            width: 180px;
+            height: 240px;
+            border-radius: var(--radius-sm);
+            border: 1px dashed var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            background: rgba(170, 150, 113, 0.04);
+        }
+
+        .champ-id {
+            font-size: 56px;
+            color: var(--text-white);
+            letter-spacing: 1px;
+            font-weight: 700;
+            font-style: italic;
+            line-height: 1;
+            text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .champ-name-hall {
+            font-size: 26px;
+            font-weight: 400;
+            color: var(--text-light);
+            letter-spacing: 8px;
+            margin-top: 16px;
+            line-height: 1;
+            opacity: 0.9;
+        }
+
+        .champ-tag-hall {
+            margin-top: 18px;
+            display: block;
+            font-size: 22px;
+            font-weight: 500;
+            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 4px;
+        }
+
+        .champ-left-text,
+        .champ-right-text {
+            padding-top: 24px;
+        }
+
+        .bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 266px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .divider {
+            width: 60%;
+            height: 1px;
+            margin: 0 auto 28px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+        }
+
+        .carousel-marquee {
+            width: 100%;
+            overflow: hidden;
+            mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+            -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+        }
+
+        .carousel-track {
+            display: flex;
+            gap: 32px;
+            width: max-content;
+            animation: marquee 40s linear infinite;
+        }
+
+        .carousel-marquee:hover .carousel-track { animation-play-state: paused; }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .c-item {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .c-item:hover { transform: translateY(-4px); }
+
+        .c-item:hover .c-box {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 16px rgba(170, 150, 113, 0.2);
+        }
+
+        .c-box {
+            width: 140px;
+            height: 140px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: linear-gradient(160deg, #1f1d1a 0%, var(--bg-card-light) 60%, var(--bg-card) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(225, 208, 173, 0.08);
+        }
+
+        .c-box span {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .c-label {
+            font-size: 14px;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        /* ========================================== */
+        /* DETAIL VIEW */
+        /* ========================================== */
+        .detail-page {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 42% 45%, #1f1a14 0%, #181410 50%, var(--bg) 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            display: flex;
+            transition: background 0.6s ease;
+        }
+
+        /* Theme tint layer — game-specific color wash that fuses with gold accents.
+           Set per champion via --champ-bg-overlay; default is transparent (pure gold). */
+        .detail-page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--champ-bg-overlay, transparent);
+            pointer-events: none;
+            z-index: 0;
+            transition: background 0.6s ease, opacity 0.6s ease;
+            mix-blend-mode: screen;
+            opacity: 0.85;
+        }
+
+        .atmosphere {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .atmosphere::before {
+            content: '';
+            position: absolute;
+            top: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1200px;
+            height: 700px;
+            background: var(--champ-atmos-top, radial-gradient(ellipse, rgba(200, 178, 140, 0.07) 0%, rgba(200, 178, 140, 0.02) 45%, transparent 75%));
+            transition: background 0.6s ease;
+        }
+
+        .atmosphere::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 540px;
+            height: 100%;
+            background: var(--champ-atmos-side, radial-gradient(ellipse at 45% 60%, rgba(200, 178, 140, 0.05) 0%, transparent 70%));
+            transition: background 0.6s ease;
+        }
+
+        .detail-particle {
+            position: absolute;
+            width: 1.5px;
+            height: 1.5px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            opacity: 0;
+            animation: drift linear infinite;
+        }
+
+        @keyframes drift {
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.08; }
+            100% { transform: translateY(-700px); opacity: 0; }
+        }
+
+        .nav-pane {
+            width: 130px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            padding: 120px 0 36px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px 14px;
+            margin: 0 24px 56px;
+            transition: color 0.25s;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .back-link:hover { color: var(--gold-light); }
+
+        .nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            padding: 14px 28px;
+            font-size: 16px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            letter-spacing: 5px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover { color: var(--gold-light); }
+
+        .nav-item.active {
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 24px;
+            background: var(--gold);
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            position: relative;
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        /* Left column — editorial layout: header block on top, portrait gallery below */
+        .portrait-stage {
+            flex: 0 0 520px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 64px 48px 64px;
+            min-width: 0;
+            gap: 32px;
+        }
+
+        .portrait-header {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .portrait-header .intro {
+            max-width: none;
+            margin-top: 4px;
+        }
+
+        /* Portrait gallery — framed like a museum exhibit */
+        .portrait-canvas {
+            flex: 1;
+            position: relative;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .portrait-frame {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* Subtle gold corner marks — museum frame language */
+        .portrait-frame::before,
+        .portrait-frame::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border: 1px solid var(--border-bright);
+            opacity: 0.55;
+            z-index: 2;
+        }
+        .portrait-frame::before {
+            top: 0; left: 0;
+            border-right: none;
+            border-bottom: none;
+        }
+        .portrait-frame::after {
+            bottom: 0; right: 0;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* Caption below portrait — museum plaque */
+        .portrait-plaque {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .plaque-rule {
+            width: 36px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.65;
+        }
+
+        .plaque-text {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .plaque-text .game-zh {
+            color: var(--gold-light);
+            font-size: 13px;
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+
+        .plaque-text .game-en {
+            color: var(--text-muted);
+            font-size: 10px;
+            letter-spacing: 2px;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        /* Right: editorial copy column, vertically centered */
+        .content {
+            flex: 1;
+            padding: 56px 64px 56px 32px;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            gap: 26px;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            max-width: 760px;
+        }
+
+        .champ-header-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .champ-meta-line {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .champ-id-detail {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .champ-meta-divider {
+            width: 28px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.5;
+        }
+
+        .champ-name-detail {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-light);
+            letter-spacing: 6px;
+        }
+
+        .champ-tag-text {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 6px;
+            line-height: 1.15;
+            margin-top: 4px;
+        }
+
+        /* Champion signature quote — like a museum plaque inscription */
+        .champ-quote {
+            font-size: 14px;
+            font-style: italic;
+            color: var(--gold-light);
+            line-height: 1.65;
+            letter-spacing: 2px;
+            font-weight: 300;
+            margin-top: 14px;
+            padding: 4px 0 4px 16px;
+            border-left: 1px solid var(--gold);
+            opacity: 0.85;
+            max-width: 460px;
+            position: relative;
+        }
+
+        .champ-quote::before {
+            content: '"';
+            color: var(--gold);
+            font-size: 18px;
+            font-style: normal;
+            margin-right: 2px;
+            opacity: 0.8;
+        }
+
+        .champ-quote::after {
+            content: '"';
+            color: var(--gold);
+            font-size: 18px;
+            font-style: normal;
+            margin-left: 2px;
+            opacity: 0.8;
+        }
+
+        /* Game caption — small line indicating which game this champion endorses */
+        .champ-game-line {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            max-width: 440px;
+        }
+
+        .champ-game-label {
+            font-size: 10px;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .champ-game-name {
+            font-size: 16px;
+            color: var(--text-white);
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+
+        .champ-game-en {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            font-style: italic;
+            font-weight: 400;
+            margin-left: 2px;
+        }
+
+        .intro {
+            font-size: 13.5px;
+            line-height: 1.85;
+            color: var(--text-light);
+            padding-left: 18px;
+            position: relative;
+            max-width: 680px;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .intro::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 1px;
+            background: var(--gold);
+            opacity: 0.5;
+        }
+
+        .media-row {
+            display: flex;
+            gap: 28px;
+            align-items: stretch;
+        }
+
+        /* Video feature block — sits at the top of the right column as a hero highlight */
+        .video-feature {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .video-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 18px;
+            color: var(--gold-light);
+            letter-spacing: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding-bottom: 4px;
+        }
+
+        .video-rule {
+            width: 22px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.8;
+        }
+
+        .video-area {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse at center, rgba(200, 178, 140, 0.08) 0%, transparent 70%),
+                linear-gradient(160deg, rgba(48, 38, 26, 0.6) 0%, rgba(28, 22, 16, 0.6) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+            border: 1px solid var(--border);
+        }
+
+        .video-area::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(8, 6, 3, 0.55) 100%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .video-thumb-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 60% 40%, rgba(200, 178, 140, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .video-area:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--gold-bright);
+        }
+
+        .play-icon {
+            position: relative;
+            z-index: 2;
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            background: rgba(200, 178, 140, 0.08);
+            border: 1px solid rgba(200, 178, 140, 0.45);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-light);
+            font-size: 18px;
+            padding-left: 4px;
+            transition: all 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        .video-area:hover .play-icon {
+            transform: scale(1.08);
+            background: rgba(200, 178, 140, 0.18);
+            border-color: var(--gold-light);
+            box-shadow: 0 0 32px rgba(200, 178, 140, 0.35);
+        }
+
+        .video-meta {
+            position: absolute;
+            bottom: 16px;
+            left: 22px;
+            z-index: 2;
+            font-size: 10px;
+            color: var(--gold-light);
+            letter-spacing: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            opacity: 0.85;
+            font-style: italic;
+        }
+
+        .honors {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .honors-title {
+            font-size: 18px;
+            color: var(--gold-light);
+            letter-spacing: 6px;
+            padding-bottom: 16px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .honors-title::before {
+            content: '';
+            width: 22px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.8;
+        }
+
+        .honors-list {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding-right: 8px;
+            max-height: 180px;
+        }
+
+        .honors-list::-webkit-scrollbar { width: 3px; }
+        .honors-list::-webkit-scrollbar-track { background: transparent; }
+        .honors-list::-webkit-scrollbar-thumb { background: rgba(200, 178, 140, 0.2); border-radius: 2px; }
+
+        .honor-item {
+            display: flex;
+            align-items: baseline;
+            gap: 20px;
+            padding: 9px 0;
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.55;
+            font-weight: 300;
+            border-bottom: 1px solid rgba(170, 150, 113, 0.08);
+        }
+
+        .honor-item:last-child {
+            border-bottom: none;
+        }
+
+        .honor-year {
+            color: var(--gold-light);
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 2px;
+            flex-shrink: 0;
+            min-width: 44px;
+            font-style: italic;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Game-specific scenario describing latency pain — precedes the bridge */
+        .scene-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .scene-text {
+            font-size: 13.5px;
+            line-height: 2;
+            color: var(--text-light);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            opacity: 0.85;
+            font-style: italic;
+        }
+
+        .scene-text em {
+            font-style: normal;
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        .bridge-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 24px;
+            margin-top: 0;
+        }
+
+        .bridge-section .bridge {
+            width: 100%;
+            max-width: 560px;
+        }
+
+        .bridge {
+            flex: 1;
+            font-size: 13.5px;
+            line-height: 2;
+            color: var(--text-light);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .bridge strong {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .cta-row { flex-shrink: 0; }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 38px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(180deg, var(--gold-light) 0%, var(--gold-bright) 100%);
+            color: #1a1610;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            cursor: pointer;
+            border: 1px solid var(--gold-light);
+            transition: all 0.4s;
+            box-shadow:
+                0 6px 18px rgba(170, 150, 113, 0.28),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        .cta-btn:hover {
+            background: linear-gradient(180deg, #ece2cc 0%, var(--gold-light) 100%);
+            border-color: #ece2cc;
+            color: #0a0a0d;
+            box-shadow:
+                0 10px 28px rgba(200, 178, 140, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .cta-btn .arrow {
+            font-size: 18px;
+            transition: transform 0.3s;
+        }
+
+        .cta-btn:hover .arrow { transform: translateX(4px); }
+
+        /* Portrait image — sits inside .portrait-canvas, no card-like background */
+        .portrait-img {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(240, 230, 208, 0.22);
+            font-size: 13px;
+            letter-spacing: 6px;
+            font-weight: 300;
+            background: transparent;
+            z-index: 0;
+        }
+
+        /* Soft halo behind the portrait creates the "spotlight" feel without a hard card edge */
+        .portrait-halo {
+            position: absolute;
+            width: 460px;
+            height: 460px;
+            border-radius: 50%;
+            background: var(--champ-halo, radial-gradient(circle, rgba(200, 178, 140, 0.16) 0%, rgba(200, 178, 140, 0.04) 35%, transparent 65%));
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+            transition: background 0.5s ease;
+        }
+
+        .floor-light {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 380px;
+            height: 70px;
+            background: var(--champ-floor, radial-gradient(ellipse, rgba(200, 178, 140, 0.18) 0%, transparent 70%));
+            filter: blur(28px);
+            pointer-events: none;
+            z-index: 1;
+            transition: background 0.5s ease;
+        }
+
+        /* Stats row — new bottom section */
+        .champ-stats {
+            display: flex;
+            gap: 36px;
+            padding: 20px 0 0;
+            border-top: 1px solid var(--border);
+            margin-top: 4px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stat-num {
+            font-size: 36px;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--gold-light);
+            line-height: 1;
+            letter-spacing: 1px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .stat-num .unit {
+            font-size: 14px;
+            font-weight: 400;
+            font-style: normal;
+            color: var(--text-muted);
+            margin-left: 4px;
+            letter-spacing: 2px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .stat-divider {
+            width: 1px;
+            background: var(--border);
+            opacity: 0.6;
+        }
+
+        /* Signature games row */
+        .signature-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .signature-label {
+            font-size: 11px;
+            color: var(--gold);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-right: 4px;
+        }
+
+        .sig-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--text-light);
+            letter-spacing: 2px;
+            background: rgba(200, 178, 140, 0.04);
+            transition: all 0.3s;
+        }
+
+        .sig-chip:hover {
+            border-color: var(--gold);
+            background: rgba(200, 178, 140, 0.08);
+            color: var(--gold-light);
+        }
+
+        .sig-chip .dot {
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+        }
+
+        /* Induction plate — small memorial at bottom */
+        .induction-plate {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0 0;
+            border-top: 1px solid var(--border);
+            opacity: 0.75;
+        }
+
+        .plate-side {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .plate-num {
+            color: var(--gold-light);
+            font-style: italic;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+
+        .plate-mark {
+            width: 18px;
+            height: 18px;
+            border: 1px solid var(--border-bright);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-light);
+            font-size: 9px;
+            font-style: italic;
+            font-weight: 700;
+        }
+
+        /* ========================================== */
+        /* HALL → DETAIL CEREMONIAL TRANSITION       */
+        /* ========================================== */
+        .card-wrapper { transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.5s ease, filter 0.5s ease; }
+        .card { transition: transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.55s ease, border-color 0.4s ease; }
+
+        /* Other elements dim during ceremony */
+        .hall-page.is-launching .title-area,
+        .hall-page.is-launching .champ-left-text,
+        .hall-page.is-launching .champ-right-text,
+        .hall-page.is-launching .bottom,
+        .hall-page.is-launching .hall-header {
+            opacity: 0;
+            transform: translateY(-8px);
+            transition: opacity 0.6s ease, transform 0.7s ease;
+            pointer-events: none;
+        }
+
+        /* Non-selected cards retreat */
+        .hall-page.is-launching .card-wrapper:not(.is-chosen) {
+            opacity: 0;
+            transform: scale(0.82) translateY(20px);
+            filter: blur(4px);
+        }
+
+        /* The chosen card rises, glows, and zooms */
+        .card-wrapper.is-chosen {
+            z-index: 30;
+        }
+        .card-wrapper.is-chosen .card {
+            transform: translateY(-14px) scale(1.08);
+            border-color: var(--gold-light);
+            box-shadow:
+                0 30px 80px rgba(170, 150, 113, 0.45),
+                0 0 0 1.5px var(--gold-light),
+                0 0 60px rgba(200, 178, 140, 0.35),
+                inset 0 1px 0 rgba(225, 208, 173, 0.25);
+        }
+        .card-wrapper.is-chosen.is-zooming .card {
+            transform: translateY(-40px) scale(1.45);
+            box-shadow:
+                0 50px 120px rgba(170, 150, 113, 0.6),
+                0 0 0 2px var(--gold-light),
+                0 0 140px rgba(200, 178, 140, 0.55),
+                inset 0 1px 0 rgba(225, 208, 173, 0.4);
+        }
+        .card-wrapper.is-chosen .card::after {
+            opacity: 1;
+        }
+
+        /* Light rays sweeping across chosen card */
+        .card-rays {
+            position: absolute;
+            inset: -50%;
+            background:
+                conic-gradient(from 0deg at 50% 50%,
+                    transparent 0deg,
+                    rgba(225, 208, 173, 0.28) 18deg,
+                    transparent 38deg,
+                    transparent 170deg,
+                    rgba(225, 208, 173, 0.22) 195deg,
+                    transparent 218deg,
+                    transparent 360deg);
+            opacity: 0;
+            pointer-events: none;
+            mix-blend-mode: screen;
+            animation: none;
+        }
+        .card-wrapper.is-chosen .card-rays {
+            opacity: 0.9;
+            animation: raySweep 1.1s linear forwards;
+        }
+        @keyframes raySweep {
+            0%   { transform: rotate(0deg);   opacity: 0; }
+            20%  { opacity: 0.9; }
+            100% { transform: rotate(180deg); opacity: 0; }
+        }
+
+        /* Ceremonial overlay: gold flash + iris reveal */
+        .ceremony-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .ceremony-overlay.is-active { opacity: 1; }
+
+        .ceremony-flash {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                rgba(255, 240, 200, 0.95) 0%,
+                rgba(225, 208, 173, 0.75) 25%,
+                rgba(170, 150, 113, 0.35) 50%,
+                rgba(170, 150, 113, 0) 75%);
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            filter: blur(2px);
+        }
+        .ceremony-overlay.is-active .ceremony-flash {
+            animation: ceremonyFlash 1.1s cubic-bezier(0.16, 0.84, 0.44, 1) forwards;
+        }
+        @keyframes ceremonyFlash {
+            0%   { transform: translate(-50%, -50%) scale(0);   opacity: 0; filter: blur(2px); }
+            20%  { opacity: 1; }
+            55%  { transform: translate(-50%, -50%) scale(28);  opacity: 0.9; filter: blur(8px); }
+            100% { transform: translate(-50%, -50%) scale(60);  opacity: 0; filter: blur(20px); }
+        }
+
+        /* Horizontal gold beam sweep */
+        .ceremony-beam {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -30%;
+            width: 30%;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(225, 208, 173, 0.0) 20%,
+                rgba(255, 240, 200, 0.35) 50%,
+                rgba(225, 208, 173, 0.0) 80%,
+                transparent 100%);
+            transform: skewX(-18deg);
+            filter: blur(6px);
+            opacity: 0;
+        }
+        .ceremony-overlay.is-active .ceremony-beam {
+            animation: beamSweep 0.9s cubic-bezier(0.55, 0, 0.45, 1) forwards;
+            animation-delay: 0.15s;
+        }
+        @keyframes beamSweep {
+            0%   { left: -30%; opacity: 0; }
+            20%  { opacity: 1; }
+            100% { left: 110%; opacity: 0; }
+        }
+
+        /* Vignette closes in */
+        .ceremony-iris {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center,
+                transparent 0%,
+                transparent 35%,
+                rgba(8, 6, 3, 0.5) 65%,
+                rgba(8, 6, 3, 0.95) 100%);
+            opacity: 0;
+        }
+        .ceremony-overlay.is-active .ceremony-iris {
+            animation: irisClose 0.85s cubic-bezier(0.55, 0, 0.45, 1) forwards;
+            animation-delay: 0.45s;
+        }
+        @keyframes irisClose {
+            0%   { opacity: 0; transform: scale(1.3); }
+            60%  { opacity: 1; }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Particles burst from card on launch */
+        .ceremony-sparks {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+        .spark {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: var(--gold-light);
+            box-shadow: 0 0 8px var(--gold-light), 0 0 16px var(--gold);
+            top: 0;
+            left: 0;
+            opacity: 0;
+        }
+
+        /* Detail view entrance on first reveal */
+        .view#viewDetail.just-revealed .detail-page {
+            animation: detailReveal 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+        }
+        @keyframes detailReveal {
+            0%   { opacity: 0; transform: scale(1.04); filter: brightness(1.6) blur(8px); }
+            60%  { opacity: 1; filter: brightness(1.15) blur(0); }
+            100% { opacity: 1; transform: scale(1); filter: brightness(1) blur(0); }
+        }
+        .view#viewDetail.just-revealed .nav-pane {
+            animation: navSlideIn 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.25s;
+        }
+        @keyframes navSlideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Override view transition speed for ceremony */
+        .view.ceremony-fade {
+            transition: opacity 0.5s ease 0.4s;
+        }
+
+        /* ========================================== */
+        /* CHAMPION SWITCH ANIMATIONS                 */
+        /* ========================================== */
+        @keyframes champFadeInUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes champFadeInRight {
+            from { opacity: 0; transform: translateX(-18px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes champFadeInScale {
+            from { opacity: 0; transform: scale(0.96); filter: blur(6px); }
+            to   { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+        @keyframes haloPulse {
+            0%   { opacity: 0.4; transform: translate(-50%, -50%) scale(0.85); }
+            60%  { opacity: 1;   transform: translate(-50%, -50%) scale(1.08); }
+            100% { opacity: 1;   transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Exit state — applied before data swap */
+        .is-switching .champ-header-detail,
+        .is-switching .intro,
+        .is-switching .champ-quote,
+        .is-switching .portrait-plaque,
+        .is-switching .video-feature,
+        .is-switching .honors,
+        .is-switching .bridge-section {
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.28s ease, transform 0.28s ease;
+        }
+        .is-switching .portrait-img {
+            opacity: 0;
+            transform: scale(1.04);
+            filter: blur(6px);
+            transition: opacity 0.28s ease, transform 0.28s ease, filter 0.28s ease;
+        }
+
+        /* Enter state — staggered fade-in after data swap */
+        .is-entering .champ-header-detail {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.02s;
+        }
+        .is-entering .intro {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.10s;
+        }
+        .is-entering .champ-quote {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.08s;
+        }
+        .is-entering .video-feature {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.12s;
+        }
+        .is-entering .honors {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.20s;
+        }
+        .is-entering .scene-section {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.22s;
+        }
+        .is-entering .bridge-section {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.30s;
+        }
+        .is-entering .champ-stats {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.34s;
+        }
+        .is-entering .signature-row {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.42s;
+        }
+        .is-entering .induction-plate {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.50s;
+        }
+        .is-entering .portrait-img {
+            animation: champFadeInScale 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.05s;
+        }
+        .is-entering .portrait-plaque {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.22s;
+        }
+        .is-entering .portrait-halo {
+            animation: haloPulse 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+        }
+        .is-entering .honor-item {
+            animation: champFadeInRight 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+        }
+
+        /* ========================================== */
+        /* CHAMPION SWITCH CEREMONY (lightweight)      */
+        /* ========================================== */
+        .detail-switch-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 40;
+            opacity: 0;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+        }
+
+        .detail-switch-overlay.is-active { opacity: 1; }
+
+        .detail-switch-overlay::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(8, 6, 3, 0.5) 0%, rgba(8, 6, 3, 0.18) 55%, transparent 100%);
+            opacity: 0;
+        }
+
+        .detail-switch-overlay.is-active::before {
+            animation: detailSwitchDim 0.85s ease forwards;
+        }
+
+        @keyframes detailSwitchDim {
+            0%   { opacity: 0; }
+            40%  { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .detail-switch-beam {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -28%;
+            width: 28%;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255, 240, 200, 0.0) 15%,
+                rgba(255, 240, 200, 0.35) 50%,
+                rgba(225, 208, 173, 0.0) 85%,
+                transparent 100%);
+            transform: skewX(-16deg);
+            filter: blur(10px);
+            opacity: 0;
+            mix-blend-mode: screen;
+        }
+
+        .detail-switch-overlay.is-active .detail-switch-beam {
+            animation: detailSwitchBeam 0.85s cubic-bezier(0.55, 0, 0.45, 1) forwards;
+        }
+
+        @keyframes detailSwitchBeam {
+            0%   { left: -28%; opacity: 0; }
+            22%  { opacity: 1; }
+            100% { left: 112%; opacity: 0; }
+        }
+
+        /* Smoother nav-item active indicator transition */
+        .nav-item { transition: color 0.3s ease; }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 1px;
+            height: 0;
+            background: var(--gold);
+            transform: translateY(-50%);
+            transition: height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.3s ease;
+            opacity: 0;
+        }
+        .nav-item.active::before {
+            height: 24px;
+            opacity: 1;
+        }
+
+        /* ========================================== */
+        /* TEAM VIEW — lightweight branch page         */
+        /* ========================================== */
+        .team-page {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 42% 45%, #1f1a14 0%, #181410 50%, var(--bg) 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .team-header-bar {
+            position: relative;
+            z-index: 10;
+            padding: 24px 32px 0;
+            flex-shrink: 0;
+        }
+
+        .team-main {
+            flex: 1;
+            display: flex;
+            position: relative;
+            z-index: 5;
+            overflow: hidden;
+            padding: 12px 64px 56px 64px;
+            gap: 56px;
+            min-height: 0;
+        }
+
+        /* Left column — team identity */
+        .team-portrait-stage {
+            flex: 0 0 460px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            min-width: 0;
+            justify-content: center;
+        }
+
+        .team-name-block {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .team-id {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .team-name-cn {
+            font-size: 38px;
+            font-weight: 700;
+            background: linear-gradient(180deg, #ebe4d4 0%, var(--gold-light) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 4px;
+            line-height: 1.15;
+        }
+
+        .team-tag {
+            font-size: 14px;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        /* Inline partnership marker under team tag */
+        .team-partnership {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 4px;
+            padding: 8px 14px 8px 0;
+            position: relative;
+        }
+
+        .team-partnership::before {
+            content: '';
+            width: 22px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.7;
+        }
+
+        .partnership-label {
+            font-size: 10px;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .partnership-game {
+            font-size: 13px;
+            color: var(--text-white);
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .team-image-frame {
+            position: relative;
+            width: 100%;
+            height: 360px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-bright);
+            background:
+                radial-gradient(ellipse at center, rgba(200, 178, 140, 0.10) 0%, transparent 70%),
+                linear-gradient(160deg, #1f1d1a 0%, var(--bg-card-light) 60%, var(--bg-card) 100%);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(225, 208, 173, 0.10);
+        }
+
+        .team-image-frame::before,
+        .team-image-frame::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border: 1px solid var(--border-bright);
+            opacity: 0.55;
+            z-index: 2;
+        }
+        .team-image-frame::before {
+            top: 0; left: 0;
+            border-right: none;
+            border-bottom: none;
+        }
+        .team-image-frame::after {
+            bottom: 0; right: 0;
+            border-left: none;
+            border-top: none;
+        }
+
+        .team-image {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(240, 230, 208, 0.28);
+            font-size: 14px;
+            letter-spacing: 6px;
+            font-weight: 300;
+            z-index: 1;
+        }
+
+        .team-image-halo {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: var(--team-halo, radial-gradient(circle, rgba(200, 178, 140, 0.18) 0%, rgba(200, 178, 140, 0.04) 35%, transparent 65%));
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+            transition: background 0.5s ease;
+        }
+
+        /* Right column — content */
+        .team-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            min-width: 0;
+            justify-content: center;
+            max-width: 680px;
+        }
+
+        .team-section-block {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .team-section-title {
+            font-size: 14px;
+            color: var(--gold-light);
+            letter-spacing: 5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .team-section-title::before {
+            content: '';
+            width: 22px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.8;
+        }
+
+        .team-divisions-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .team-honors-list {
+            display: flex;
+            flex-direction: column;
+            max-height: 180px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .team-honors-list::-webkit-scrollbar { width: 3px; }
+        .team-honors-list::-webkit-scrollbar-track { background: transparent; }
+        .team-honors-list::-webkit-scrollbar-thumb { background: rgba(200, 178, 140, 0.2); border-radius: 2px; }
+
+        .team-bridge {
+            font-size: 13.5px;
+            line-height: 2;
+            color: var(--text-light);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            padding-left: 18px;
+            position: relative;
+            max-width: 620px;
+        }
+
+        .team-bridge::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 1px;
+            background: var(--gold);
+            opacity: 0.5;
+        }
+
+        .team-bridge strong {
+            color: var(--gold-light);
+            font-weight: 600;
+        }
+
+        .team-bridge em {
+            font-style: normal;
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+
+        /* Team page entrance animation */
+        .view#viewTeam.just-revealed .team-portrait-stage {
+            animation: champFadeInUp 0.65s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.08s;
+        }
+        .view#viewTeam.just-revealed .team-content > * {
+            animation: champFadeInUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+        }
+        .view#viewTeam.just-revealed .team-content > *:nth-child(1) { animation-delay: 0.18s; }
+        .view#viewTeam.just-revealed .team-content > *:nth-child(2) { animation-delay: 0.32s; }
+
+        /* Carousel items: make sure they look clickable */
+        .c-item { cursor: pointer; }
+
+        /* ========================================== */
+        /* PLAZA VIEW — biubiu 广场 entry page         */
+        /* ========================================== */
+        .plaza-page {
+            width: 100%;
+            height: 100%;
+            background: #0e1218;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            color: #e8eaed;
+        }
+
+        /* Top bar */
+        .plaza-topbar {
+            height: 52px;
+            background: #0a0d12;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .plaza-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 160px;
+        }
+
+        .plaza-brand .brand-logo {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(180deg, #ff8a4d, #ff5c2a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .plaza-brand .brand-sub {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.45);
+            line-height: 1.3;
+        }
+
+        .plaza-user-promo {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 100px;
+            padding: 4px 14px 4px 4px;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .plaza-user-promo .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a3a6e, #6b5293);
+            border: 2px solid #5cf28a;
+            flex-shrink: 0;
+        }
+
+        .plaza-user-promo .promo-text {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .plaza-user-promo .promo-top {
+            font-size: 10px;
+            color: #5cf28a;
+            background: rgba(92, 242, 138, 0.12);
+            padding: 1px 6px;
+            border-radius: 4px;
+            align-self: flex-start;
+            line-height: 1.4;
+        }
+
+        .plaza-user-promo .promo-bottom {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .plaza-user-promo .promo-bottom .countdown {
+            color: #ff7842;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .plaza-search {
+            flex: 1;
+            max-width: 340px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 100px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            gap: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .plaza-search .search-icon {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 12px;
+        }
+
+        .plaza-search input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e8eaed;
+            font-size: 13px;
+        }
+
+        .plaza-search input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .plaza-topbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .plaza-btn-pill {
+            height: 32px;
+            padding: 0 16px;
+            border-radius: 100px;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .plaza-btn-pill.btn-exchange {
+            background: linear-gradient(135deg, #ffe57a, #ffb942);
+            color: #6e4a10;
+        }
+
+        .plaza-btn-pill.btn-student {
+            background: linear-gradient(135deg, #ff8757, #ff5530);
+            color: #fff;
+            padding-left: 6px;
+            gap: 6px;
+        }
+
+        .plaza-btn-pill .btn-mascot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 50% 38%, #ffe1c4 0%, #ffe1c4 30%, transparent 32%),
+                linear-gradient(180deg, #b07eff, #6a3fc4);
+            border: 1.5px solid #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+
+        .plaza-btn-pill .pill-emoji {
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .plaza-win-ctrl {
+            display: flex;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .plaza-win-ctrl span {
+            width: 26px;
+            height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .plaza-win-ctrl span:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Body: sidebar + main */
+        .plaza-body {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+        }
+
+        .plaza-sidebar {
+            width: 280px;
+            background: #0a0d12;
+            border-right: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            flex-direction: column;
+            padding: 14px 14px;
+            gap: 12px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .plaza-sidebar::-webkit-scrollbar { width: 0; }
+
+        .welfare-pool-card {
+            background: linear-gradient(135deg, #5a3a86 0%, #9c4a6e 100%);
+            border-radius: 8px;
+            padding: 12px 10px;
+            position: relative;
+            overflow: hidden;
+            height: 84px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .welfare-pool-card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(120, 60, 130, 0.35);
+        }
+
+        .welfare-pool-card::before {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: -10px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(255, 200, 100, 0.32), transparent);
+        }
+
+        .pool-character {
+            position: absolute;
+            right: 4px;
+            top: 4px;
+            bottom: 4px;
+            width: 70px;
+            background:
+                radial-gradient(ellipse 18px 22px at 24px 30px, rgba(255, 220, 200, 0.55), transparent 60%),
+                radial-gradient(ellipse 18px 22px at 46px 34px, rgba(255, 220, 200, 0.45), transparent 60%),
+                linear-gradient(180deg, rgba(255, 200, 160, 0.15), rgba(255, 200, 160, 0));
+            border-radius: 6px;
+            pointer-events: none;
+        }
+
+        .pool-character::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, transparent 40%, rgba(80, 30, 80, 0.35) 100%);
+            border-radius: 6px;
+        }
+
+        .pool-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+
+        .pool-countdown {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.85);
+            position: relative;
+        }
+
+        .my-games-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75);
+            padding: 4px 4px 0;
+            font-weight: 500;
+        }
+
+        .my-games-header .arrow-right {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .my-games-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .my-games-list::-webkit-scrollbar { width: 0; }
+
+        .game-card {
+            background: #161b24;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .game-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .game-cover {
+            width: 100%;
+            height: 105px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            position: relative;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            line-height: 1.2;
+            padding: 0 8px;
+        }
+
+        .game-cover.cover-pubg {
+            background:
+                radial-gradient(ellipse at 70% 30%, rgba(255, 180, 60, 0.18), transparent 60%),
+                linear-gradient(135deg, #3a3020 0%, #1a1208 70%);
+        }
+
+        .game-cover.cover-sf6 {
+            background:
+                radial-gradient(ellipse at 50% 30%, rgba(140, 100, 220, 0.25), transparent 60%),
+                linear-gradient(135deg, #2a1a48 0%, #14082a 70%);
+        }
+
+        .game-cover.cover-aion {
+            background:
+                radial-gradient(ellipse at 30% 30%, rgba(80, 220, 200, 0.18), transparent 60%),
+                linear-gradient(135deg, #1a3540 0%, #0a1820 70%);
+        }
+
+        .game-card.is-active .game-cover {
+            box-shadow: 0 0 0 2px #00d4d4 inset;
+        }
+
+        .game-card.is-active .game-name {
+            color: #00d4d4;
+        }
+
+        .game-cover .game-tag {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-size: 9px;
+            padding: 1px 4px;
+            background: rgba(255, 180, 80, 0.9);
+            color: #2a1808;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+
+        .game-name {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.78);
+            padding: 6px 8px;
+            line-height: 1.3;
+        }
+
+        .all-games-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            padding: 12px 0;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .all-games-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        /* Main content */
+        .plaza-main {
+            flex: 1;
+            padding: 18px 22px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 0;
+            overflow-y: auto;
+        }
+
+        .plaza-main::-webkit-scrollbar { width: 0; }
+
+        .plaza-section-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        /* Hall of Fame banner — dark-gold ceremonial style, matches landing page */
+        .plaza-banner {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            border-radius: 14px;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 70% 90% at 28% 50%, rgba(170, 130, 60, 0.28) 0%, transparent 65%),
+                radial-gradient(ellipse at 85% 22%, rgba(220, 180, 120, 0.22) 0%, transparent 55%),
+                radial-gradient(ellipse at 15% 95%, rgba(140, 100, 50, 0.3) 0%, transparent 55%),
+                linear-gradient(135deg, #2c1f0c 0%, #1a1208 55%, #0c0805 100%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            box-shadow:
+                0 20px 50px rgba(170, 130, 60, 0.22),
+                0 0 0 1px rgba(200, 178, 140, 0.22),
+                inset 0 1px 0 rgba(225, 208, 173, 0.12);
+            transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.4s;
+        }
+
+        .plaza-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -30%;
+            width: 35%;
+            height: 200%;
+            background: linear-gradient(75deg,
+                transparent 0%,
+                rgba(225, 208, 173, 0.0) 30%,
+                rgba(255, 240, 200, 0.18) 50%,
+                rgba(225, 208, 173, 0.0) 70%,
+                transparent 100%);
+            transform: skewX(-20deg);
+            filter: blur(8px);
+            animation: bannerShimmer 7s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes bannerShimmer {
+            0%, 100% { left: -30%; opacity: 0; }
+            25% { opacity: 1; }
+            60% { left: 120%; opacity: 0; }
+            100% { left: 120%; opacity: 0; }
+        }
+
+        .plaza-banner:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                0 28px 60px rgba(200, 178, 140, 0.35),
+                0 0 0 1px rgba(225, 208, 173, 0.5),
+                0 0 80px rgba(200, 178, 140, 0.22),
+                inset 0 1px 0 rgba(225, 208, 173, 0.25);
+        }
+
+        /* Corner frame marks — museum language */
+        .banner-corner {
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            border: 1px solid rgba(200, 178, 140, 0.55);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .banner-corner.tl { top: 16px; left: 16px; border-right: none; border-bottom: none; }
+        .banner-corner.tr { top: 16px; right: 16px; border-left: none; border-bottom: none; }
+        .banner-corner.bl { bottom: 16px; left: 16px; border-right: none; border-top: none; }
+        .banner-corner.br { bottom: 16px; right: 16px; border-left: none; border-top: none; }
+
+        /* Text block — left side, ceremonial typography */
+        .banner-text-block {
+            position: relative;
+            padding: 38px 46px;
+            z-index: 2;
+            flex-shrink: 0;
+            max-width: 52%;
+        }
+
+        .banner-eyebrow {
+            font-size: 11px;
+            color: #e1d0ad;
+            letter-spacing: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            opacity: 0.75;
+        }
+
+        .banner-title {
+            font-size: 46px;
+            font-weight: 800;
+            background: linear-gradient(180deg, #f0e4cc 0%, #e1d0ad 50%, #978363 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 8px;
+            margin-top: 10px;
+            line-height: 1.1;
+            text-shadow: 0 2px 18px rgba(170, 130, 60, 0.25);
+        }
+
+        .banner-divider {
+            width: 180px;
+            height: 1px;
+            background: linear-gradient(90deg, #978363, transparent);
+            margin-top: 16px;
+            margin-bottom: 12px;
+        }
+
+        .banner-sub {
+            font-size: 12.5px;
+            color: rgba(240, 230, 208, 0.7);
+            letter-spacing: 3px;
+            font-weight: 400;
+        }
+
+        .banner-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 22px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            padding: 11px 24px;
+            background: linear-gradient(180deg, #e1d0ad 0%, #ba9f81 100%);
+            color: #1a1610;
+            border-radius: 100px;
+            border: 1px solid #e1d0ad;
+            box-shadow:
+                0 6px 18px rgba(170, 130, 60, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: all 0.35s;
+        }
+
+        .plaza-banner:hover .banner-cta {
+            background: linear-gradient(180deg, #ece2cc 0%, #e1d0ad 100%);
+            box-shadow:
+                0 10px 28px rgba(225, 208, 173, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        }
+
+        .banner-cta .cta-arrow {
+            transition: transform 0.3s;
+        }
+
+        .plaza-banner:hover .banner-cta .cta-arrow {
+            transform: translateX(4px);
+        }
+
+        /* Figures with golden spotlight behind */
+        .banner-figures {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 22px 50px 0 0;
+            z-index: 2;
+        }
+
+        .figure-spotlight {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(225, 208, 173, 0.22) 0%, rgba(170, 130, 60, 0.06) 40%, transparent 70%);
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: figureSpotlight 5s ease-in-out infinite alternate;
+        }
+
+        @keyframes figureSpotlight {
+            0%   { transform: translate(-50%, -50%) scale(1); opacity: 0.75; }
+            100% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+        }
+
+        .banner-figure {
+            width: 240px;
+            height: 96%;
+            background: linear-gradient(180deg,
+                rgba(225, 208, 173, 0.06) 0%,
+                rgba(170, 130, 60, 0.12) 65%,
+                rgba(225, 208, 173, 0.2) 100%);
+            border: 1px dashed rgba(200, 178, 140, 0.38);
+            border-radius: 14px 14px 0 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 18px;
+            color: rgba(225, 208, 173, 0.7);
+            font-size: 11px;
+            letter-spacing: 3px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .banner-figure + .banner-figure {
+            margin-left: -56px;
+        }
+
+        /* Floor light at bottom of figures area */
+        .banner-floor-light {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 360px;
+            height: 60px;
+            background: radial-gradient(ellipse, rgba(225, 208, 173, 0.25) 0%, transparent 70%);
+            filter: blur(20px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .banner-figures {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 62%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 18px 60px 0 0;
+            gap: 0;
+            z-index: 1;
+        }
+
+        .banner-figure {
+            width: 300px;
+            height: 96%;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.14));
+            border: 1px dashed rgba(42, 29, 4, 0.22);
+            border-radius: 14px 14px 0 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 18px;
+            color: rgba(42, 29, 4, 0.5);
+            font-size: 12px;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .banner-figure + .banner-figure {
+            margin-left: -50px;
+        }
+
+        .banner-placeholder {
+            position: relative;
+            z-index: 2;
+            width: 170px;
+            height: 244px;
+            margin: 0 8px;
+            border: 2px dashed rgba(225, 208, 173, 0.55);
+            border-radius: 14px 14px 0 0;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(225, 208, 173, 0.06),
+                rgba(225, 208, 173, 0.06) 10px,
+                rgba(225, 208, 173, 0.12) 10px,
+                rgba(225, 208, 173, 0.12) 20px
+            );
+            color: rgba(225, 208, 173, 0.85);
+            font-size: 14px;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .banner-pagination {
+            position: absolute;
+            bottom: 18px;
+            left: 36px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 3;
+        }
+
+        .banner-arrow {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(200, 178, 140, 0.08);
+            color: rgba(225, 208, 173, 0.7);
+            border: 1px solid rgba(200, 178, 140, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+        }
+
+        .banner-dots {
+            position: absolute;
+            bottom: 22px;
+            right: 36px;
+            display: flex;
+            gap: 6px;
+            z-index: 3;
+        }
+
+        .banner-dots .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(200, 178, 140, 0.25);
+        }
+
+        .banner-dots .dot.active {
+            background: #e1d0ad;
+            width: 18px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(225, 208, 173, 0.4);
+        }
+
+        .plaza-section-sub {
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.92);
+            letter-spacing: 0.5px;
+            margin-top: 6px;
+        }
+
+        .plaza-rewards-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .reward-tile {
+            background: #161b24;
+            border-radius: 12px;
+            padding: 14px 16px;
+            position: relative;
+            overflow: hidden;
+            min-height: 92px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reward-tile:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .reward-tile.tile-cod {
+            background: linear-gradient(135deg, #1a1f28 0%, #161b24 100%);
+        }
+
+        .reward-tile .reward-thumb {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #2a2a2a, #0a0a0a);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .reward-tile .reward-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .reward-tile .reward-title {
+            font-size: 13px;
+            color: #fff;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .reward-tile .reward-sub {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.4;
+        }
+
+        .reward-tile .badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .reward-tile .badge-beta {
+            background: rgba(120, 230, 130, 0.18);
+            color: #5ce070;
+            border: 1px solid rgba(120, 230, 130, 0.3);
+        }
+
+        .reward-tile .badge-new {
+            background: rgba(255, 130, 60, 0.18);
+            color: #ff8a4d;
+            border: 1px solid rgba(255, 130, 60, 0.3);
+        }
+
+        .reward-tile .badge-corner {
+            position: absolute;
+            bottom: 8px;
+            right: 10px;
+            font-size: 10px;
+            color: #ff8a4d;
+            font-weight: 600;
+        }
+
+        .reward-tile .tag-bottom {
+            position: absolute;
+            bottom: 8px;
+            left: 90px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            background: linear-gradient(135deg, #ff5530, #d12a08);
+            color: #fff;
+            border-radius: 3px;
+            letter-spacing: 1px;
+        }
+
+        .reward-tile .reward-icon-svg {
+            width: 36px;
+            height: 36px;
+            color: #6ad9c8;
+            flex-shrink: 0;
+        }
+
+        .reward-tile.tile-activity {
+            background: linear-gradient(135deg, #2d1f0e 0%, #1a1208 100%);
+        }
+
+        .reward-tile.tile-activity .reward-icon-svg {
+            color: #ff8a4d;
+        }
+
+        /* ========================================== */
+        /* GAME DETAIL VIEW                            */
+        /* ========================================== */
+        .game-main {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .game-hero {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .game-hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .game-hero-bg.bg-pubg {
+            background:
+                radial-gradient(ellipse 60% 70% at 70% 50%, rgba(220, 160, 80, 0.22) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 80%, rgba(40, 50, 60, 0.5) 0%, transparent 60%),
+                linear-gradient(135deg, #2a2520 0%, #15110c 60%, #1a1208 100%);
+        }
+
+        .game-hero-bg.bg-sf6 {
+            background:
+                radial-gradient(ellipse 60% 70% at 55% 45%, rgba(180, 120, 220, 0.28) 0%, transparent 60%),
+                radial-gradient(ellipse at 25% 80%, rgba(80, 60, 130, 0.45) 0%, transparent 60%),
+                linear-gradient(135deg, #2a1d4a 0%, #14082a 60%, #0d0815 100%);
+        }
+
+        .game-hero-bg.bg-aion {
+            background:
+                radial-gradient(ellipse 55% 70% at 65% 50%, rgba(255, 220, 140, 0.18) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 70%, rgba(50, 80, 90, 0.5) 0%, transparent 60%),
+                linear-gradient(135deg, #20303a 0%, #0e1620 60%, #1a1208 100%);
+        }
+
+        .game-hero-overlay {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            padding: 36px 44px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-logo-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            max-width: 55%;
+        }
+
+        .game-logo {
+            font-size: 64px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 4px;
+            text-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+            line-height: 1;
+        }
+
+        .game-tagline {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.75);
+            letter-spacing: 3px;
+            padding: 6px 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            backdrop-filter: blur(4px);
+        }
+
+        .game-launch-block {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-start;
+        }
+
+        .game-name-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-name-row .game-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        .game-mode-pill {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.75);
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .game-platforms {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 1px;
+        }
+
+        .game-launch-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .launch-btn {
+            height: 46px;
+            padding: 0 30px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, #00e6d6 0%, #00b8c8 50%, #0090b8 100%);
+            color: #fff;
+            border: 1px solid rgba(0, 230, 220, 0.5);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow:
+                0 0 26px rgba(0, 220, 220, 0.4),
+                0 6px 18px rgba(0, 180, 200, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+        }
+
+        /* (Removed: full ceremonial Hall-of-Fame entry animation — replaced with simple fade) */
+        /* ========== Soft-focus push transition (game → champion detail) ========== */
+        .push-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            background: #000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out;
+            overflow: hidden;
+            border-radius: inherit;
+        }
+        .push-overlay.is-active {
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .push-overlay.is-black { opacity: 1; }
+
+        /* Soft vignette overlay — slight inner glow for a cinematic black */
+        .push-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%,
+                rgba(40, 28, 14, 0.25) 0%,
+                rgba(0, 0, 0, 0.0) 35%,
+                rgba(0, 0, 0, 0.6) 100%);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* Push-out: current page scales up + blurs + dims */
+        .push-out {
+            animation: pushOutAnim 0.55s cubic-bezier(0.55, 0, 0.35, 1) forwards;
+            transform-origin: 50% 48%;
+            will-change: transform, filter, opacity;
+        }
+        @keyframes pushOutAnim {
+            0%   { transform: scale(1);    filter: blur(0px)  brightness(1);    opacity: 1; }
+            100% { transform: scale(1.08); filter: blur(14px) brightness(0.25); opacity: 0; }
+        }
+
+        /* Push-in: detail page enters from slight over-scale + blur + dim, settles into clarity */
+        .push-in {
+            animation: pushInAnim 0.65s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+            transform-origin: 50% 48%;
+            will-change: transform, filter, opacity;
+        }
+        @keyframes pushInAnim {
+            0%   { transform: scale(1.06); filter: blur(12px) brightness(0.3); opacity: 0; }
+            60%  { opacity: 1; }
+            100% { transform: scale(1);    filter: blur(0px)  brightness(1);   opacity: 1; }
+        }
+
+        .champion-line-btn {
+            height: 46px;
+            padding: 0 26px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, #2a2014 0%, #5a4528 35%, #8a6f3f 65%, #c9a96a 100%);
+            color: #fff4d6;
+            border: 1px solid rgba(225, 208, 173, 0.55);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow:
+                0 0 26px rgba(188, 167, 130, 0.45),
+                0 6px 18px rgba(99, 83, 60, 0.5),
+                inset 0 1px 0 rgba(255, 240, 200, 0.35),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .champion-line-btn:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 0 32px rgba(225, 208, 173, 0.6),
+                0 8px 22px rgba(99, 83, 60, 0.55),
+                inset 0 1px 0 rgba(255, 240, 200, 0.45),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.35);
+        }
+
+        .champion-line-btn .champion-crown {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, #ffe9a8, #c9a14a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3a2c14;
+            font-size: 12px;
+            font-weight: 900;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        .launch-btn .launch-bolt {
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, #b6f5ff, #5ce0e6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #003a48;
+            font-size: 13px;
+            font-weight: 900;
+        }
+
+        .settings-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .server-chip {
+            font-size: 11px;
+            padding: 4px 10px;
+            background: rgba(0, 220, 220, 0.12);
+            color: #00d4d4;
+            border: 1px solid rgba(0, 220, 220, 0.3);
+            border-radius: 4px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .game-bottom-strip {
+            background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7));
+            padding: 14px 30px;
+            font-size: 12.5px;
+            color: #ffb942;
+            text-align: center;
+            border-top: 1px solid rgba(255, 200, 80, 0.12);
+            position: relative;
+            z-index: 3;
+            flex-shrink: 0;
+        }
+
+        .game-bottom-strip .strip-icon {
+            margin-right: 6px;
+        }
+
+        /* Right side tool panel */
+        .game-side-panel {
+            width: 260px;
+            background: #0a0d12;
+            border-left: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+
+        .game-side-panel::-webkit-scrollbar { width: 0; }
+
+        .side-ad {
+            background:
+                radial-gradient(ellipse at 30% 50%, rgba(170, 130, 60, 0.3), transparent 65%),
+                linear-gradient(135deg, #1d2630 0%, #0e1218 100%);
+            border-radius: 8px;
+            padding: 12px 14px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            height: 96px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid rgba(225, 208, 173, 0.18);
+        }
+
+        .side-ad-eyebrow {
+            font-size: 9px;
+            color: rgba(225, 208, 173, 0.55);
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+
+        .side-ad-title {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(180deg, #f0e4cc 0%, #e1d0ad 50%, #978363 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 4px;
+            margin-top: 2px;
+            line-height: 1;
+        }
+
+        .side-ad-sub {
+            font-size: 10px;
+            color: rgba(225, 208, 173, 0.6);
+            margin-top: 6px;
+            letter-spacing: 1px;
+        }
+
+        .side-ad-dots {
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 3px;
+        }
+
+        .side-ad-dots .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .side-ad-dots .dot.active {
+            background: rgba(255, 255, 255, 0.7);
+            width: 10px;
+            border-radius: 4px;
+        }
+
+        .tools-title {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.75);
+            padding: 6px 4px 2px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .tools-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .tool-item {
+            display: flex;
+            align-items: center;
+            padding: 9px 8px;
+            gap: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .tool-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .tool-item .tool-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #fff;
+            font-weight: 700;
+            flex-shrink: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .tool-item .tool-name {
+            flex: 1;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .tool-item .tool-badge {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.55);
+            padding: 1px 5px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tool-item .tool-badge.badge-on {
+            color: #5cf28a;
+            background: rgba(92, 242, 138, 0.08);
+            border-color: rgba(92, 242, 138, 0.25);
+        }
+
+        .tool-item .tool-badge.badge-new {
+            color: #5cf28a;
+        }
+
+        .tool-item .tool-arrow {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+        }
+
+        .all-tools-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 9px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .all-tools-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .faq-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 4px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            margin-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .faq-tag {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-weight: 700;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* Floating surprise drop button */
+        .surprise-btn {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 35% 30%, #ffb066, transparent 50%),
+                linear-gradient(135deg, #ff5530, #d12a08);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(255, 85, 48, 0.45);
+            z-index: 10;
+            text-align: center;
+            letter-spacing: 1px;
+            border: 2px solid rgba(255, 200, 160, 0.4);
+        }
+
+        /* ========================================== */
+        /* MVP DEV PANEL — outside the prototype       */
+        /* ========================================== */
+        .dev-panel {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 9999;
+            background: rgba(20, 22, 28, 0.92);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 10px 12px 12px;
+            font-family: -apple-system, 'PingFang SC', sans-serif;
+            color: #e8eaed;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            min-width: 220px;
+            max-width: 260px;
+        }
+
+        .dev-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            margin-bottom: 8px;
+        }
+
+        .dev-panel-header .dev-title {
+            font-size: 11px;
+            color: #6ad9c8;
+            letter-spacing: 2px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .dev-panel-header .dev-toggle {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.55);
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dev-panel.collapsed .dev-panel-body {
+            display: none;
+        }
+
+        .dev-panel-body {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dev-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .dev-label {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 2px 2px;
+        }
+
+        .dev-btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .dev-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .dev-btn:hover {
+            background: rgba(106, 217, 200, 0.15);
+            border-color: rgba(106, 217, 200, 0.35);
+            color: #6ad9c8;
+        }
+    </style>
+</head>
+<body>
+    <!-- MVP DEV PANEL — fixed outside the prototype -->
+    <div class="dev-panel" id="devPanel">
+        <div class="dev-panel-header">
+            <span class="dev-title">MVP 调试</span>
+            <button class="dev-toggle" onclick="document.getElementById('devPanel').classList.toggle('collapsed')">_</button>
+        </div>
+        <div class="dev-panel-body">
+            <div class="dev-section">
+                <div class="dev-label">页面</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devGoto('plaza')">广场</button>
+                    <button class="dev-btn" onclick="devGoto('hall')">名人堂</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">游戏页</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devGoto('game', 'pubg')">PUBG</button>
+                    <button class="dev-btn" onclick="devGoto('game', 'sf6')">街霸6</button>
+                    <button class="dev-btn" onclick="devGoto('game', 'aion2')">永恒之塔2</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">选手详情</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devGoto('detail', 'xiaohai')">曾卓君</button>
+                    <button class="dev-btn" onclick="devGoto('detail', 'aixleft')">左梓轩</button>
+                    <button class="dev-btn" onclick="devGoto('detail', 'guo')">郭永军</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">战队详情</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devGoto('team', 'pero')">PeRo</button>
+                    <button class="dev-btn" onclick="devGoto('team', '4am')">4AM</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'falcons')">Falcons</button>
+                    <button class="dev-btn" onclick="devGoto('team', '17')">17</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'ig')">IG</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'rng')">RNG</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'ag')">AG</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'edg')">EDG</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app">
+        <!-- Soft-focus push transition overlay (scoped to the prototype frame) -->
+        <div class="push-overlay" id="pushOverlay">
+            <div class="push-vignette"></div>
+        </div>
+
+
+        <!-- =========================== -->
+        <!-- PLAZA VIEW (biubiu 广场入口) -->
+        <!-- =========================== -->
+        <div class="view active" id="viewPlaza">
+            <div class="plaza-page">
+                <!-- Top bar -->
+                <div class="plaza-topbar">
+                    <div class="plaza-brand">
+                        <span class="brand-logo">biubiu</span>
+                        <span class="brand-sub">阿里巴巴旗下产品<br>灵活互娱旗下产品</span>
+                    </div>
+
+                    <div class="plaza-user-promo">
+                        <div class="avatar"></div>
+                        <div class="promo-text">
+                            <span class="promo-top">会员充值</span>
+                            <span class="promo-bottom">新人首单优惠<span class="countdown">剩 00:00:24</span></span>
+                        </div>
+                    </div>
+
+                    <div class="plaza-search">
+                        <span class="search-icon">⌕</span>
+                        <input type="text" placeholder="搜索游戏" />
+                    </div>
+
+                    <div class="plaza-topbar-actions">
+                        <button class="plaza-btn-pill btn-exchange"><span class="pill-emoji">⇋</span> 兑换</button>
+                        <button class="plaza-btn-pill btn-student"><span class="btn-mascot"></span>学生优惠</button>
+                        <div class="plaza-win-ctrl">
+                            <span>▦</span>
+                            <span>◷</span>
+                            <span>—</span>
+                            <span>✕</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="plaza-body">
+                    <!-- Sidebar -->
+                    <aside class="plaza-sidebar">
+                        <div class="welfare-pool-card" onclick="showPlaza()">
+                            <div class="pool-character"></div>
+                            <div class="pool-title">限免福利池</div>
+                            <div class="pool-countdown">限免倒计时余29天</div>
+                        </div>
+
+                        <div class="my-games-header">
+                            <span>我的游戏(3)</span>
+                            <span class="arrow-right">›</span>
+                        </div>
+
+                        <div class="my-games-list">
+                            <div class="game-card" data-game="pubg" onclick="showGame('pubg')">
+                                <div class="game-cover cover-pubg">PUBG<br>BATTLEGROUNDS</div>
+                                <div class="game-name">绝地求生</div>
+                            </div>
+                            <div class="game-card" data-game="sf6" onclick="showGame('sf6')">
+                                <div class="game-cover cover-sf6">STREET<br>FIGHTER 6</div>
+                                <div class="game-name">街头霸王6</div>
+                            </div>
+                            <div class="game-card" data-game="aion2" onclick="showGame('aion2')">
+                                <div class="game-cover cover-aion">AION 2</div>
+                                <div class="game-name">永恒之塔2</div>
+                            </div>
+                        </div>
+
+                        <button class="all-games-btn">+ 添加游戏</button>
+                    </aside>
+
+                    <!-- Main -->
+                    <main class="plaza-main">
+                        <div class="plaza-section-title">biubiu广场</div>
+
+                        <div class="plaza-banner" onclick="openHallFromPlaza()">
+                            <div class="banner-corner tl"></div>
+                            <div class="banner-corner tr"></div>
+                            <div class="banner-corner bl"></div>
+                            <div class="banner-corner br"></div>
+
+                            <div class="banner-text-block">
+                                <div class="banner-eyebrow">BIUBIU HALL OF FAME</div>
+                                <div class="banner-title">冠军名人堂</div>
+                                <div class="banner-divider"></div>
+                            </div>
+
+                            <div class="banner-figures">
+                                <div class="figure-spotlight"></div>
+                                <div class="banner-floor-light"></div>
+                                <div class="banner-placeholder">曾卓君</div>
+                                <div class="banner-placeholder">左梓轩</div>
+                            </div>
+
+                            <div class="banner-dots">
+                                <span class="dot"></span>
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+
+                        <div class="plaza-section-sub">更多精彩福利</div>
+
+                        <div class="plaza-rewards-grid">
+                            <div class="reward-tile tile-cod">
+                                <div class="reward-thumb">COD 21</div>
+                                <div class="reward-content">
+                                    <div class="reward-title">使命召唤：黑色行动6</div>
+                                    <div class="reward-sub">参与活动，抽COD21提前测试资格</div>
+                                </div>
+                                <span class="badge badge-beta">Beta测试</span>
+                                <span class="tag-bottom">限免</span>
+                                <span class="badge-corner">仅剩3天</span>
+                            </div>
+
+                            <div class="reward-tile">
+                                <svg class="reward-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                                </svg>
+                                <div class="reward-content">
+                                    <div class="reward-title">限免加速游戏库</div>
+                                    <div class="reward-sub">当前总共1896款</div>
+                                </div>
+                            </div>
+
+                            <div class="reward-tile">
+                                <svg class="reward-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M12 3v13M6 11l6 6 6-6M4 21h16"/>
+                                </svg>
+                                <div class="reward-content">
+                                    <div class="reward-title">游戏免费领取</div>
+                                    <div class="reward-sub">一键轻松"喜加一"</div>
+                                </div>
+                                <span class="badge badge-new">上新3款</span>
+                            </div>
+
+                            <div class="reward-tile tile-activity">
+                                <svg class="reward-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="8" width="18" height="13" rx="1"/>
+                                    <path d="M3 12h18M12 8v13M8 8c-1.5-2 0-4 2-4s2.5 2 2 4M16 8c1.5-2 0-4-2-4s-2.5 2-2 4"/>
+                                </svg>
+                                <div class="reward-content">
+                                    <div class="reward-title">活动中心</div>
+                                    <div class="reward-sub">16款活动进行中</div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- GAME DETAIL VIEW -->
+        <!-- =========================== -->
+        <div class="view" id="viewGame">
+            <div class="plaza-page">
+                <!-- Top bar (reuse plaza structure) -->
+                <div class="plaza-topbar">
+                    <div class="plaza-brand">
+                        <span class="brand-logo">biubiu</span>
+                        <span class="brand-sub">阿里巴巴旗下产品<br>灵活互娱旗下产品</span>
+                    </div>
+
+                    <div class="plaza-user-promo">
+                        <div class="avatar"></div>
+                        <div class="promo-text">
+                            <span class="promo-top">学生优惠</span>
+                        </div>
+                    </div>
+
+                    <div class="plaza-search">
+                        <span class="search-icon">⌕</span>
+                        <input type="text" placeholder="周年庆好礼送" />
+                    </div>
+
+                    <div class="plaza-topbar-actions">
+                        <button class="plaza-btn-pill btn-exchange"><span class="pill-emoji">⇋</span> 兑换</button>
+                        <button class="plaza-btn-pill btn-student"><span class="btn-mascot"></span>学生优惠</button>
+                        <div class="plaza-win-ctrl">
+                            <span>▦</span>
+                            <span>◷</span>
+                            <span>—</span>
+                            <span>✕</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="plaza-body">
+                    <!-- Sidebar (same games list as plaza) -->
+                    <aside class="plaza-sidebar">
+                        <div class="welfare-pool-card" onclick="showPlaza()">
+                            <div class="pool-character"></div>
+                            <div class="pool-title">限免福利池</div>
+                            <div class="pool-countdown">- 限免天天有 福利享不停 -</div>
+                        </div>
+
+                        <div class="my-games-header">
+                            <span>我的游戏(3)</span>
+                            <span class="arrow-right">›</span>
+                        </div>
+
+                        <div class="my-games-list" id="gameSidebarList">
+                            <div class="game-card" data-game="pubg" onclick="showGame('pubg')">
+                                <div class="game-cover cover-pubg">PUBG<br>BATTLEGROUNDS</div>
+                                <div class="game-name">绝地求生</div>
+                            </div>
+                            <div class="game-card" data-game="sf6" onclick="showGame('sf6')">
+                                <div class="game-cover cover-sf6">STREET<br>FIGHTER 6</div>
+                                <div class="game-name">街头霸王6</div>
+                            </div>
+                            <div class="game-card" data-game="aion2" onclick="showGame('aion2')">
+                                <div class="game-cover cover-aion">AION 2</div>
+                                <div class="game-name">永恒之塔2</div>
+                            </div>
+                        </div>
+
+                        <button class="all-games-btn" onclick="showPlaza()">‹ 返回广场</button>
+                    </aside>
+
+                    <!-- Game main -->
+                    <div class="game-main">
+                        <div class="game-hero">
+                            <div class="game-hero-bg" id="gameHeroBg"></div>
+
+                            <div class="game-hero-overlay">
+                                <div class="game-logo-block">
+                                    <div class="game-logo" id="gameLogo">PUBG</div>
+                                    <div class="game-tagline" id="gameTagline">五月新模式 · 赏金行动</div>
+                                </div>
+
+                                <div class="game-launch-block">
+                                    <div class="game-name-row">
+                                        <span class="game-name" id="gameName">绝地求生</span>
+                                        <span class="game-mode-pill" id="gameModePill">全新模式：赏金行动!</span>
+                                    </div>
+                                    <div class="game-platforms" id="gamePlatforms">同步加速Steam / Epic</div>
+                                    <div class="game-launch-row">
+                                        <button class="launch-btn">
+                                            <span class="launch-bolt">⚡</span>
+                                            <span id="launchText">电竞加速</span>
+                                        </button>
+                                        <button class="champion-line-btn" id="championLineBtn">
+                                            <span>前往冠军专线</span>
+                                        </button>
+                                        <button class="settings-btn">⊕</button>
+                                        <span class="server-chip" id="serverChip">亚服</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="game-bottom-strip" id="gameBottomStrip">
+                            <span class="strip-icon">⚠</span><span id="gameBottomText">biubiu联动PCL送福利，瓜分100万G币！每周三周四免费加速！电竞加速更快更稳！</span>
+                        </div>
+                    </div>
+
+                    <!-- Right tools panel -->
+                    <aside class="game-side-panel">
+                        <div class="side-ad" onclick="openHallFromPlaza()">
+                            <div class="side-ad-eyebrow">JianJun · 小孩</div>
+                            <div class="side-ad-title">生来为赢</div>
+                            <div class="side-ad-sub">biubiu加速器，电竞冠军都在用</div>
+                            <div class="side-ad-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+
+                        <div class="tools-title">工具</div>
+                        <div class="tools-list" id="toolsList"></div>
+                        <button class="all-tools-btn">▦ 全部工具</button>
+
+                        <div class="faq-row">
+                            <span class="faq-tag">FAQ</span>
+                            <span>常见问题解答</span>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="surprise-btn">惊喜<br>掉宝</div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- HALL OF FAME VIEW -->
+        <!-- =========================== -->
+        <div class="view" id="viewHall">
+            <div class="hall-page">
+                <div class="bg-light"></div>
+                <div class="bg-light-secondary"></div>
+                <div class="bg-bottom"></div>
+                <div class="particles" id="hallParticles"></div>
+
+                <div class="back-btn" onclick="showPlaza()">‹ 返回</div>
+
+                <div class="title-area">
+                    <div class="title-main">Biubiu 冠军名人堂</div>
+                    <div class="title-sub">Hall of Fame</div>
+                    <div class="title-bar"></div>
+                </div>
+
+                <div class="champions">
+                    <div class="champ-left-text">
+                        <div class="champ-id">Xiaohai</div>
+                        <div class="champ-name-hall">曾卓君</div>
+                        <div class="champ-tag-hall">中国格斗电竞传奇</div>
+                    </div>
+
+                    <div class="cards-group">
+                        <div class="card-wrapper" onclick="showDetail('xiaohai')">
+                            <div class="card">
+                                <div class="card-rays"></div>
+                                <div class="card-content">
+                                    <div class="card-img">选手形象</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-wrapper" onclick="showDetail('aixleft')">
+                            <div class="card">
+                                <div class="card-rays"></div>
+                                <div class="card-content">
+                                    <div class="card-img">选手形象</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="champ-right-text">
+                        <div class="champ-id">Aixleft</div>
+                        <div class="champ-name-hall">左梓轩</div>
+                        <div class="champ-tag-hall">FPS第一天才少年</div>
+                    </div>
+                </div>
+
+                <div class="ceremony-overlay" id="ceremonyOverlay">
+                    <div class="ceremony-flash"></div>
+                    <div class="ceremony-beam"></div>
+                    <div class="ceremony-iris"></div>
+                    <div class="ceremony-sparks" id="ceremonySparks"></div>
+                </div>
+
+                <div class="bottom">
+                    <div class="divider"></div>
+                    <div class="carousel-marquee">
+                        <div class="carousel-track">
+                            <div class="c-item" onclick="showDetail('guo')"><div class="c-box"><span>人物</span></div><span class="c-label">郭永军</span></div>
+                            <div class="c-item" onclick="showTeam('pero')"><div class="c-box"><span>队徽</span></div><span class="c-label">PeRo</span></div>
+                            <div class="c-item" onclick="showTeam('4am')"><div class="c-box"><span>队徽</span></div><span class="c-label">4AM</span></div>
+                            <div class="c-item" onclick="showTeam('falcons')"><div class="c-box"><span>队徽</span></div><span class="c-label">Falcons</span></div>
+                            <div class="c-item" onclick="showTeam('17')"><div class="c-box"><span>队徽</span></div><span class="c-label">17战队</span></div>
+                            <div class="c-item" onclick="showTeam('ig')"><div class="c-box"><span>队徽</span></div><span class="c-label">IG</span></div>
+                            <div class="c-item" onclick="showTeam('rng')"><div class="c-box"><span>队徽</span></div><span class="c-label">RNG</span></div>
+                            <div class="c-item" onclick="showTeam('ag')"><div class="c-box"><span>队徽</span></div><span class="c-label">AG</span></div>
+                            <div class="c-item" onclick="showTeam('edg')"><div class="c-box"><span>队徽</span></div><span class="c-label">EDG</span></div>
+                            <div class="c-item" onclick="showDetail('guo')"><div class="c-box"><span>人物</span></div><span class="c-label">郭永军</span></div>
+                            <div class="c-item" onclick="showTeam('pero')"><div class="c-box"><span>队徽</span></div><span class="c-label">PeRo</span></div>
+                            <div class="c-item" onclick="showTeam('4am')"><div class="c-box"><span>队徽</span></div><span class="c-label">4AM</span></div>
+                            <div class="c-item" onclick="showTeam('falcons')"><div class="c-box"><span>队徽</span></div><span class="c-label">Falcons</span></div>
+                            <div class="c-item" onclick="showTeam('17')"><div class="c-box"><span>队徽</span></div><span class="c-label">17战队</span></div>
+                            <div class="c-item" onclick="showTeam('ig')"><div class="c-box"><span>队徽</span></div><span class="c-label">IG</span></div>
+                            <div class="c-item" onclick="showTeam('rng')"><div class="c-box"><span>队徽</span></div><span class="c-label">RNG</span></div>
+                            <div class="c-item" onclick="showTeam('ag')"><div class="c-box"><span>队徽</span></div><span class="c-label">AG</span></div>
+                            <div class="c-item" onclick="showTeam('edg')"><div class="c-box"><span>队徽</span></div><span class="c-label">EDG</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- DETAIL VIEW -->
+        <!-- =========================== -->
+        <div class="view" id="viewDetail">
+            <div class="detail-page">
+                <div class="atmosphere"></div>
+                <div class="particles" id="detailParticles"></div>
+
+                <div class="detail-switch-overlay" id="detailSwitchOverlay">
+                    <div class="detail-switch-beam"></div>
+                </div>
+
+                <div class="back-btn" onclick="showHall()">‹ 返回</div>
+
+                <aside class="nav-pane">
+                    <nav class="nav-list">
+                        <div class="nav-item active" data-champ="xiaohai">曾卓君</div>
+                        <div class="nav-item" data-champ="aixleft">左梓轩</div>
+                        <div class="nav-item" data-champ="guo">郭永军</div>
+                    </nav>
+                </aside>
+
+                <div class="main">
+                    <div class="portrait-stage">
+                        <div class="portrait-header">
+                            <div class="champ-header-detail">
+                                <div class="champ-meta-line">
+                                    <div class="champ-id-detail" id="champId">XIAOHAI</div>
+                                    <div class="champ-meta-divider"></div>
+                                    <div class="champ-name-detail" id="champName">曾卓君</div>
+                                </div>
+                                <div class="champ-tag-text" id="champTag">中国格斗电竞传奇</div>
+                                <div class="champ-quote" id="champQuote">格斗游戏的魅力，在于每一帧都有答案。</div>
+                            </div>
+                            <div class="intro" id="champIntro">
+                                6岁入行，从拳皇到街霸再到饿狼传说，跨越三个游戏时代依然封王，53项国际冠军，让格斗游戏的中国冠军不止是头衔。
+                            </div>
+                        </div>
+                        <div class="portrait-canvas">
+                            <div class="portrait-frame">
+                                <div class="portrait-halo"></div>
+                                <div class="portrait-img">冠军形象</div>
+                                <div class="floor-light"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content">
+                        <div class="video-feature">
+                            <div class="video-area">
+                                <div class="video-thumb-overlay"></div>
+                                <div class="play-icon">▶</div>
+                                <div class="video-meta">HIGHLIGHT REEL · 0:30</div>
+                            </div>
+                        </div>
+
+                        <div class="honors">
+                            <div class="honors-title">荣誉时刻</div>
+                            <div class="honors-list" id="honorsList">
+                                <div class="honor-item"><span class="honor-year">2025</span><span>沙特电竞世界杯 街霸6 卫冕冠军</span></div>
+                                <div class="honor-item"><span class="honor-year">2024</span><span>沙特电竞世界杯 街霸6 冠军</span></div>
+                                <div class="honor-item"><span class="honor-year">2023</span><span>EVO 街霸6 季军 / Capcom Cup 八强</span></div>
+                                <div class="honor-item"><span class="honor-year">2022</span><span>Capcom Pro Tour 多站冠军</span></div>
+                                <div class="honor-item"><span class="honor-year">2019</span><span>EVO 第三人格斗游戏 季军</span></div>
+                                <div class="honor-item"><span class="honor-year">2017</span><span>SFV 中国区总冠军</span></div>
+                                <div class="honor-item"><span class="honor-year">2009</span><span>KOF 世界冠军 — 中国第一个格斗游戏世界冠军</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bridge-section">
+                            <div class="bridge" id="bridgeText">
+                                对局正酣，画面忽然陷入慢放；指令明明按下，角色却纹丝不动。在街霸6的线上战场，每一位玩家都经历过这样的时刻——输不在判断，不在操作，而在你与对手之间，<em>那段不可控的距离</em>。<strong>从未在一帧上妥协的人</strong>，biubiu与 Xiaohai 联手深度共研，以世界冠军的严苛标准校准每一帧传输，为<strong>街霸6</strong>定制冠军专线。
+                            </div>
+                            <div class="cta-row">
+                                <button class="cta-btn">
+                                    <span id="ctaText">了解同款专线</span>
+                                    <span class="arrow">→</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- TEAM VIEW (branch page) -->
+        <!-- =========================== -->
+        <div class="view" id="viewTeam">
+            <div class="team-page">
+                <div class="atmosphere"></div>
+                <div class="particles" id="teamParticles"></div>
+
+                <div class="back-btn" onclick="showHall()">‹ 返回</div>
+
+                <div class="team-main">
+                    <div class="team-portrait-stage">
+                        <div class="team-name-block">
+                            <div class="team-name-cn" id="teamNameCn">PeRo 战队</div>
+                            <div class="team-tag" id="teamTag">无畏少年军团</div>
+                            <div class="team-partnership">
+                                <span class="partnership-label">biubiu 合作分部</span>
+                                <span class="partnership-game" id="teamPartnerDivision">《PUBG》</span>
+                            </div>
+                        </div>
+                        <div class="team-image-frame">
+                            <div class="team-image-halo"></div>
+                            <div class="team-image" id="teamImage">战队图片</div>
+                        </div>
+                    </div>
+
+                    <div class="team-content">
+                        <div class="team-section-block">
+                            <div class="team-section-title">战队荣誉</div>
+                            <div class="team-honors-list" id="teamHonors"></div>
+                        </div>
+
+                        <div class="team-section-block">
+                            <div class="team-bridge" id="teamBridge"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== Particles for both views ==========
+        function spawnParticle(container, isDetail) {
+            const p = document.createElement('div');
+            p.className = isDetail ? 'detail-particle' : 'particle';
+            p.style.left = (10 + Math.random() * 80) + '%';
+            p.style.bottom = '0';
+            const s = isDetail ? (1 + Math.random() * 0.5) : (1 + Math.random() * 1.5);
+            p.style.width = s + 'px';
+            p.style.height = s + 'px';
+            p.style.animationDuration = (8 + Math.random() * 5) + 's';
+            container.appendChild(p);
+            setTimeout(() => p.remove(), 14000);
+        }
+
+        const hallP = document.getElementById('hallParticles');
+        const detailP = document.getElementById('detailParticles');
+        for (let i = 0; i < 12; i++) setTimeout(() => spawnParticle(hallP, false), i * 180);
+        setInterval(() => spawnParticle(hallP, false), 500);
+        for (let i = 0; i < 10; i++) setTimeout(() => spawnParticle(detailP, true), i * 200);
+        setInterval(() => spawnParticle(detailP, true), 600);
+        const teamP = document.getElementById('teamParticles');
+        for (let i = 0; i < 10; i++) setTimeout(() => spawnParticle(teamP, true), i * 200);
+        setInterval(() => spawnParticle(teamP, true), 600);
+
+        // ========== Champion data ==========
+        const champions = {
+            xiaohai: {
+                tag: '中国格斗电竞传奇', id: 'XIAOHAI', name: '曾卓君',
+                quote: '生来为赢。',
+                // Street Fighter 6 — deep violet × magenta fused with imperial gold
+                accentHalo: 'radial-gradient(circle, rgba(168, 90, 220, 0.38) 0%, rgba(120, 60, 180, 0.14) 35%, transparent 70%)',
+                accentFloor: 'radial-gradient(ellipse, rgba(190, 110, 230, 0.42) 0%, rgba(140, 90, 200, 0.12) 40%, transparent 75%)',
+                accentBgOverlay: 'radial-gradient(ellipse at 50% 30%, rgba(110, 50, 170, 0.32) 0%, rgba(60, 25, 110, 0.22) 40%, rgba(20, 10, 38, 0.0) 80%), linear-gradient(160deg, rgba(80, 30, 130, 0.28) 0%, rgba(30, 15, 55, 0.18) 60%, rgba(8, 6, 15, 0.0) 100%)',
+                accentAtmosTop: 'radial-gradient(ellipse, rgba(190, 110, 230, 0.18) 0%, rgba(225, 208, 173, 0.08) 45%, transparent 75%)',
+                accentAtmosSide: 'radial-gradient(ellipse at 45% 60%, rgba(150, 90, 210, 0.16) 0%, transparent 70%)',
+                intro: '6岁入行，从拳皇到街霸再到饿狼传说，跨越三个游戏时代依然封王，53项国际冠军，让格斗游戏的中国冠军不止是头衔。',
+                bridge: '对局正酣，画面忽然陷入慢放；指令明明按下，角色却纹丝不动。在街霸6的线上战场，每一位玩家都经历过这样的时刻——输不在判断，不在操作，而在你与对手之间，<em>那段不可控的距离</em>。<strong>从未在一帧上妥协的人</strong>，biubiu与 Xiaohai 联手深度共研，以世界冠军的严苛标准校准每一帧传输，为<strong>街霸6</strong>定制冠军专线。',
+                game: '街霸6', gameEn: 'STREET FIGHTER 6',
+                cta: '了解《街霸6》冠军专线',
+                stats: [{n:'53', u:'项', l:'International Titles'}, {n:'18', u:'年', l:'Pro Career'}, {n:'3', u:'代', l:'Game Eras'}],
+                signatures: ['街霸6', '拳皇', '饿狼传说'],
+                plateNo: '01', plateYear: '2024',
+                honors: [
+                    {y: '2025', t: '沙特电竞世界杯 街霸6 卫冕冠军'},
+                    {y: '2024', t: '沙特电竞世界杯 街霸6 冠军'},
+                    {y: '2023', t: 'EVO 街霸6 季军 / Capcom Cup 八强'},
+                    {y: '2022', t: 'Capcom Pro Tour 多站冠军'},
+                    {y: '2019', t: 'EVO 第三人格斗游戏 季军'},
+                    {y: '2017', t: 'SFV 中国区总冠军'},
+                    {y: '2009', t: 'KOF 世界冠军 — 中国第一个格斗游戏世界冠军'},
+                ]
+            },
+            aixleft: {
+                tag: 'FPS第一天才少年', id: 'AIXLEFT', name: '左梓轩',
+                quote: '莫问少年凌云志，曾许天下第一流。',
+                // PUBG — gunmetal smoke × ember orange fused with deep gold
+                accentHalo: 'radial-gradient(circle, rgba(230, 130, 55, 0.34) 0%, rgba(190, 105, 50, 0.12) 35%, transparent 70%)',
+                accentFloor: 'radial-gradient(ellipse, rgba(240, 140, 65, 0.42) 0%, rgba(210, 130, 60, 0.12) 40%, transparent 75%)',
+                accentBgOverlay: 'radial-gradient(ellipse at 50% 35%, rgba(180, 95, 40, 0.22) 0%, rgba(90, 60, 40, 0.18) 40%, rgba(20, 18, 14, 0.0) 80%), linear-gradient(160deg, rgba(70, 60, 50, 0.32) 0%, rgba(40, 32, 24, 0.22) 60%, rgba(10, 8, 6, 0.0) 100%)',
+                accentAtmosTop: 'radial-gradient(ellipse, rgba(235, 145, 75, 0.16) 0%, rgba(225, 208, 173, 0.08) 45%, transparent 75%)',
+                accentAtmosSide: 'radial-gradient(ellipse at 45% 60%, rgba(200, 120, 60, 0.14) 0%, transparent 70%)',
+                intro: '15岁守望先锋国服第一，转战 PUBG 后自建 PeRo 战队，PCS 三连冠、PCL 春季赛四项全满贯。永远在加速，永不止步。',
+                bridge: '决赛圈的对枪，从来不只是手速的较量。你先开镜、先扣下扳机，回放里却是对方先将你击倒。你明明已经贴进掩体，击杀提示却在下一刻传来。不是输给操作，是输给了你与对手之间，<em>那段看不见的时差</em>。<strong>从未在一发子弹上妥协的人</strong>，biubiu与 Aixleft 联手深度共研，以世界冠军的严苛标准校准每一次响应，为<strong>PUBG</strong>定制冠军专线。',
+                game: 'PUBG 绝地求生', gameEn: 'PUBG: BATTLEGROUNDS',
+                cta: '了解《PUBG》冠军专线',
+                stats: [{n:'4', u:'冠', l:'PCL Grand Slam'}, {n:'3', u:'连', l:'PCS Champion'}, {n:'15', u:'岁', l:'OW No.1 China'}],
+                signatures: ['PUBG', '守望先锋', '无畏契约'],
+                plateNo: '02', plateYear: '2025',
+                honors: [
+                    {y: '2025', t: 'PCL 春季赛 总冠军 / MVP / 淘汰王 / 伤害王'},
+                    {y: '2024', t: 'PCS 三连冠 / 沙特电竞世界杯 PUBG 亚军'},
+                    {y: '2023', t: 'PCL 夏季赛 冠军'},
+                    {y: '2022', t: '自建 PeRo 战队，半年内夺冠'},
+                    {y: '2020', t: 'PCL 多站决赛圈 MVP'},
+                    {y: '2017', t: '守望先锋国服天梯第一'},
+                ]
+            },
+            guo: {
+                tag: '永恒之塔传奇', id: 'GUOYONGJUN', name: '郭永军',
+                quote: '团里的位置，是用时间一点一点熬出来的。',
+                // AION 2 — celestial sapphire × cyan glow fused with champagne gold
+                accentHalo: 'radial-gradient(circle, rgba(120, 185, 245, 0.38) 0%, rgba(80, 140, 220, 0.13) 35%, transparent 70%)',
+                accentFloor: 'radial-gradient(ellipse, rgba(140, 200, 250, 0.42) 0%, rgba(100, 160, 230, 0.12) 40%, transparent 75%)',
+                accentBgOverlay: 'radial-gradient(ellipse at 50% 30%, rgba(70, 130, 210, 0.32) 0%, rgba(40, 80, 150, 0.22) 40%, rgba(10, 18, 38, 0.0) 80%), linear-gradient(160deg, rgba(40, 90, 160, 0.28) 0%, rgba(20, 45, 90, 0.18) 60%, rgba(6, 10, 20, 0.0) 100%)',
+                accentAtmosTop: 'radial-gradient(ellipse, rgba(130, 195, 245, 0.22) 0%, rgba(225, 208, 173, 0.09) 45%, transparent 75%)',
+                accentAtmosSide: 'radial-gradient(ellipse at 45% 60%, rgba(100, 170, 230, 0.16) 0%, transparent 70%)',
+                intro: '永恒之塔顶级玩家，多年深耕，经验丰富。',
+                bridge: '团本副本进行到第三十分钟，技能循环刚跟上节奏——画面突然定格。等到回神时，整队已经躺在副本入口。对永恒之塔玩家来说，最难受的从来不是 BOSS，是那一秒不知道发生了什么的网络；<em>半小时的协作，毁于一瞬</em>。<strong>对每一次操作的精度极致要求</strong>，biubiu与郭永军联手深度共研，以世界冠军的严苛标准校准每一次响应，为<strong>永恒之塔</strong>定制冠军专线。',
+                game: '永恒之塔', gameEn: 'AION',
+                cta: '了解《永恒之塔》冠军专线',
+                stats: [{n:'12', u:'年', l:'In Aion'}, {n:'8', u:'冠', l:'Cross-Server Wins'}, {n:'1', u:'位', l:'National Top'}],
+                signatures: ['永恒之塔'],
+                plateNo: '03', plateYear: '2025',
+                honors: [
+                    {y: '2024', t: '永恒之塔国服顶级玩家'},
+                    {y: '2023', t: '多次跨服赛事胜出'},
+                ]
+            }
+        };
+
+        // ========== Team data ==========
+        const teams = {
+            pero: {
+                id: 'PERO', name: 'PeRo 战队', tag: '少年自建·三冠王朝',
+                partnerDivision: '《PUBG》分部',
+                accentHalo: 'radial-gradient(circle, rgba(220, 170, 110, 0.20) 0%, rgba(220, 170, 110, 0.05) 35%, transparent 65%)',
+                honors: [
+                    {y: '2025', t: 'PCL 春季赛 总冠军 / 大满贯'},
+                    {y: '2024', t: 'PCS 三连冠 / 沙特电竞世界杯 PUBG 亚军'},
+                    {y: '2023', t: 'PCL 夏季赛 冠军'},
+                    {y: '2022', t: '由 Aixleft 牵头自建，半年内夺冠'},
+                ],
+                bridge: '由 <strong>Aixleft</strong> 牵头自建，PeRo 用三年时间，把"少年队"打成了 PUBG 国内最难绕开的名字。<em>每一次决赛圈的呼吸、每一次落地成盒前的反扑</em>——biubiu 与 PeRo 一路同行，见证这群少年把不甘心打成一座座奖杯。'
+            },
+            '4am': {
+                id: '4AM', name: '4 Angry Men', tag: '老牌劲旅·永不熄火',
+                partnerDivision: '《PUBG》分部',
+                accentHalo: 'radial-gradient(circle, rgba(220, 170, 110, 0.20) 0%, rgba(220, 170, 110, 0.05) 35%, transparent 65%)',
+                honors: [
+                    {y: '2024', t: '多届国内 PUBG 顶级赛事决赛圈常客'},
+                    {y: '2021', t: 'PGI.S 全球总决赛 亚军'},
+                    {y: '2019', t: 'PCL 春季赛 冠军'},
+                    {y: '2017', t: '战队成立·由韦神等老将组建'},
+                ],
+                bridge: '从端游元年坚守到今天，4AM 是中国 PUBG 永远的"<em>四个愤怒的男人</em>"。八年起伏，他们从未真正离场。biubiu 与 4AM 一道，<strong>把每一份"再来一局"的执拗</strong>，托在身后。'
+            },
+            falcons: {
+                id: 'FALCONS', name: 'Team Falcons', tag: '沙特豪门·跨项目王者',
+                partnerDivision: '《街霸6》分部',
+                accentHalo: 'radial-gradient(circle, rgba(217, 125, 88, 0.20) 0%, rgba(217, 125, 88, 0.05) 35%, transparent 65%)',
+                honors: [
+                    {y: '2025', t: '沙特电竞世界杯 多项目冠军 / 俱乐部总积分第一'},
+                    {y: '2024', t: 'EWC 街霸6 / Apex / CS 多项目登顶'},
+                    {y: '2023', t: '收购多支顶级战队，组建全项目矩阵'},
+                ],
+                bridge: '从利雅得出发，Falcons 把猎鹰旗帜插上了格斗、FPS、MOBA 多个赛道。在《街霸6》分部，他们集结了世界顶级的格斗游戏选手——<em>一帧之差，便是冠亚之分</em>。biubiu 与 Falcons《街霸6》分部并肩，把每一次出招的专注，<strong>稳稳守在它该有的位置</strong>。'
+            },
+            '17': {
+                id: '17 GAMING', name: '17 战队', tag: '韧性 · 战术之师',
+                partnerDivision: '《PUBG》分部',
+                accentHalo: 'radial-gradient(circle, rgba(220, 170, 110, 0.20) 0%, rgba(220, 170, 110, 0.05) 35%, transparent 65%)',
+                honors: [
+                    {y: '2024', t: 'PCL 多站决赛圈入围 / 战术执行最优队伍'},
+                    {y: '2023', t: 'PCL 夏季赛 季军'},
+                    {y: '2022', t: '战队整编重组，确立战术核心打法'},
+                ],
+                bridge: '17 战队以战术见长——缩圈前的每一次转点、交火时的每一次卡位，都建立在毫秒级的判断之上。biubiu 与 17 一路同行，<strong>把这份冷静背后的那一秒不确定</strong>，从画面里抹去。'
+            },
+            ig: {
+                id: 'IG', name: 'Invictus Gaming', tag: 'S8 冠军·永不为奴',
+                partnerDivision: '《英雄联盟》分部',
+                accentHalo: 'radial-gradient(circle, rgba(155, 140, 215, 0.20) 0%, rgba(155, 140, 215, 0.05) 35%, transparent 65%)',
+                honors: [
+                    {y: '2018', t: '英雄联盟 全球总决赛 冠军（S8）'},
+                    {y: '2017', t: 'LPL 春季赛 冠军'},
+                    {y: '2012', t: 'DOTA2 国际邀请赛 TI2 冠军'},
+                ],
+                bridge: '2018 年仁川，IG 把第一座银龙杯捧回中国。"<em>永不为奴</em>"——不是一句口号，是上头之前对操作上限的绝对自信。biubiu 与 IG《英雄联盟》分部并肩，<strong>让这份自信，永远敢于被兑现</strong>。'
+            },
+            rng: {
+                id: 'RNG', name: 'Royal Never Give Up', tag: 'MSI 三冠·永不言弃',
+                partnerDivision: '《英雄联盟》分部',
+                accentHalo: 'radial-gradient(circle, rgba(220, 130, 130, 0.20) 0%, rgba(220, 130, 130, 0.05) 35%, transparent 65%)',
+                honors: [
+                    {y: '2022', t: 'MSI 季中冠军赛 冠军（队史第三冠）'},
+                    {y: '2021', t: 'MSI 季中冠军赛 冠军'},
+                    {y: '2018', t: 'MSI 季中冠军赛 冠军 / LPL 春夏双冠'},
+                ],
+                bridge: '三座 MSI 奖杯，让 RNG 成为中国战队海外赛事的代名词。"<em>Never Give Up</em>"——从落后五千经济到翻盘水晶，靠的不只是心态，是每一次走位与技能释放的精准抵达。biubiu 与 RNG《英雄联盟》分部一路同行，<strong>把"永不言弃"稳稳兜住</strong>。'
+            },
+            ag: {
+                id: 'AG', name: 'AG 超玩会', tag: '王者荣耀·六冠之师',
+                partnerDivision: '《王者荣耀》分部',
+                accentHalo: 'radial-gradient(circle, rgba(220, 140, 100, 0.20) 0%, rgba(220, 140, 100, 0.05) 35%, transparent 65%)',
+                honors: [
+                    {y: '2024', t: 'KPL 世冠杯 冠军（队史第六冠）'},
+                    {y: '2021', t: 'KPL 春季赛 冠军 / 世冠杯 冠军'},
+                    {y: '2019', t: 'KPL 春季赛 冠军 / 秋季赛 冠军'},
+                    {y: '2017', t: 'KPL 秋季赛 冠军（首冠）'},
+                ],
+                bridge: 'AG 超玩会，是 KPL 历史上奖杯最多的战队之一。<em>5v5 的胜负，常常压在 0.3 秒的位移判断上</em>——一次走神，整波团灭。biubiu 与 AG 一路同行，<strong>把决胜瞬间的那 0.3 秒，稳稳还给选手</strong>。'
+            },
+            edg: {
+                id: 'EDG', name: 'Edward Gaming', tag: 'S11 全球总冠军',
+                partnerDivision: '《英雄联盟》分部',
+                accentHalo: 'radial-gradient(circle, rgba(155, 140, 215, 0.20) 0%, rgba(155, 140, 215, 0.05) 35%, transparent 65%)',
+                honors: [
+                    {y: '2021', t: '英雄联盟 全球总决赛 冠军（S11）'},
+                    {y: '2017', t: 'MSI 季中冠军赛 冠军'},
+                    {y: '2015', t: 'MSI 季中冠军赛 冠军 / LPL 五冠'},
+                ],
+                bridge: '2021 年冰岛，EDG 让全国玩家在凌晨的宿舍楼里集体沸腾。世界冠军的背后，是<em>无数次训练赛里对操作精度的极致打磨</em>。biubiu 与 EDG《英雄联盟》分部并肩，<strong>把训练场上的稳定，带进每一次出征</strong>。'
+            }
+        };
+
+        // ========== Game data ==========
+        const games = {
+            pubg: {
+                bgClass: 'bg-pubg',
+                logo: 'PUBG',
+                tagline: '五月新模式 · 赏金行动',
+                name: '绝地求生',
+                mode: '全新模式：赏金行动!',
+                platforms: '同步加速Steam / Epic',
+                launchText: '电竞加速',
+                server: '亚服',
+                bottomText: 'biubiu联动PCL送福利，瓜分100万G币！每周三周四免费加速！电竞加速更快更稳！',
+                tools: [
+                    {icon: '送', color: '#ff8a4d', name: '送好友加速卡'},
+                    {icon: '⊕', color: '#5cb4f7', name: '外置准星', badge: '未开启'},
+                    {icon: '金', color: '#ff8a4d', name: '赏金行动'},
+                    {icon: '▶', color: '#a87aff', name: '直播掉宝-new'},
+                    {icon: '〰', color: '#5cf28a', name: '脚步声增强'},
+                    {icon: '⊕', color: '#5cb4f7', name: '卡大厅修复', badge: '已开启', badgeType: 'on'},
+                ]
+            },
+            sf6: {
+                bgClass: 'bg-sf6',
+                logo: 'SF6',
+                tagline: 'STREET FIGHTER 6',
+                name: '街头霸王6',
+                mode: '好友对战修复',
+                platforms: '同步加速Steam',
+                launchText: '电竞加速',
+                server: '',
+                bottomText: '官宣！世界冠军小孩正式成为biubiu加速器品牌代言人！',
+                tools: [
+                    {icon: '易', color: '#ff8a4d', name: '账号交易'},
+                    {icon: '联', color: '#5cb4f7', name: '好友联机低延迟'},
+                    {icon: 'SF', color: '#5c8af7', name: '角色排位数据'},
+                    {icon: '▶', color: '#a87aff', name: '直播掉宝-new'},
+                    {icon: '玩', color: '#ff5530', name: 'MOD'},
+                    {icon: 'Q', color: '#8a9ab0', name: '加速保障Q群'},
+                ]
+            },
+            aion2: {
+                bgClass: 'bg-aion',
+                logo: 'AION 2',
+                tagline: '高速下载 · 专享IP · 同步支持PURPLE平台',
+                name: '永恒之塔2',
+                mode: 'PURPLE平台下载',
+                platforms: '同步加速Steam / NCPurple',
+                launchText: '立即加速',
+                server: '港澳台服',
+                bottomText: '',
+                tools: [
+                    {icon: '汉', color: '#5cf28a', name: '简中汉化', badge: '未开启'},
+                    {icon: '地', color: '#ff8a4d', name: '大地图互动'},
+                    {icon: '礼', color: '#ff5530', name: '福利兑换码'},
+                    {icon: '数', color: '#5cb4f7', name: 'DPS统计(第三方)'},
+                    {icon: '★', color: '#8a9ab0', name: '角色评分'},
+                    {icon: '易', color: '#ff8a4d', name: '账号交易'},
+                ]
+            }
+        };
+
+        function shadeColor(hex) {
+            // simple darker shade for icon gradient
+            const c = hex.replace('#', '');
+            const num = parseInt(c, 16);
+            const r = Math.max(0, ((num >> 16) & 0xff) - 50);
+            const g = Math.max(0, ((num >> 8) & 0xff) - 50);
+            const b = Math.max(0, (num & 0xff) - 50);
+            return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+        }
+
+        function showGame(key) {
+            const data = games[key];
+            if (!data) return;
+
+            document.getElementById('gameHeroBg').className = 'game-hero-bg ' + data.bgClass;
+            document.getElementById('gameLogo').textContent = data.logo;
+            document.getElementById('gameTagline').textContent = data.tagline;
+            document.getElementById('gameName').textContent = data.name;
+
+            const modePill = document.getElementById('gameModePill');
+            if (data.mode) {
+                modePill.textContent = data.mode;
+                modePill.style.display = '';
+            } else {
+                modePill.style.display = 'none';
+            }
+
+            document.getElementById('gamePlatforms').textContent = data.platforms;
+            document.getElementById('launchText').textContent = data.launchText;
+
+            const championBtn = document.getElementById('championLineBtn');
+            const championMap = { sf6: 'xiaohai', pubg: 'aixleft', aion2: 'guo' };
+            const detailKey = championMap[key];
+            if (detailKey) {
+                championBtn.style.display = '';
+                championBtn.onclick = (e) => curtainRevealToDetail(detailKey, e);
+            } else {
+                championBtn.style.display = 'none';
+            }
+
+            const serverChip = document.getElementById('serverChip');
+            if (data.server) {
+                serverChip.textContent = data.server;
+                serverChip.style.display = '';
+            } else {
+                serverChip.style.display = 'none';
+            }
+
+            const bottomStrip = document.getElementById('gameBottomStrip');
+            if (data.bottomText) {
+                document.getElementById('gameBottomText').textContent = data.bottomText;
+                bottomStrip.style.display = '';
+            } else {
+                bottomStrip.style.display = 'none';
+            }
+
+            document.getElementById('toolsList').innerHTML = data.tools.map(t => {
+                const badgeHtml = t.badge
+                    ? `<div class="tool-badge ${t.badgeType === 'on' ? 'badge-on' : ''}">${t.badge}</div>`
+                    : '';
+                return `
+                    <div class="tool-item">
+                        <div class="tool-icon" style="background: linear-gradient(135deg, ${t.color}, ${shadeColor(t.color)});">${t.icon}</div>
+                        <div class="tool-name">${t.name}</div>
+                        ${badgeHtml}
+                        <div class="tool-arrow">›</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Sidebar active state (both plaza and game sidebars)
+            document.querySelectorAll('.game-card[data-game]').forEach(card => {
+                card.classList.toggle('is-active', card.dataset.game === key);
+            });
+
+            // Switch views
+            viewPlaza.classList.remove('active');
+            viewHall.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewTeam.classList.remove('active');
+            viewTeam.classList.remove('just-revealed');
+            viewGame.classList.add('active');
+        }
+
+        // ========== View switching ==========
+        const viewPlaza = document.getElementById('viewPlaza');
+        const viewHall = document.getElementById('viewHall');
+        const viewDetail = document.getElementById('viewDetail');
+        const viewTeam = document.getElementById('viewTeam');
+        const viewGame = document.getElementById('viewGame');
+
+        // Simple smooth fade transition into the Hall of Fame.
+        function openHallFromPlaza() {
+            viewPlaza.classList.remove('active');
+            viewGame.classList.remove('active');
+            setTimeout(() => viewHall.classList.add('active'), 80);
+        }
+
+        function showPlaza() {
+            viewHall.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewTeam.classList.remove('active');
+            viewTeam.classList.remove('just-revealed');
+            viewGame.classList.remove('active');
+            document.querySelectorAll('.game-card[data-game]').forEach(c => c.classList.remove('is-active'));
+            viewPlaza.classList.add('active');
+        }
+
+        function spawnSparks() {
+            const container = document.getElementById('ceremonySparks');
+            if (!container) return;
+            container.innerHTML = '';
+            const count = 22;
+            for (let i = 0; i < count; i++) {
+                const s = document.createElement('div');
+                s.className = 'spark';
+                const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+                const dist = 180 + Math.random() * 220;
+                const dx = Math.cos(angle) * dist;
+                const dy = Math.sin(angle) * dist;
+                const dur = 0.7 + Math.random() * 0.5;
+                const delay = Math.random() * 0.15;
+                s.style.setProperty('--dx', dx + 'px');
+                s.style.setProperty('--dy', dy + 'px');
+                s.animate(
+                    [
+                        { transform: 'translate(0, 0) scale(0.6)', opacity: 0 },
+                        { transform: `translate(${dx * 0.3}px, ${dy * 0.3}px) scale(1.2)`, opacity: 1, offset: 0.25 },
+                        { transform: `translate(${dx}px, ${dy}px) scale(0.3)`, opacity: 0 }
+                    ],
+                    { duration: dur * 1000, delay: delay * 1000, easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)', fill: 'forwards' }
+                );
+                container.appendChild(s);
+            }
+            setTimeout(() => { container.innerHTML = ''; }, 1600);
+        }
+
+        function showDetail(champKey) {
+            const hallPage = document.querySelector('#viewHall .hall-page');
+            const overlay = document.getElementById('ceremonyOverlay');
+            const wrappers = document.querySelectorAll('#viewHall .card-wrapper');
+            let chosen = null;
+            wrappers.forEach(w => {
+                if (w.getAttribute('onclick') && w.getAttribute('onclick').includes(`'${champKey}'`)) {
+                    chosen = w;
+                }
+            });
+
+            // Phase 1: launch — chosen card lifts and glows, others retreat
+            hallPage.classList.add('is-launching');
+            if (chosen) chosen.classList.add('is-chosen');
+
+            // Phase 2: zoom + flash + sparks
+            setTimeout(() => {
+                if (chosen) chosen.classList.add('is-zooming');
+                overlay.classList.add('is-active');
+                spawnSparks();
+            }, 320);
+
+            // Phase 3: swap to detail mid-flash
+            setTimeout(() => {
+                updateChampion(champKey);
+                viewHall.classList.remove('active');
+                viewDetail.classList.add('active');
+                viewDetail.classList.add('just-revealed');
+            }, 850);
+
+            // Phase 4: cleanup
+            setTimeout(() => {
+                hallPage.classList.remove('is-launching');
+                if (chosen) {
+                    chosen.classList.remove('is-chosen');
+                    chosen.classList.remove('is-zooming');
+                }
+                overlay.classList.remove('is-active');
+                viewDetail.classList.remove('just-revealed');
+            }, 1800);
+        }
+
+        function showHall() {
+            viewPlaza.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewTeam.classList.remove('active');
+            viewTeam.classList.remove('just-revealed');
+            viewGame.classList.remove('active');
+            setTimeout(() => viewHall.classList.add('active'), 100);
+        }
+
+        function showTeam(key) {
+            const data = teams[key];
+            if (!data) return;
+            const teamPage = document.querySelector('#viewTeam .team-page');
+            if (data.accentHalo) teamPage.style.setProperty('--team-halo', data.accentHalo);
+            else teamPage.style.removeProperty('--team-halo');
+            const teamIdEl = document.getElementById('teamId');
+            if (teamIdEl) teamIdEl.textContent = data.id;
+            document.getElementById('teamNameCn').textContent = data.name;
+            document.getElementById('teamTag').textContent = data.tag;
+            document.getElementById('teamImage').textContent = data.name + ' · 队徽';
+            document.getElementById('teamPartnerDivision').textContent = data.partnerDivision;
+            document.getElementById('teamHonors').innerHTML = data.honors.map(h =>
+                `<div class="honor-item"><span class="honor-year">${h.y}</span><span>${h.t}</span></div>`
+            ).join('');
+            document.getElementById('teamBridge').innerHTML = data.bridge;
+
+            viewHall.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewTeam.classList.add('active');
+            viewTeam.classList.remove('just-revealed');
+            void viewTeam.offsetWidth;
+            viewTeam.classList.add('just-revealed');
+            setTimeout(() => viewTeam.classList.remove('just-revealed'), 1200);
+        }
+
+        // ========== Soft-focus push transition (game page → champion detail) ==========
+        let pushBusy = false;
+        function curtainRevealToDetail(detailKey) {
+            if (pushBusy) return;
+            pushBusy = true;
+            const overlay = document.getElementById('pushOverlay');
+            const gamePage = document.querySelector('#viewGame .plaza-page');
+            if (!overlay || !gamePage) { devGoto('detail', detailKey); pushBusy = false; return; }
+
+            // Phase 1: push the current game page out (scale up + blur + dim)
+            //          and fade in a black overlay underneath the motion blur.
+            overlay.classList.remove('is-black');
+            overlay.classList.add('is-active');
+            gamePage.classList.add('push-out');
+            requestAnimationFrame(() => overlay.classList.add('is-black'));
+
+            // Phase 2: when fully black, swap to detail view and prep its push-in start state
+            setTimeout(() => {
+                devGoto('detail', detailKey);
+                const detailPage = document.querySelector('#viewDetail .detail-page');
+                if (detailPage) {
+                    detailPage.classList.add('push-in');
+                }
+                // Begin fading the black overlay back out as detail emerges from the blur
+                requestAnimationFrame(() => overlay.classList.remove('is-black'));
+            }, 520);
+
+            // Phase 3: cleanup once both halves of the push have settled
+            setTimeout(() => {
+                overlay.classList.remove('is-active', 'is-black');
+                gamePage.classList.remove('push-out');
+                const detailPage = document.querySelector('#viewDetail .detail-page');
+                if (detailPage) detailPage.classList.remove('push-in');
+                pushBusy = false;
+            }, 1300);
+        }
+
+        // ========== MVP Dev Panel — direct view jumps ==========
+        function devGoto(view, key) {
+            // Hard-reset all view states
+            [viewPlaza, viewHall, viewDetail, viewTeam, viewGame].forEach(v => {
+                v.classList.remove('active');
+                v.classList.remove('just-revealed');
+            });
+            document.querySelectorAll('.game-card[data-game]').forEach(c => c.classList.remove('is-active'));
+            const hallPage = document.querySelector('#viewHall .hall-page');
+            if (hallPage) hallPage.classList.remove('is-launching');
+            document.querySelectorAll('#viewHall .card-wrapper').forEach(w => {
+                w.classList.remove('is-chosen');
+                w.classList.remove('is-zooming');
+            });
+            const overlay = document.getElementById('ceremonyOverlay');
+            if (overlay) overlay.classList.remove('is-active');
+            const switchOverlay = document.getElementById('detailSwitchOverlay');
+            if (switchOverlay) switchOverlay.classList.remove('is-active');
+            isSwitching = false;
+
+            if (view === 'plaza') {
+                viewPlaza.classList.add('active');
+            } else if (view === 'hall') {
+                viewHall.classList.add('active');
+            } else if (view === 'detail' && key) {
+                viewDetail.classList.add('active');
+                currentChamp = null;
+                applyChampionData(key);
+                currentChamp = key;
+            } else if (view === 'team' && key) {
+                showTeam(key);
+            } else if (view === 'game' && key) {
+                showGame(key);
+            }
+        }
+
+        let currentChamp = null;
+        let isSwitching = false;
+
+        function applyChampionData(key) {
+            const data = champions[key];
+            if (!data) return;
+            const detailPage = document.querySelector('#viewDetail .detail-page');
+            if (data.accentHalo) detailPage.style.setProperty('--champ-halo', data.accentHalo);
+            else detailPage.style.removeProperty('--champ-halo');
+            if (data.accentFloor) detailPage.style.setProperty('--champ-floor', data.accentFloor);
+            else detailPage.style.removeProperty('--champ-floor');
+            if (data.accentBgOverlay) detailPage.style.setProperty('--champ-bg-overlay', data.accentBgOverlay);
+            else detailPage.style.removeProperty('--champ-bg-overlay');
+            if (data.accentAtmosTop) detailPage.style.setProperty('--champ-atmos-top', data.accentAtmosTop);
+            else detailPage.style.removeProperty('--champ-atmos-top');
+            if (data.accentAtmosSide) detailPage.style.setProperty('--champ-atmos-side', data.accentAtmosSide);
+            else detailPage.style.removeProperty('--champ-atmos-side');
+            document.getElementById('champTag').textContent = data.tag;
+            document.getElementById('champId').textContent = data.id.toUpperCase();
+            document.getElementById('champName').textContent = data.name;
+            document.getElementById('champIntro').textContent = data.intro;
+            const quoteEl = document.getElementById('champQuote');
+            if (data.quote) {
+                quoteEl.textContent = data.quote;
+                quoteEl.style.display = '';
+            } else {
+                quoteEl.style.display = 'none';
+            }
+            document.getElementById('bridgeText').innerHTML = data.bridge;
+            document.getElementById('ctaText').textContent = data.cta;
+            const honorsList = document.getElementById('honorsList');
+            honorsList.innerHTML = data.honors.map(h =>
+                `<div class="honor-item"><span class="honor-year">${h.y}</span><span>${h.t}</span></div>`
+            ).join('');
+
+            // Update active nav
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const target = document.querySelector(`.nav-item[data-champ="${key}"]`);
+            if (target) target.classList.add('active');
+        }
+
+        function updateChampion(key, opts) {
+            opts = opts || {};
+            if (isSwitching) return;
+            if (key === currentChamp && !opts.force) return;
+
+            const detailPage = document.querySelector('#viewDetail .detail-page');
+            // If first load or forced (e.g. opening from hall), skip exit transition
+            const skipExit = !!opts.skipExit || currentChamp === null;
+
+            const enter = () => {
+                applyChampionData(key);
+                currentChamp = key;
+                detailPage.classList.remove('is-switching');
+                // restart entrance animations
+                detailPage.classList.remove('is-entering');
+                // force reflow so animation replays
+                void detailPage.offsetWidth;
+                detailPage.classList.add('is-entering');
+                // stagger honor items
+                const items = detailPage.querySelectorAll('.honor-item');
+                items.forEach((el, i) => {
+                    el.style.animationDelay = (0.28 + i * 0.06) + 's';
+                });
+                setTimeout(() => {
+                    detailPage.classList.remove('is-entering');
+                    isSwitching = false;
+                }, 900);
+            };
+
+            isSwitching = true;
+            if (skipExit) {
+                enter();
+            } else {
+                detailPage.classList.remove('is-entering');
+                detailPage.classList.add('is-switching');
+                // Ceremonial beam sweep — fires across the page mid-switch
+                const switchOverlay = document.getElementById('detailSwitchOverlay');
+                if (switchOverlay) {
+                    switchOverlay.classList.remove('is-active');
+                    void switchOverlay.offsetWidth;
+                    switchOverlay.classList.add('is-active');
+                    setTimeout(() => switchOverlay.classList.remove('is-active'), 900);
+                }
+                setTimeout(enter, 320);
+            }
+        }
+
+        // Patch showDetail so the entrance animation plays on first open
+        const _origShowDetail = showDetail;
+        showDetail = function(champKey) {
+            currentChamp = null; // force entrance animation
+            isSwitching = false;
+            _origShowDetail(champKey);
+        };
+
+        // Detail page nav switching
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => updateChampion(item.dataset.champ));
+        });
+
+        // Initialize currentChamp for first detail open
+        currentChamp = 'xiaohai';
+    </script>
+</body>
+</html>
