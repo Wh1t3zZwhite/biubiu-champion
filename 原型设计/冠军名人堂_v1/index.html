@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biubiu 冠军名人堂</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- =========================== -->
+        <!-- HALL OF FAME VIEW -->
+        <!-- =========================== -->
+        <div class="view active" id="viewHall">
+            <div class="hall-page">
+                <div class="bg-light"></div>
+                <div class="bg-light-secondary"></div>
+                <div class="bg-bottom"></div>
+                <div class="particles" id="hallParticles"></div>
+
+                <div class="hall-header">
+                    <div class="back-btn">‹ 返回</div>
+                </div>
+
+                <div class="title-area">
+                    <div class="title-main">Biubiu 冠军名人堂</div>
+                    <div class="title-sub">Hall of Fame</div>
+                    <div class="title-bar"></div>
+                </div>
+
+                <div class="champions">
+                    <div class="champ-left-text">
+                        <div class="champ-id">Xiaohai</div>
+                        <div class="champ-name-hall">曾卓君</div>
+                        <div class="champ-tag-hall">中国格斗电竞传奇</div>
+                    </div>
+
+                    <div class="cards-group">
+                        <div class="card-wrapper" onclick="showDetail('xiaohai')">
+                            <div class="card">
+                                <div class="card-rays"></div>
+                                <div class="card-content">
+                                    <div class="card-img">选手形象</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-wrapper" onclick="showDetail('aixleft')">
+                            <div class="card">
+                                <div class="card-rays"></div>
+                                <div class="card-content">
+                                    <div class="card-img">选手形象</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="champ-right-text">
+                        <div class="champ-id">Aixleft</div>
+                        <div class="champ-name-hall">左梓轩</div>
+                        <div class="champ-tag-hall">FPS第一天才少年</div>
+                    </div>
+                </div>
+
+                <div class="ceremony-overlay" id="ceremonyOverlay">
+                    <div class="ceremony-flash"></div>
+                    <div class="ceremony-beam"></div>
+                    <div class="ceremony-iris"></div>
+                    <div class="ceremony-sparks" id="ceremonySparks"></div>
+                </div>
+
+                <div class="bottom">
+                    <div class="divider"></div>
+                    <div class="carousel-marquee">
+                        <div class="carousel-track">
+                            <div class="c-item"><div class="c-box"><span>人物</span></div><span class="c-label">郭永军</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">PeRo</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">4AM</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">Falcons</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">17战队</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">IG</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">RNG</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">AG</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">EDG</span></div>
+                            <div class="c-item"><div class="c-box"><span>人物</span></div><span class="c-label">郭永军</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">PeRo</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">4AM</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">Falcons</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">17战队</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">IG</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">RNG</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">AG</span></div>
+                            <div class="c-item"><div class="c-box"><span>队徽</span></div><span class="c-label">EDG</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- DETAIL VIEW -->
+        <!-- =========================== -->
+        <div class="view" id="viewDetail">
+            <div class="detail-page">
+                <div class="atmosphere"></div>
+                <div class="particles" id="detailParticles"></div>
+
+                <aside class="nav-pane">
+                    <div class="back-link" onclick="showHall()">‹ 返回</div>
+                    <nav class="nav-list">
+                        <div class="nav-item active" data-champ="xiaohai">曾卓君</div>
+                        <div class="nav-item" data-champ="aixleft">左梓轩</div>
+                        <div class="nav-item" data-champ="guo">郭永军</div>
+                    </nav>
+                </aside>
+
+                <div class="main">
+                    <div class="portrait-stage">
+                        <div class="portrait-header">
+                            <div class="champ-header-detail">
+                                <div class="champ-meta-line">
+                                    <div class="champ-id-detail" id="champId">XIAOHAI</div>
+                                    <div class="champ-meta-divider"></div>
+                                    <div class="champ-name-detail" id="champName">曾卓君</div>
+                                </div>
+                                <div class="champ-tag-text" id="champTag">中国格斗电竞传奇</div>
+                            </div>
+                            <div class="intro" id="champIntro">
+                                6岁入行，从拳皇到街霸再到饿狼传说，跨越三个游戏时代依然封王，53项国际冠军，让格斗游戏的中国冠军不止是头衔。
+                            </div>
+                        </div>
+                        <div class="portrait-canvas">
+                            <div class="portrait-frame">
+                                <div class="portrait-halo"></div>
+                                <div class="portrait-img">冠军形象</div>
+                                <div class="floor-light"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content">
+                        <div class="honors">
+                            <div class="honors-title">荣誉时刻</div>
+                            <div class="honors-list" id="honorsList">
+                                <div class="honor-item"><span class="honor-year">2025</span><span>沙特电竞世界杯 街霸6 卫冕冠军</span></div>
+                                <div class="honor-item"><span class="honor-year">2024</span><span>沙特电竞世界杯 街霸6 冠军</span></div>
+                                <div class="honor-item"><span class="honor-year">2023</span><span>EVO 街霸6 季军 / Capcom Cup 八强</span></div>
+                                <div class="honor-item"><span class="honor-year">2022</span><span>Capcom Pro Tour 多站冠军</span></div>
+                                <div class="honor-item"><span class="honor-year">2019</span><span>EVO 第三人格斗游戏 季军</span></div>
+                                <div class="honor-item"><span class="honor-year">2017</span><span>SFV 中国区总冠军</span></div>
+                                <div class="honor-item"><span class="honor-year">2009</span><span>KOF 世界冠军 — 中国第一个格斗游戏世界冠军</span></div>
+                            </div>
+                        </div>
+
+                        <div class="bridge-section">
+                            <div class="bridge" id="bridgeText">
+                                对局正酣，画面忽然陷入慢放；指令明明按下，角色却纹丝不动。在街霸6的线上战场，每一位玩家都经历过这样的时刻——输不在判断，不在操作，而在你与对手之间，<em>那段不可控的距离</em>。<strong>从未在一帧上妥协的人</strong>，biubiu与 Xiaohai 联手深度共研，以世界冠军的严苛标准校准每一帧传输，为<strong>街霸6</strong>定制冠军专线。
+                            </div>
+                            <div class="cta-row">
+                                <button class="cta-btn">
+                                    <span id="ctaText">了解同款专线</span>
+                                    <span class="arrow">→</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script src="script.js"></script>
+</body>
+</html>
