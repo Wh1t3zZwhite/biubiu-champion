@@ -1392,3 +1392,69 @@
 
         // 暴露给 dev 面板调试
         window.playDivineLight = playDivineLight;
+
+        // ========== Banner Stack — 双卡覆盖滑动切换 ==========
+        // 两张卡反向滑动互换位置。z-index 在动画中点（两卡完全重合）交换，
+        // 视觉上零跳变。
+        var _stackBusy = false;
+        function toggleBannerStack() {
+            var stack = document.getElementById('bannerStack');
+            if (!stack || _stackBusy) return;
+            _stackBusy = true;
+
+            var card1 = stack.querySelector('.stack-card-1');
+            var card2 = stack.querySelector('.stack-card-2');
+            var isState1 = stack.classList.contains('state-1');
+
+            // 1) 锁住当前 z-index（用 inline style 覆盖 CSS）
+            card1.style.zIndex = isState1 ? '2' : '1';
+            card2.style.zIndex = isState1 ? '1' : '2';
+
+            // 2) 切换位置状态 → 触发 left 的 CSS transition
+            stack.classList.replace(
+                isState1 ? 'state-1' : 'state-2',
+                isState1 ? 'state-2' : 'state-1'
+            );
+
+            // 3) 在动画中点（两卡完全重合时）移除 inline z-index，
+            //    让 CSS 的新 z-index 生效 —— 视觉零跳变
+            setTimeout(function() {
+                card1.style.zIndex = '';
+                card2.style.zIndex = '';
+            }, 275);
+
+            // 4) 同步侧栏卡片
+            syncSidebarCards(!isState1);
+
+            // 5) 动画结束后释放锁
+            setTimeout(function() {
+                _stackBusy = false;
+            }, 560);
+        }
+
+        // 侧栏卡片跟随主 Banner 同步切换
+        function syncSidebarCards(isState1) {
+            var entry1 = document.querySelector('#sidebarStack .sidebar-entry-1');
+            var entry2 = document.querySelector('#sidebarStack .sidebar-entry-2');
+            if (!entry1 || !entry2) return;
+            if (isState1) {
+                entry1.classList.add('is-top');
+                entry2.classList.remove('is-top');
+            } else {
+                entry2.classList.add('is-top');
+                entry1.classList.remove('is-top');
+            }
+        }
+
+        // 点击底层卡片露出的边缘也触发切换
+        document.addEventListener('click', function(e) {
+            var stack = document.getElementById('bannerStack');
+            if (!stack) return;
+            var rect = stack.getBoundingClientRect();
+            var clickX = e.clientX - rect.left;
+            // 露出区域在右侧 88%-100%
+            if (clickX > rect.width * 0.88) {
+                e.stopPropagation();
+                toggleBannerStack();
+            }
+        });

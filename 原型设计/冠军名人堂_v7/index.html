@@ -181,10 +181,17 @@
                 <div class="plaza-body">
                     <!-- Sidebar -->
                     <aside class="plaza-sidebar">
-                        <div class="welfare-pool-card" onclick="showPlaza()">
-                            <div class="pool-character"></div>
-                            <div class="pool-title">限免福利池</div>
-                            <div class="pool-countdown">限免倒计时余29天</div>
+                        <div class="sidebar-card-stack" id="sidebarStack">
+                            <div class="hall-entry-card sidebar-entry sidebar-entry-1 is-top" onclick="showPlaza()">
+                                <div class="hall-entry-deco"></div>
+                                <div class="hall-entry-title">冠军名人堂</div>
+                                <div class="hall-entry-sub">致敬不朽传奇 ›</div>
+                            </div>
+                            <div class="hall-entry-card sidebar-entry sidebar-entry-2 promo-entry" onclick="showPlaza()">
+                                <div class="promo-entry-icon">AION</div>
+                                <div class="hall-entry-title">限免加速</div>
+                                <div class="hall-entry-sub">EWC限免季进行中 ›</div>
+                            </div>
                         </div>
 
                         <div class="my-games-header">
@@ -214,40 +221,68 @@
                     <main class="plaza-main">
                         <div class="plaza-section-title">biubiu广场</div>
 
-                        <div class="plaza-banner" onclick="openHallFromPlaza()">
-                            <div class="banner-corner tl"></div>
-                            <div class="banner-corner tr"></div>
-                            <div class="banner-corner bl"></div>
-                            <div class="banner-corner br"></div>
+                        <div class="banner-stack state-1" id="bannerStack">
+                            <!-- Card 1: 冠军名人堂（默认在上，左对齐） -->
+                            <div class="plaza-banner stack-card stack-card-1" onclick="openHallFromPlaza()">
+                                <div class="banner-corner tl"></div>
+                                <div class="banner-corner tr"></div>
+                                <div class="banner-corner bl"></div>
+                                <div class="banner-corner br"></div>
 
-                            <div class="banner-text-block">
-                                <div class="banner-title-wrap">
-                                    <div class="banner-title">
-                                        <span class="title-brand">Biubiu</span>
-                                        <span class="title-cn">冠军名人堂</span>
+                                <div class="banner-text-block">
+                                    <div class="banner-title-wrap">
+                                        <div class="banner-title">
+                                            <span class="title-brand">Biubiu</span>
+                                            <span class="title-cn">冠军名人堂</span>
+                                        </div>
+                                        <div class="banner-en-tag">HALL OF BIUBIU</div>
                                     </div>
-                                    <div class="banner-en-tag">HALL OF BIUBIU</div>
+                                    <div class="banner-sub">
+                                        <span class="sub-lead">与</span>
+                                        <span class="sub-brand">Biubiu</span>
+                                        <span class="sub-hall">一起，致敬不朽传奇</span>
+                                        <span class="sub-arrow">›</span>
+                                    </div>
                                 </div>
-                                <div class="banner-sub">
-                                    <span class="sub-lead">与</span>
-                                    <span class="sub-brand">Biubiu</span>
-                                    <span class="sub-hall">一起，致敬不朽传奇</span>
-                                    <span class="sub-arrow">›</span>
+
+                                <div class="banner-figures">
+                                    <div class="figure-spotlight"></div>
+                                    <div class="banner-floor-light"></div>
+                                    <div class="banner-placeholder">曾卓君</div>
+                                    <div class="banner-placeholder">左梓轩</div>
                                 </div>
                             </div>
 
-                            <div class="banner-figures">
-                                <div class="figure-spotlight"></div>
-                                <div class="banner-floor-light"></div>
-                                <div class="banner-placeholder">曾卓君</div>
-                                <div class="banner-placeholder">左梓轩</div>
+                            <!-- Card 2: 游戏限免活动卡（右对齐） -->
+                            <div class="plaza-banner stack-card stack-card-2 banner-promo">
+                                <div class="promo-bg"></div>
+                                <div class="promo-top-bar">
+                                    <span class="promo-badge-last">最后<strong>1</strong>天</span>
+                                    <span class="promo-countdown">00 天 00:00:59 后结束</span>
+                                </div>
+                                <div class="promo-body">
+                                    <div class="promo-info">
+                                        <div class="promo-game-row">
+                                            <span class="promo-game-icon">AION</span>
+                                            <span class="promo-game-name">永恒之塔2</span>
+                                        </div>
+                                        <p class="promo-desc">07-08日至08-24EWC电竞世界杯限免季期间，共有20款超重磅游戏限免加速，一起为电竞赛事呐喊助威吧～</p>
+                                        <div class="promo-btns">
+                                            <button class="promo-btn-go">⚡ 立即加速</button>
+                                            <button class="promo-btn-alt">⊕ 活动详情</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="promo-figures">
+                                    <div class="promo-fig">角色A</div>
+                                    <div class="promo-fig">角色B</div>
+                                </div>
                             </div>
 
-                            <div class="banner-dots">
-                                <span class="dot"></span>
-                                <span class="dot active"></span>
-                                <span class="dot"></span>
-                            </div>
+                            <!-- 切换按钮 -->
+                            <button class="stack-switch-btn" id="stackSwitchBtn" type="button" onclick="event.stopPropagation(); toggleBannerStack()">
+                                <span class="switch-arrow">←</span>
+                            </button>
                         </div>
 
                         <div class="plaza-section-sub">更多精彩福利</div>
@@ -344,10 +379,10 @@
                 <div class="plaza-body">
                     <!-- Sidebar (same games list as plaza) -->
                     <aside class="plaza-sidebar">
-                        <div class="welfare-pool-card" onclick="showPlaza()">
-                            <div class="pool-character"></div>
-                            <div class="pool-title">限免福利池</div>
-                            <div class="pool-countdown">- 限免天天有 福利享不停 -</div>
+                        <div class="hall-entry-card" onclick="showPlaza()">
+                            <div class="hall-entry-deco"></div>
+                            <div class="hall-entry-title">冠军名人堂</div>
+                            <div class="hall-entry-sub">致敬不朽传奇 ›</div>
                         </div>
 
                         <div class="my-games-header">
