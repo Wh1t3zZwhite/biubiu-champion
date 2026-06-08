@@ -341,11 +341,7 @@
             });
 
             // Switch views
-            viewPlaza.classList.remove('active');
-            viewHall.classList.remove('active');
-            viewDetail.classList.remove('active');
-            viewTeam.classList.remove('active');
-            viewTeam.classList.remove('just-revealed');
+            clearAllViews();
             viewGame.classList.add('active');
         }
 
@@ -355,26 +351,31 @@
         const viewDetail = document.getElementById('viewDetail');
         const viewTeam = document.getElementById('viewTeam');
         const viewGame = document.getElementById('viewGame');
+        const viewOrder = document.getElementById('viewOrder');
+
+        // 清理所有视图（含下单页）
+        function clearAllViews() {
+            viewPlaza.classList.remove('active');
+            viewHall.classList.remove('active');
+            viewDetail.classList.remove('active');
+            viewTeam.classList.remove('active');
+            viewTeam.classList.remove('just-revealed');
+            viewGame.classList.remove('active');
+            if (viewOrder) viewOrder.classList.remove('active');
+        }
 
         // 进入名人堂主页：用「冠军时光长廊」隧道作仪式过场。
         // 历史/底蕴语义在这里更自然，且名人堂是低频深度入口，4s 仪式不会让人厌烦。
         function openHallFromPlaza() {
             playTunnelEntrance(() => {
                 // 中场切到名人堂（tunnel 仍盖在上面），淡出后玩家直接看到名人堂
-                viewPlaza.classList.remove('active');
-                viewGame.classList.remove('active');
-                viewDetail.classList.remove('active');
-                viewTeam.classList.remove('active');
+                clearAllViews();
                 viewHall.classList.add('active');
             });
         }
 
         function showPlaza() {
-            viewHall.classList.remove('active');
-            viewDetail.classList.remove('active');
-            viewTeam.classList.remove('active');
-            viewTeam.classList.remove('just-revealed');
-            viewGame.classList.remove('active');
+            clearAllViews();
             document.querySelectorAll('.game-card[data-game]').forEach(c => c.classList.remove('is-active'));
             viewPlaza.classList.add('active');
         }
@@ -440,7 +441,7 @@
             // Phase 3 (~700ms): swap to detail mid-flash
             setTimeout(() => {
                 updateChampion(champKey);
-                viewHall.classList.remove('active');
+                clearAllViews();
                 viewDetail.classList.add('active');
                 viewDetail.classList.add('just-revealed');
             }, 700);
@@ -458,11 +459,7 @@
         }
 
         function showHall() {
-            viewPlaza.classList.remove('active');
-            viewDetail.classList.remove('active');
-            viewTeam.classList.remove('active');
-            viewTeam.classList.remove('just-revealed');
-            viewGame.classList.remove('active');
+            clearAllViews();
             setTimeout(() => viewHall.classList.add('active'), 100);
         }
 
@@ -495,10 +492,8 @@
                 partnershipBlock.style.display = 'none';
             }
 
-            viewHall.classList.remove('active');
-            viewDetail.classList.remove('active');
+            clearAllViews();
             viewTeam.classList.add('active');
-            viewTeam.classList.remove('just-revealed');
             void viewTeam.offsetWidth;
             viewTeam.classList.add('just-revealed');
             setTimeout(() => viewTeam.classList.remove('just-revealed'), 1200);
@@ -972,8 +967,13 @@
         };
 
         // Detail page nav switching
+        // 视频遮罩打开时禁止切换选手
         document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => updateChampion(item.dataset.champ));
+            item.addEventListener('click', () => {
+                var videoModal = document.getElementById('videoModal');
+                if (videoModal && videoModal.classList.contains('is-open')) return;
+                updateChampion(item.dataset.champ);
+            });
         });
 
         // Initialize currentChamp for first detail open
@@ -1023,6 +1023,43 @@
             window.openVideoModal = openVideoModal;
             window.closeVideoModal = closeVideoModal;
         })();
+
+        // ========== 冠军专线下单详情页 导航 ==========
+        // 记录进入下单页前所在的页面，以便返回
+        var orderReturnChamp = null;
+
+        function goToOrder() {
+            // 记录当前选手，以便返回
+            orderReturnChamp = currentChamp;
+            // 更新下单页标题
+            var data = champions[currentChamp];
+            if (data) {
+                var titleEl = document.getElementById('orderTitle');
+                if (titleEl) titleEl.textContent = '《' + data.game + '》冠军专线';
+            }
+            viewDetail.classList.remove('active');
+            var viewOrder = document.getElementById('viewOrder');
+            if (viewOrder) viewOrder.classList.add('active');
+        }
+
+        function backFromOrder() {
+            var viewOrder = document.getElementById('viewOrder');
+            if (viewOrder) viewOrder.classList.remove('active');
+            // 恢复到之前的选手详情页
+            if (orderReturnChamp) {
+                applyChampionData(orderReturnChamp);
+                currentChamp = orderReturnChamp;
+            }
+            viewDetail.classList.add('active');
+            orderReturnChamp = null;
+        }
+
+        // CTA 按钮点击跳转到下单页
+        document.addEventListener('click', function(e) {
+            var ctaBtn = e.target.closest('.cta-btn-v7');
+            if (!ctaBtn) return;
+            goToOrder();
+        });
 
         // ========== 冠军名人堂开屏弹窗（v6.1） ==========
         // 行为：页面加载后短暂延迟弹出（让玩家先看见 plaza 一眼），关闭/CTA 后不再自动弹。
@@ -1074,6 +1111,15 @@
             window.showHallSplash = showSplash;
             window.hideHallSplash = hideSplash;
         })();
+
+        // 首次渲染完成后移除 no-transition，恢复动画能力
+        requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+                document.querySelectorAll('.no-transition').forEach(function(el) {
+                    el.classList.remove('no-transition');
+                });
+            });
+        });
 
 
         // ============================================================
@@ -1432,29 +1478,33 @@
             }, 560);
         }
 
-        // 侧栏卡片跟随主 Banner 同步切换
+        // 侧栏卡片跟随主 Banner 同步切换（广场 + 游戏页两套侧栏同步）
         function syncSidebarCards(isState1) {
-            var entry1 = document.querySelector('#sidebarStack .sidebar-entry-1');
-            var entry2 = document.querySelector('#sidebarStack .sidebar-entry-2');
-            if (!entry1 || !entry2) return;
-            if (isState1) {
-                entry1.classList.add('is-top');
-                entry2.classList.remove('is-top');
-            } else {
-                entry2.classList.add('is-top');
-                entry1.classList.remove('is-top');
-            }
+            var stacks = document.querySelectorAll('#sidebarStack, #sidebarStackGame');
+            stacks.forEach(function(stack) {
+                var entry1 = stack.querySelector('.sidebar-entry-1');
+                var entry2 = stack.querySelector('.sidebar-entry-2');
+                if (!entry1 || !entry2) return;
+                if (isState1) {
+                    entry1.classList.add('is-top');
+                    entry2.classList.remove('is-top');
+                } else {
+                    entry2.classList.add('is-top');
+                    entry1.classList.remove('is-top');
+                }
+            });
         }
 
-        // 点击底层卡片露出的边缘也触发切换
-        document.addEventListener('click', function(e) {
+        // Banner 区域统一点击：任意卡片区域 → 进入名人堂；切换仅由按钮负责
+        (function() {
             var stack = document.getElementById('bannerStack');
             if (!stack) return;
-            var rect = stack.getBoundingClientRect();
-            var clickX = e.clientX - rect.left;
-            // 露出区域在右侧 88%-100%
-            if (clickX > rect.width * 0.88) {
-                e.stopPropagation();
-                toggleBannerStack();
-            }
-        });
+            stack.addEventListener('click', function(e) {
+                // 切换按钮有自己的 onclick，不在这里处理
+                if (e.target.closest('.stack-switch-btn')) return;
+                // 点击任何卡片区域（顶层或底层露出部分）→ 进入名人堂
+                if (e.target.closest('.stack-card')) {
+                    openHallFromPlaza();
+                }
+            });
+        })();
