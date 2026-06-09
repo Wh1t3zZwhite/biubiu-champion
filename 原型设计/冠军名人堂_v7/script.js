@@ -298,8 +298,17 @@
                 championBtn.onclick = () => {
                     detailReturnTo = 'game';
                     detailReturnGameKey = key;
-                    // v7 new: 圣光降临过场（替代原 devGoto 硬切）
-                    playDivineLight(detailKey, key);
+                    // v7: 圣光降临过场 — 动效高潮时切到冠军详情页
+                    playDivineLight(detailKey, key, function() {
+                        applyChampionData(detailKey);
+                        currentChamp = detailKey;
+                        clearAllViews();
+                        viewDetail.classList.add('active');
+                        viewDetail.classList.add('dl-entering');
+                        setTimeout(function() {
+                            viewDetail.classList.remove('dl-entering');
+                        }, 700);
+                    });
                 };
             } else {
                 championBtn.style.display = 'none';
@@ -1054,11 +1063,23 @@
             orderReturnChamp = null;
         }
 
-        // CTA 按钮点击跳转到下单页
+        // CTA 按钮点击 → 圣光降临过场 → 跳转到冠军专线下单页
         document.addEventListener('click', function(e) {
             var ctaBtn = e.target.closest('.cta-btn-v7');
             if (!ctaBtn) return;
-            goToOrder();
+            // 使用圣光降临动效作为过渡（与游戏加速页 → 详情页同款视觉语言）
+            var champKey = currentChamp || 'xiaohai';
+            playDivineLight(champKey, null, function() {
+                goToOrder();
+                // 给下单页添加入场动画类
+                var orderView = document.getElementById('viewOrder');
+                if (orderView) {
+                    orderView.classList.add('dl-entering');
+                    setTimeout(function() {
+                        orderView.classList.remove('dl-entering');
+                    }, 700);
+                }
+            });
         });
 
         // ========== 冠军名人堂开屏弹窗（v6.1） ==========
@@ -1367,13 +1388,16 @@
             }, 5500);
         }
 
-        function playDivineLight(detailKey, sourceGameKey) {
+        // playDivineLight 支持两种模式：
+        //   1. 演示模式（无 onTransition）：仅播放动效后淡出，不做任何视图跳转
+        //   2. 过渡模式（传入 onTransition 回调）：动效高潮时执行视图切换，然后收束消散
+        function playDivineLight(detailKey, sourceGameKey, onTransition) {
             if (pushBusy) return;
             const overlay = document.getElementById('divineLight');
             const data = champions[detailKey];
             if (!overlay || !data) {
-                // 兜底：直接硬切
-                devGoto('detail', detailKey);
+                // 兜底：直接执行回调（硬切）
+                if (typeof onTransition === 'function') onTransition();
                 return;
             }
             pushBusy = true;
@@ -1381,7 +1405,7 @@
             // 清掉残留 phase 类
             overlay.classList.remove(
                 'is-active', 'phase-darken', 'phase-column',
-                'phase-burst', 'phase-settle'
+                'phase-burst', 'phase-settle', 'phase-fadeout'
             );
 
             // 把冠军专属色写到 CSS 变量
@@ -1416,24 +1440,53 @@
                 overlay.classList.add('phase-burst');
             }, 1500);
 
-            // Phase D (2500ms)：动效收束 —— 仅做平滑淡出，不做视图跳转
-            // (原跳转逻辑已移除：现在只用于演示动效本身，播完回到来源页面)
-            setTimeout(function() {
-                overlay.classList.add('phase-fadeout');
-            }, 2500);
+            if (typeof onTransition === 'function') {
+                // ===== 过渡模式：phase-settle 时执行视图跳转，然后覆盖层消散 =====
 
-            // Phase E (3200ms)：清理
-            setTimeout(function() {
-                overlay.classList.remove(
-                    'is-active', 'phase-darken', 'phase-column',
-                    'phase-burst', 'phase-settle', 'phase-fadeout'
-                );
-                overlay.style.removeProperty('--dl-tint');
-                overlay.style.removeProperty('--dl-spotlight');
-                const layer = document.getElementById('dlParticles');
-                if (layer) layer.innerHTML = '';
-                pushBusy = false;
-            }, 3200);
+                // Phase D (2500ms)：settle — 光柱化为聚光 + 执行视图切换
+                setTimeout(function() {
+                    overlay.classList.add('phase-settle');
+                    onTransition();
+                }, 2500);
+
+                // Phase E (3200ms)：覆盖层整体淡出
+                setTimeout(function() {
+                    overlay.classList.add('phase-fadeout');
+                }, 3200);
+
+                // Phase F (3900ms)：清理
+                setTimeout(function() {
+                    overlay.classList.remove(
+                        'is-active', 'phase-darken', 'phase-column',
+                        'phase-burst', 'phase-settle', 'phase-fadeout'
+                    );
+                    overlay.style.removeProperty('--dl-tint');
+                    overlay.style.removeProperty('--dl-spotlight');
+                    const layer = document.getElementById('dlParticles');
+                    if (layer) layer.innerHTML = '';
+                    pushBusy = false;
+                }, 3900);
+            } else {
+                // ===== 演示模式：仅播放动效后淡出，不做视图跳转 =====
+
+                // Phase D (2500ms)：动效收束 — 平滑淡出
+                setTimeout(function() {
+                    overlay.classList.add('phase-fadeout');
+                }, 2500);
+
+                // Phase E (3200ms)：清理
+                setTimeout(function() {
+                    overlay.classList.remove(
+                        'is-active', 'phase-darken', 'phase-column',
+                        'phase-burst', 'phase-settle', 'phase-fadeout'
+                    );
+                    overlay.style.removeProperty('--dl-tint');
+                    overlay.style.removeProperty('--dl-spotlight');
+                    const layer = document.getElementById('dlParticles');
+                    if (layer) layer.innerHTML = '';
+                    pushBusy = false;
+                }, 3200);
+            }
         }
 
         // 暴露给 dev 面板调试
@@ -1502,9 +1555,119 @@
             stack.addEventListener('click', function(e) {
                 // 切换按钮有自己的 onclick，不在这里处理
                 if (e.target.closest('.stack-switch-btn')) return;
+                // 轮播指示点和活动按钮不触发进入名人堂
+                if (e.target.closest('.promo-dots') || e.target.closest('.promo-btns')) return;
                 // 点击任何卡片区域（顶层或底层露出部分）→ 进入名人堂
                 if (e.target.closest('.stack-card')) {
                     openHallFromPlaza();
                 }
             });
+        })();
+
+        // ========== 限免活动卡片内轮播 ==========
+        (function() {
+            var carousel = document.getElementById('promoCarousel');
+            var dotsWrap = document.getElementById('promoDots');
+            if (!carousel || !dotsWrap) return;
+
+            var slides = carousel.querySelectorAll('.promo-slide');
+            var dots = dotsWrap.querySelectorAll('.promo-dot');
+            if (slides.length < 2) return;
+
+            // 每张活动卡对应的侧边栏 / peek-label 数据
+            var promoData = [
+                { icon: 'AION', title: '限免加速',  sub: 'EWC限免季进行中 ›', peek1: '限免加速', peek2: 'EWC限免季' },
+                { icon: 'PUBG', title: 'PUBG限免',  sub: '绝地求生限免加速 ›', peek1: 'PUBG',     peek2: '限免加速' },
+                { icon: 'SF6',  title: '街霸6限免', sub: '格斗冠军限免 ›',     peek1: '街霸6',    peek2: '限免加速' }
+            ];
+
+            var currentSlide = 0;
+            var autoTimer = null;
+            var pauseTimer = null;
+            var AUTO_INTERVAL = 4000;   // 自动轮播间隔
+            var PAUSE_RESUME  = 8000;   // 手动操作后暂停恢复时间
+
+            function goToSlide(idx) {
+                if (idx === currentSlide || idx < 0 || idx >= slides.length) return;
+                slides[currentSlide].classList.remove('promo-slide-active');
+                if (dots[currentSlide]) dots[currentSlide].classList.remove('promo-dot-active');
+                currentSlide = idx;
+                slides[currentSlide].classList.add('promo-slide-active');
+                if (dots[currentSlide]) dots[currentSlide].classList.add('promo-dot-active');
+                syncPromoSidebar(idx);
+                syncPromoPeekLabel(idx);
+            }
+
+            function nextSlide() {
+                goToSlide((currentSlide + 1) % slides.length);
+            }
+
+            function startAuto() {
+                stopAuto();
+                autoTimer = setInterval(nextSlide, AUTO_INTERVAL);
+            }
+
+            function stopAuto() {
+                if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+            }
+
+            function pauseAndResume() {
+                stopAuto();
+                if (pauseTimer) clearTimeout(pauseTimer);
+                pauseTimer = setTimeout(startAuto, PAUSE_RESUME);
+            }
+
+            // 点击指示点切换
+            dots.forEach(function(dot, i) {
+                dot.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    goToSlide(i);
+                    pauseAndResume();
+                });
+            });
+
+            // 鼠标悬停暂停，离开恢复
+            var card2 = document.querySelector('.stack-card-2');
+            if (card2) {
+                card2.addEventListener('mouseenter', function() {
+                    stopAuto();
+                    if (pauseTimer) { clearTimeout(pauseTimer); pauseTimer = null; }
+                });
+                card2.addEventListener('mouseleave', function() {
+                    startAuto();
+                });
+            }
+
+            // 同步侧边栏 entry-2 的文案
+            function syncPromoSidebar(idx) {
+                var d = promoData[idx];
+                if (!d) return;
+                var stacks = document.querySelectorAll('#sidebarStack, #sidebarStackGame');
+                stacks.forEach(function(stack) {
+                    var entry2 = stack.querySelector('.sidebar-entry-2');
+                    if (!entry2) return;
+                    var icon  = entry2.querySelector('.promo-entry-icon');
+                    var title = entry2.querySelector('.hall-entry-title');
+                    var sub   = entry2.querySelector('.hall-entry-sub');
+                    if (icon)  icon.textContent  = d.icon;
+                    if (title) title.textContent = d.title;
+                    if (sub)   sub.textContent   = d.sub;
+                });
+            }
+
+            // 同步底层卡片露出区域的标签
+            function syncPromoPeekLabel(idx) {
+                var d = promoData[idx];
+                if (!d) return;
+                var line1 = document.getElementById('peekPromoLine1');
+                var line2 = document.getElementById('peekPromoLine2');
+                if (line1) line1.textContent = d.peek1;
+                if (line2) line2.textContent = d.peek2;
+            }
+
+            // 启动自动轮播
+            startAuto();
+
+            // 暴露给外部调试
+            window.promoCarousel = { goTo: goToSlide, pause: stopAuto, resume: startAuto };
         })();

@@ -259,29 +259,99 @@
                                 </div>
                             </div>
 
-                            <!-- Card 2: 游戏限免活动卡（右对齐） -->
+                            <!-- Card 2: 游戏限免活动卡（右对齐）— 内含3张活动轮播 -->
                             <div class="plaza-banner stack-card stack-card-2 banner-promo">
                                 <div class="promo-bg"></div>
-                                <div class="promo-top-bar">
-                                    <span class="promo-badge-last">最后<strong>1</strong>天</span>
-                                    <span class="promo-countdown">00 天 00:00:59 后结束</span>
-                                </div>
-                                <div class="promo-body">
-                                    <div class="promo-info">
-                                        <div class="promo-game-row">
-                                            <span class="promo-game-icon">AION</span>
-                                            <span class="promo-game-name">永恒之塔2</span>
+
+                                <!-- 轮播容器 -->
+                                <div class="promo-carousel" id="promoCarousel">
+                                    <!-- Slide 1: 永恒之塔2 EWC限免 -->
+                                    <div class="promo-slide promo-slide-active">
+                                        <div class="promo-top-bar">
+                                            <span class="promo-badge-last">最后<strong>1</strong>天</span>
+                                            <span class="promo-countdown">00 天 00:00:59 后结束</span>
                                         </div>
-                                        <p class="promo-desc">07-08日至08-24EWC电竞世界杯限免季期间，共有20款超重磅游戏限免加速，一起为电竞赛事呐喊助威吧～</p>
-                                        <div class="promo-btns">
-                                            <button class="promo-btn-go">⚡ 立即加速</button>
-                                            <button class="promo-btn-alt">⊕ 活动详情</button>
+                                        <div class="promo-body">
+                                            <div class="promo-info">
+                                                <div class="promo-game-row">
+                                                    <span class="promo-game-icon">AION</span>
+                                                    <span class="promo-game-name">永恒之塔2</span>
+                                                </div>
+                                                <p class="promo-desc">07-08日至08-24EWC电竞世界杯限免季期间，共有20款超重磅游戏限免加速，一起为电竞赛事呐喊助威吧～</p>
+                                                <div class="promo-btns">
+                                                    <button class="promo-btn-go">⚡ 立即加速</button>
+                                                    <button class="promo-btn-alt">⊕ 活动详情</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="promo-figures">
+                                            <div class="promo-fig">角色A</div>
+                                            <div class="promo-fig">角色B</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Slide 2: PUBG 限免加速 -->
+                                    <div class="promo-slide">
+                                        <div class="promo-top-bar">
+                                            <span class="promo-badge-last">限时<strong>7</strong>天</span>
+                                            <span class="promo-countdown">06 天 12:30:00 后结束</span>
+                                        </div>
+                                        <div class="promo-body">
+                                            <div class="promo-info">
+                                                <div class="promo-game-row">
+                                                    <span class="promo-game-icon promo-icon-pubg">PUBG</span>
+                                                    <span class="promo-game-name">绝地求生</span>
+                                                </div>
+                                                <p class="promo-desc">PUBG 限时免费加速，低延迟畅享绝地求生，冠军同款网络体验等你来战！</p>
+                                                <div class="promo-btns">
+                                                    <button class="promo-btn-go">⚡ 立即加速</button>
+                                                    <button class="promo-btn-alt">⊕ 活动详情</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="promo-figures">
+                                            <div class="promo-fig promo-fig-pubg">角色C</div>
+                                            <div class="promo-fig promo-fig-pubg">角色D</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Slide 3: 街霸6 限免加速 -->
+                                    <div class="promo-slide">
+                                        <div class="promo-top-bar">
+                                            <span class="promo-badge-last">限时<strong>3</strong>天</span>
+                                            <span class="promo-countdown">02 天 08:15:00 后结束</span>
+                                        </div>
+                                        <div class="promo-body">
+                                            <div class="promo-info">
+                                                <div class="promo-game-row">
+                                                    <span class="promo-game-icon promo-icon-sf6">SF6</span>
+                                                    <span class="promo-game-name">街头霸王6</span>
+                                                </div>
+                                                <p class="promo-desc">街霸6 限时免费加速，帧级低延迟对战体验，与世界冠军同场竞技！</p>
+                                                <div class="promo-btns">
+                                                    <button class="promo-btn-go">⚡ 立即加速</button>
+                                                    <button class="promo-btn-alt">⊕ 活动详情</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="promo-figures">
+                                            <div class="promo-fig promo-fig-sf6">角色E</div>
+                                            <div class="promo-fig promo-fig-sf6">角色F</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="promo-figures">
-                                    <div class="promo-fig">角色A</div>
-                                    <div class="promo-fig">角色B</div>
+
+                                <!-- 轮播指示点 -->
+                                <div class="promo-dots" id="promoDots">
+                                    <span class="promo-dot promo-dot-active"></span>
+                                    <span class="promo-dot"></span>
+                                    <span class="promo-dot"></span>
+                                </div>
+
+                                <!-- 底层时右侧露出区域的标签（随轮播同步） -->
+                                <div class="peek-label" id="peekLabelPromo">
+                                    <div class="peek-label-line" id="peekPromoLine1">限免加速</div>
+                                    <div class="peek-label-line" id="peekPromoLine2">EWC限免季</div>
                                 </div>
                             </div>
 

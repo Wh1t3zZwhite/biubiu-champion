@@ -3250,11 +3250,13 @@
             bottom: 0;
             width: 13.6%;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.4s ease;
+            z-index: 4;
         }
         .peek-label-line {
             font-size: 11px;
@@ -3267,6 +3269,10 @@
         }
         /* 只在 card-1 处于底层（state-2）时显示 */
         .banner-stack.state-2 .stack-card-1 .peek-label {
+            opacity: 1;
+        }
+        /* 只在 card-2 处于底层（state-1）时显示 */
+        .banner-stack.state-1 .stack-card-2 .peek-label {
             opacity: 1;
         }
 
@@ -3461,6 +3467,90 @@
 
         .promo-fig + .promo-fig {
             margin-left: -30px;
+        }
+
+        /* ========== 限免卡片内轮播 ========== */
+        .promo-carousel {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+        }
+
+        .promo-slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .promo-slide.promo-slide-active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 轮播指示点 */
+        .promo-dots {
+            position: absolute;
+            bottom: 14px;
+            left: 20px;
+            z-index: 5;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .promo-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .promo-dot:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .promo-dot.promo-dot-active {
+            width: 18px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        /* 不同游戏的图标配色 */
+        .promo-icon-pubg {
+            background: linear-gradient(135deg, #d4a24c, #c48a30) !important;
+        }
+
+        .promo-icon-sf6 {
+            background: linear-gradient(135deg, #c44a6a, #a03060) !important;
+        }
+
+        /* 不同游戏角色占位配色区分 */
+        .promo-fig-pubg {
+            border-color: rgba(212, 162, 76, 0.25) !important;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(212, 162, 76, 0.04),
+                rgba(212, 162, 76, 0.04) 10px,
+                rgba(212, 162, 76, 0.08) 10px,
+                rgba(212, 162, 76, 0.08) 20px
+            ) !important;
+        }
+
+        .promo-fig-sf6 {
+            border-color: rgba(196, 74, 106, 0.25) !important;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(196, 74, 106, 0.04),
+                rgba(196, 74, 106, 0.04) 10px,
+                rgba(196, 74, 106, 0.08) 10px,
+                rgba(196, 74, 106, 0.08) 20px
+            ) !important;
         }
 
         .plaza-section-sub {
@@ -5897,6 +5987,21 @@
         @keyframes dlContentFadeIn {
             from { opacity: 0; transform: translateY(8px); }
             to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ------- order page 入场动画（圣光降临后的冠军专线页） ------- */
+        .view.dl-entering .order-main {
+            animation: dlContentFadeIn 0.55s ease-out forwards;
+            opacity: 0;
+            animation-delay: 0.08s;
+        }
+        .view.dl-entering .order-bg-glow {
+            animation: dlOrderGlow 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes dlOrderGlow {
+            from { opacity: 0; transform: translateX(-50%) scale(0.8); }
+            to   { opacity: 1; transform: translateX(-50%) scale(1); }
         }
 
         /* ==================================================================
