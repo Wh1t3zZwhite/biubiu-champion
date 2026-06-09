@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biubiu 冠军名人堂</title>
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+    <!-- MVP DEV PANEL — fixed outside the prototype -->
+    <div class="dev-panel" id="devPanel">
+        <div class="dev-panel-header">
+            <span class="dev-title">MVP 调试</span>
+            <button class="dev-toggle" onclick="document.getElementById('devPanel').classList.toggle('collapsed')">_</button>
+        </div>
+        <div class="dev-panel-body">
+            <div class="dev-section">
+                <div class="dev-label">页面</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devGoto('plaza')">广场</button>
+                    <button class="dev-btn" onclick="devGoto('hall')">名人堂</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">弹窗 / 过场</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="window.showHallSplash && window.showHallSplash()">开屏广告</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">圣光降临（游戏页→详情）</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="window.playDivineLight && window.playDivineLight('xiaohai', 'sf6')">曾卓君</button>
+                    <button class="dev-btn" onclick="window.playDivineLight && window.playDivineLight('aixleft', 'pubg')">左梓轩</button>
+                    <button class="dev-btn" onclick="window.playDivineLight && window.playDivineLight('guo', 'aion2')">郭永军</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">游戏页</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devGoto('game', 'pubg')">PUBG</button>
+                    <button class="dev-btn" onclick="devGoto('game', 'sf6')">街霸6</button>
+                    <button class="dev-btn" onclick="devGoto('game', 'aion2')">永恒之塔2</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">选手详情</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devGoto('detail', 'xiaohai')">曾卓君</button>
+                    <button class="dev-btn" onclick="devGoto('detail', 'aixleft')">左梓轩</button>
+                    <button class="dev-btn" onclick="devGoto('detail', 'guo')">郭永军</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">战队详情</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devGoto('team', 'pero')">PeRo</button>
+                    <button class="dev-btn" onclick="devGoto('team', '4am')">4AM</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'falcons')">Falcons</button>
+                    <button class="dev-btn" onclick="devGoto('team', '17')">17</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'ig')">IG</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'rng')">RNG</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'ag')">AG</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'edg')">EDG</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app">
+        <!-- 冠军名人堂开屏（v6.1 沉浸版）：整个 .app 框成为画布，无卡片边框。
+             关闭按钮放在 .app 右上角，跟内容物理分离。 -->
+        <div class="hall-splash" id="hallSplash" aria-hidden="true">
+            <div class="hall-splash-spotlight"></div>
+            <button class="hall-splash-close" id="hallSplashClose" type="button" aria-label="关闭">×</button>
+            <div class="hall-splash-content" role="dialog" aria-labelledby="hallSplashTitle">
+                <h1 class="hall-splash-title" id="hallSplashTitle">Biubiu 冠军名人堂</h1>
+                <div class="hall-splash-subtitle-en">HALL OF BIUBIU</div>
+                <div class="hall-splash-heroes">
+                    <div class="hall-splash-hero">
+                        <div class="hall-splash-portrait"><span>选手形象</span></div>
+                        <div class="hall-splash-id">Xiaohai</div>
+                        <div class="hall-splash-name-cn">曾卓君</div>
+                    </div>
+                    <div class="hall-splash-hero">
+                        <div class="hall-splash-portrait"><span>选手形象</span></div>
+                        <div class="hall-splash-id">Aixleft</div>
+                        <div class="hall-splash-name-cn">左梓轩</div>
+                    </div>
+                </div>
+                <div class="hall-splash-headline">
+                    <span class="line"></span>
+                    <span class="text">致敬定义电竞冠军的人</span>
+                    <span class="line"></span>
+                </div>
+                <button class="hall-splash-cta" id="hallSplashCta" type="button">点击前往</button>
+            </div>
+        </div>
+
+        <!-- Soft-focus push transition overlay (scoped to the prototype frame) -->
+        <div class="push-overlay" id="pushOverlay">
+            <div class="push-vignette"></div>
+        </div>
+
+        <!-- Grand entrance curtain (game page → champion detail page) -->
+        <div class="grand-curtain" id="grandCurtain">
+            <div class="grand-portal-backdrop"></div>
+            <div class="grand-portal" id="grandPortal">
+                <div class="grand-portal-core"></div>
+                <div class="grand-portal-ring outer"></div>
+                <div class="grand-portal-ring"></div>
+            </div>
+            <div class="grand-curtain-sparks" id="grandCurtainSparks"></div>
+        </div>
+
+        <!-- 冠军时光长廊 隧道入场过场（v6.1）：进入名人堂主页时播放 -->
+        <div class="grand-tunnel" id="grandTunnel" aria-hidden="true">
+            <div class="tunnel-stage">
+                <div class="tunnel-rings" id="tunnelRings"></div>
+            </div>
+            <div class="tunnel-streaks" id="tunnelStreaks"></div>
+            <div class="tunnel-light"></div>
+        </div>
+        <!-- 暖白幕：跟 grand-tunnel 同级，独立淡入淡出，承接"突破白光 → 缓缓显形" -->
+        <div class="tunnel-veil" id="tunnelVeil" aria-hidden="true"></div>
+
+        <!-- 圣光降临过场：游戏加速界面 → 冠军详情页（v7 new）
+             4 阶段：darken → column → burst → settle。约 3s。
+             所有图层 100% 通用，仅末段 tint/spotlight 颜色按冠军切换 CSS 变量。 -->
+        <div class="divine-light" id="divineLight" aria-hidden="true">
+            <div class="dl-dark-veil"></div>
+            <div class="dl-bg-tint"></div>
+            <div class="dl-column"></div>
+            <div class="dl-column-glow"></div>
+            <div class="dl-ripple"></div>
+            <div class="dl-ripple dl-ripple-2"></div>
+            <div class="dl-burst"></div>
+            <div class="dl-spotlight"></div>
+            <div class="dl-particles" id="dlParticles"></div>
+        </div>
+
+
+        <!-- =========================== -->
+        <!-- PLAZA VIEW (biubiu 广场入口) -->
+        <!-- =========================== -->
+        <div class="view active" id="viewPlaza">
+            <div class="plaza-page">
+                <!-- Top bar -->
+                <div class="plaza-topbar">
+                    <div class="plaza-brand">
+                        <span class="brand-logo">biubiu</span>
+                        <span class="brand-sub">阿里巴巴旗下产品<br>灵活互娱旗下产品</span>
+                    </div>
+
+                    <div class="plaza-user-promo">
+                        <div class="avatar"></div>
+                        <div class="promo-text">
+                            <span class="promo-top">会员充值</span>
+                            <span class="promo-bottom">新人首单优惠<span class="countdown">剩 00:00:24</span></span>
+                        </div>
+                    </div>
+
+                    <div class="plaza-search">
+                        <span class="search-icon">⌕</span>
+                        <input type="text" placeholder="搜索游戏" />
+                    </div>
+
+                    <div class="plaza-topbar-actions">
+                        <button class="plaza-btn-pill btn-exchange"><span class="pill-emoji">⇋</span> 兑换</button>
+                        <button class="plaza-btn-pill btn-student"><span class="btn-mascot"></span>学生优惠</button>
+                        <div class="plaza-win-ctrl">
+                            <span>▦</span>
+                            <span>◷</span>
+                            <span>—</span>
+                            <span>✕</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="plaza-body">
+                    <!-- Sidebar -->
+                    <aside class="plaza-sidebar">
+                        <div class="sidebar-card-stack no-transition" id="sidebarStack">
+                            <div class="hall-entry-card sidebar-entry sidebar-entry-1 is-top" onclick="showPlaza()">
+                                <div class="hall-entry-deco"></div>
+                                <div class="hall-entry-title">Biubiu冠军名人堂</div>
+                                <div class="hall-entry-sub">探寻冠军之路</div>
+                            </div>
+                            <div class="hall-entry-card sidebar-entry sidebar-entry-2 promo-entry" onclick="showPlaza()">
+                                <div class="promo-entry-icon">AION</div>
+                                <div class="hall-entry-title">限免加速</div>
+                                <div class="hall-entry-sub">EWC限免季进行中 ›</div>
+                            </div>
+                        </div>
+
+                        <div class="my-games-header">
+                            <span>我的游戏(3)</span>
+                            <span class="arrow-right">›</span>
+                        </div>
+
+                        <div class="my-games-list">
+                            <div class="game-card" data-game="pubg" onclick="showGame('pubg')">
+                                <div class="game-cover cover-pubg">PUBG<br>BATTLEGROUNDS</div>
+                                <div class="game-name">绝地求生</div>
+                            </div>
+                            <div class="game-card" data-game="sf6" onclick="showGame('sf6')">
+                                <div class="game-cover cover-sf6">STREET<br>FIGHTER 6</div>
+                                <div class="game-name">街头霸王6</div>
+                            </div>
+                            <div class="game-card" data-game="aion2" onclick="showGame('aion2')">
+                                <div class="game-cover cover-aion">AION 2</div>
+                                <div class="game-name">永恒之塔2</div>
+                            </div>
+                        </div>
+
+                        <button class="all-games-btn">+ 添加游戏</button>
+                    </aside>
+
+                    <!-- Main -->
+                    <main class="plaza-main">
+                        <div class="plaza-section-title">biubiu广场</div>
+
+                        <div class="banner-stack state-1 no-transition" id="bannerStack">
+                            <!-- Card 1: 冠军名人堂（默认在上，左对齐） -->
+                            <div class="plaza-banner stack-card stack-card-1">
+                                <div class="banner-corner tl"></div>
+                                <div class="banner-corner tr"></div>
+                                <div class="banner-corner bl"></div>
+                                <div class="banner-corner br"></div>
+
+                                <div class="banner-text-block">
+                                    <div class="banner-title-wrap">
+                                        <div class="banner-title">
+                                            <span class="title-brand">Biubiu</span>
+                                            <span class="title-cn">冠军名人堂</span>
+                                        </div>
+                                        <div class="banner-en-tag">HALL OF BIUBIU</div>
+                                    </div>
+                                    <div class="banner-desc">与<span class="desc-brand">Biubiu</span>一起，致敬不朽传奇</div>
+                                    <button class="banner-gold-btn" onclick="event.stopPropagation(); openHallFromPlaza()">探寻冠军之路</button>
+                                </div>
+
+                                <div class="banner-figures">
+                                    <div class="figure-spotlight"></div>
+                                    <div class="banner-floor-light"></div>
+                                    <div class="banner-placeholder">曾卓君</div>
+                                    <div class="banner-placeholder">左梓轩</div>
+                                </div>
+
+                                <!-- 底层时右侧露出区域的标签 -->
+                                <div class="peek-label">
+                                    <div class="peek-label-line">Biubiu</div>
+                                    <div class="peek-label-line">冠军名人堂</div>
+                                </div>
+                            </div>
+
+                            <!-- Card 2: 游戏限免活动卡（右对齐）— 内含3张活动轮播 -->
+                            <div class="plaza-banner stack-card stack-card-2 banner-promo">
+                                <div class="promo-bg"></div>
+
+                                <!-- 轮播容器 -->
+                                <div class="promo-carousel" id="promoCarousel">
+                                    <!-- Slide 1: 永恒之塔2 EWC限免 -->
+                                    <div class="promo-slide promo-slide-active">
+                                        <div class="promo-top-bar">
+                                            <span class="promo-badge-last">最后<strong>1</strong>天</span>
+                                            <span class="promo-countdown">00 天 00:00:59 后结束</span>
+                                        </div>
+                                        <div class="promo-body">
+                                            <div class="promo-info">
+                                                <div class="promo-game-row">
+                                                    <span class="promo-game-icon">AION</span>
+                                                    <span class="promo-game-name">永恒之塔2</span>
+                                                </div>
+                                                <p class="promo-desc">07-08日至08-24EWC电竞世界杯限免季期间，共有20款超重磅游戏限免加速，一起为电竞赛事呐喊助威吧～</p>
+                                                <div class="promo-btns">
+                                                    <button class="promo-btn-go">⚡ 立即加速</button>
+                                                    <button class="promo-btn-alt">⊕ 活动详情</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="promo-figures">
+                                            <div class="promo-fig">角色A</div>
+                                            <div class="promo-fig">角色B</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Slide 2: PUBG 限免加速 -->
+                                    <div class="promo-slide">
+                                        <div class="promo-top-bar">
+                                            <span class="promo-badge-last">限时<strong>7</strong>天</span>
+                                            <span class="promo-countdown">06 天 12:30:00 后结束</span>
+                                        </div>
+                                        <div class="promo-body">
+                                            <div class="promo-info">
+                                                <div class="promo-game-row">
+                                                    <span class="promo-game-icon promo-icon-pubg">PUBG</span>
+                                                    <span class="promo-game-name">绝地求生</span>
+                                                </div>
+                                                <p class="promo-desc">PUBG 限时免费加速，低延迟畅享绝地求生，冠军同款网络体验等你来战！</p>
+                                                <div class="promo-btns">
+                                                    <button class="promo-btn-go">⚡ 立即加速</button>
+                                                    <button class="promo-btn-alt">⊕ 活动详情</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="promo-figures">
+                                            <div class="promo-fig promo-fig-pubg">角色C</div>
+                                            <div class="promo-fig promo-fig-pubg">角色D</div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Slide 3: 街霸6 限免加速 -->
+                                    <div class="promo-slide">
+                                        <div class="promo-top-bar">
+                                            <span class="promo-badge-last">限时<strong>3</strong>天</span>
+                                            <span class="promo-countdown">02 天 08:15:00 后结束</span>
+                                        </div>
+                                        <div class="promo-body">
+                                            <div class="promo-info">
+                                                <div class="promo-game-row">
+                                                    <span class="promo-game-icon promo-icon-sf6">SF6</span>
+                                                    <span class="promo-game-name">街头霸王6</span>
+                                                </div>
+                                                <p class="promo-desc">街霸6 限时免费加速，帧级低延迟对战体验，与世界冠军同场竞技！</p>
+                                                <div class="promo-btns">
+                                                    <button class="promo-btn-go">⚡ 立即加速</button>
+                                                    <button class="promo-btn-alt">⊕ 活动详情</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="promo-figures">
+                                            <div class="promo-fig promo-fig-sf6">角色E</div>
+                                            <div class="promo-fig promo-fig-sf6">角色F</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 轮播指示点 -->
+                                <div class="promo-dots" id="promoDots">
+                                    <span class="promo-dot promo-dot-active"></span>
+                                    <span class="promo-dot"></span>
+                                    <span class="promo-dot"></span>
+                                </div>
+
+                                <!-- 底层时右侧露出区域的标签（随轮播同步） -->
+                                <div class="peek-label" id="peekLabelPromo">
+                                    <div class="peek-label-line" id="peekPromoLine1">限免加速</div>
+                                    <div class="peek-label-line" id="peekPromoLine2">EWC限免季</div>
+                                </div>
+                            </div>
+
+                            <!-- 切换按钮 -->
+                            <button class="stack-switch-btn" id="stackSwitchBtn" type="button" onclick="event.stopPropagation(); toggleBannerStack()">
+                                <span class="switch-arrow">←</span>
+                            </button>
+                        </div>
+
+                        <div class="plaza-section-sub">更多精彩福利</div>
+
+                        <div class="plaza-rewards-grid">
+                            <div class="reward-tile tile-cod">
+                                <div class="reward-thumb">COD 21</div>
+                                <div class="reward-content">
+                                    <div class="reward-title">使命召唤：黑色行动6</div>
+                                    <div class="reward-sub">参与活动，抽COD21提前测试资格</div>
+                                </div>
+                                <span class="badge badge-beta">Beta测试</span>
+                                <span class="tag-bottom">限免</span>
+                                <span class="badge-corner">仅剩3天</span>
+                            </div>
+
+                            <div class="reward-tile">
+                                <svg class="reward-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                                </svg>
+                                <div class="reward-content">
+                                    <div class="reward-title">限免加速游戏库</div>
+                                    <div class="reward-sub">当前总共1896款</div>
+                                </div>
+                            </div>
+
+                            <div class="reward-tile">
+                                <svg class="reward-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M12 3v13M6 11l6 6 6-6M4 21h16"/>
+                                </svg>
+                                <div class="reward-content">
+                                    <div class="reward-title">游戏免费领取</div>
+                                    <div class="reward-sub">一键轻松"喜加一"</div>
+                                </div>
+                                <span class="badge badge-new">上新3款</span>
+                            </div>
+
+                            <div class="reward-tile tile-activity">
+                                <svg class="reward-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="8" width="18" height="13" rx="1"/>
+                                    <path d="M3 12h18M12 8v13M8 8c-1.5-2 0-4 2-4s2.5 2 2 4M16 8c1.5-2 0-4-2-4s-2.5 2-2 4"/>
+                                </svg>
+                                <div class="reward-content">
+                                    <div class="reward-title">活动中心</div>
+                                    <div class="reward-sub">16款活动进行中</div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- GAME DETAIL VIEW -->
+        <!-- =========================== -->
+        <div class="view" id="viewGame">
+            <div class="plaza-page">
+                <!-- Top bar (reuse plaza structure) -->
+                <div class="plaza-topbar">
+                    <div class="plaza-brand">
+                        <span class="brand-logo">biubiu</span>
+                        <span class="brand-sub">阿里巴巴旗下产品<br>灵活互娱旗下产品</span>
+                    </div>
+
+                    <div class="plaza-user-promo">
+                        <div class="avatar"></div>
+                        <div class="promo-text">
+                            <span class="promo-top">学生优惠</span>
+                        </div>
+                    </div>
+
+                    <div class="plaza-search">
+                        <span class="search-icon">⌕</span>
+                        <input type="text" placeholder="周年庆好礼送" />
+                    </div>
+
+                    <div class="plaza-topbar-actions">
+                        <button class="plaza-btn-pill btn-exchange"><span class="pill-emoji">⇋</span> 兑换</button>
+                        <button class="plaza-btn-pill btn-student"><span class="btn-mascot"></span>学生优惠</button>
+                        <div class="plaza-win-ctrl">
+                            <span>▦</span>
+                            <span>◷</span>
+                            <span>—</span>
+                            <span>✕</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="plaza-body">
+                    <!-- Sidebar (same games list as plaza) -->
+                    <aside class="plaza-sidebar">
+                        <div class="sidebar-card-stack no-transition" id="sidebarStackGame">
+                            <div class="hall-entry-card sidebar-entry sidebar-entry-1 is-top" onclick="showPlaza()">
+                                <div class="hall-entry-deco"></div>
+                                <div class="hall-entry-title">Biubiu冠军名人堂</div>
+                                <div class="hall-entry-sub">探寻冠军之路</div>
+                            </div>
+                            <div class="hall-entry-card sidebar-entry sidebar-entry-2 promo-entry" onclick="showPlaza()">
+                                <div class="promo-entry-icon">AION</div>
+                                <div class="hall-entry-title">限免加速</div>
+                                <div class="hall-entry-sub">EWC限免季进行中 ›</div>
+                            </div>
+                        </div>
+
+                        <div class="my-games-header">
+                            <span>我的游戏(3)</span>
+                            <span class="arrow-right">›</span>
+                        </div>
+
+                        <div class="my-games-list" id="gameSidebarList">
+                            <div class="game-card" data-game="pubg" onclick="showGame('pubg')">
+                                <div class="game-cover cover-pubg">PUBG<br>BATTLEGROUNDS</div>
+                                <div class="game-name">绝地求生</div>
+                            </div>
+                            <div class="game-card" data-game="sf6" onclick="showGame('sf6')">
+                                <div class="game-cover cover-sf6">STREET<br>FIGHTER 6</div>
+                                <div class="game-name">街头霸王6</div>
+                            </div>
+                            <div class="game-card" data-game="aion2" onclick="showGame('aion2')">
+                                <div class="game-cover cover-aion">AION 2</div>
+                                <div class="game-name">永恒之塔2</div>
+                            </div>
+                        </div>
+
+                        <button class="all-games-btn" onclick="showPlaza()">‹ 返回广场</button>
+                    </aside>
+
+                    <!-- Game main -->
+                    <div class="game-main">
+                        <div class="game-hero">
+                            <div class="game-hero-bg" id="gameHeroBg"></div>
+
+                            <div class="game-hero-overlay">
+                                <div class="game-logo-block">
+                                    <div class="game-logo" id="gameLogo">PUBG</div>
+                                    <div class="game-tagline" id="gameTagline">五月新模式 · 赏金行动</div>
+                                </div>
+
+                                <div class="game-launch-block">
+                                    <div class="game-name-row">
+                                        <span class="game-name" id="gameName">绝地求生</span>
+                                        <span class="game-mode-pill" id="gameModePill">全新模式：赏金行动!</span>
+                                    </div>
+                                    <div class="game-platforms" id="gamePlatforms">同步加速Steam / Epic</div>
+                                    <div class="game-launch-row">
+                                        <button class="launch-btn">
+                                            <span class="launch-bolt">⚡</span>
+                                            <span id="launchText">电竞加速</span>
+                                        </button>
+                                        <button class="champion-line-btn" id="championLineBtn">
+                                            <span>前往冠军专线</span>
+                                        </button>
+                                        <button class="settings-btn">⊕</button>
+                                        <span class="server-chip" id="serverChip">亚服</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="game-bottom-strip" id="gameBottomStrip">
+                            <span class="strip-icon">⚠</span><span id="gameBottomText">biubiu联动PCL送福利，瓜分100万G币！每周三周四免费加速！电竞加速更快更稳！</span>
+                        </div>
+                    </div>
+
+                    <!-- Right tools panel -->
+                    <aside class="game-side-panel">
+                        <div class="side-ad" onclick="openHallFromPlaza()">
+                            <div class="side-ad-eyebrow">JianJun · 小孩</div>
+                            <div class="side-ad-title">生来为赢</div>
+                            <div class="side-ad-sub">biubiu加速器，电竞冠军都在用</div>
+                            <div class="side-ad-dots">
+                                <span class="dot active"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+
+                        <div class="tools-title">工具</div>
+                        <div class="tools-list" id="toolsList"></div>
+                        <button class="all-tools-btn">▦ 全部工具</button>
+
+                        <div class="faq-row">
+                            <span class="faq-tag">FAQ</span>
+                            <span>常见问题解答</span>
+                        </div>
+                    </aside>
+                </div>
+
+                <div class="surprise-btn">惊喜<br>掉宝</div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- HALL OF FAME VIEW -->
+        <!-- =========================== -->
+        <div class="view" id="viewHall">
+            <div class="hall-page">
+                <div class="bg-light"></div>
+                <div class="bg-light-secondary"></div>
+                <div class="bg-bottom"></div>
+                <div class="particles" id="hallParticles"></div>
+                <!-- 主舞台聚光层：从两张卡背后向外辐射，z-index:1 铺在 particles 之上、内容之下 -->
+                <div class="stage-spotlight"></div>
+
+                <div class="back-btn" onclick="showPlaza()">‹ 返回</div>
+
+                <div class="title-area">
+                    <div class="title-main">Biubiu 冠军名人堂</div>
+                    <div class="title-sub">Hall of Biubiu</div>
+                    <div class="title-bar"></div>
+                </div>
+
+                <div class="champions">
+                    <div class="champ-left-text">
+                        <div class="champ-id">Xiaohai</div>
+                        <div class="champ-name-hall">曾卓君</div>
+                        <div class="champ-tag-hall">中国格斗电竞传奇</div>
+                    </div>
+
+                    <div class="cards-group">
+                        <div class="card-wrapper" onclick="showDetail('xiaohai')">
+                            <div class="card">
+                                <div class="card-rays"></div>
+                                <div class="card-content">
+                                    <div class="card-img">选手形象</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-wrapper" onclick="showDetail('aixleft')">
+                            <div class="card">
+                                <div class="card-rays"></div>
+                                <div class="card-content">
+                                    <div class="card-img">选手形象</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="champ-right-text">
+                        <div class="champ-id">Aixleft</div>
+                        <div class="champ-name-hall">左梓轩</div>
+                        <div class="champ-tag-hall">FPS第一天才少年</div>
+                    </div>
+                </div>
+
+                <!-- 主舞台引导：扁额式装饰——两端金线 + 中间瘦字，与开屏 splash headline 同源视觉语言。
+                     纯文字承诺，不带箭头，告诉用户"点冠军卡能看到什么"。 -->
+                <div class="cards-hint">
+                    <span class="hint-line"></span>
+                    <span class="hint-text">查看冠军们与 Biubiu 的技术共研故事</span>
+                    <span class="hint-line"></span>
+                </div>
+
+                <div class="ceremony-overlay" id="ceremonyOverlay">
+                    <div class="ceremony-flash"></div>
+                    <div class="ceremony-beam"></div>
+                    <div class="ceremony-iris"></div>
+                    <div class="ceremony-sparks" id="ceremonySparks"></div>
+                </div>
+
+                <div class="bottom">
+                    <div class="divider"></div>
+                    <!-- 分会场金刚区：单排 6 位，1 人物 + 5 战队。
+                         极简金刚区：每位只有 emblem + 名字，承担一级入口分发。
+                         人物（郭永军）emblem 用圆形（.is-person），战队 emblem 用方形——形状级分类。
+                         郭永军格 .plaque-person 在右侧挂一条短暗金竖线，作为"人物 / 战队"的轻分隔。
+                         战队按品类分布：PUBG×2（PeRo/4AM）+ 街霸6（Falcons）+ LoL（EDG）+ 王者（AG）。 -->
+                    <div class="pw-grid">
+                        <div class="plaque plaque-person" onclick="showDetail('guo')">
+                            <!-- 加冕款装饰：金色三齿冠饰 SVG 浮在 emblem 顶部，标识"传奇人物"独一份 -->
+                            <span class="plaque-crown" aria-hidden="true">
+                                <svg viewBox="0 0 28 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- 三齿冠：中齿略高，两侧齿对称；底部一根金线作为冠座 -->
+                                    <path d="M2 13 L4 5 L8 9 L14 2 L20 9 L24 5 L26 13 Z"
+                                          fill="url(#crownFill)" stroke="#e1d0ad" stroke-width="0.8" stroke-linejoin="round"/>
+                                    <circle cx="14" cy="2.5" r="1.2" fill="#e1d0ad"/>
+                                    <circle cx="4" cy="5" r="0.9" fill="#e1d0ad"/>
+                                    <circle cx="24" cy="5" r="0.9" fill="#e1d0ad"/>
+                                    <defs>
+                                        <linearGradient id="crownFill" x1="0" y1="0" x2="0" y2="14" gradientUnits="userSpaceOnUse">
+                                            <stop offset="0" stop-color="#e1d0ad"/>
+                                            <stop offset="1" stop-color="#978363"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </span>
+                            <div class="plaque-emblem is-person">人物</div>
+                            <div class="plaque-name">郭永军</div>
+                            <div class="plaque-subtitle">永恒之塔2传奇人物</div>
+                        </div>
+                        <div class="plaque" onclick="showTeam('pero')">
+                            <div class="plaque-emblem">队徽</div>
+                            <div class="plaque-name">PeRo</div>
+                        </div>
+                        <div class="plaque" onclick="showTeam('4am')">
+                            <div class="plaque-emblem">队徽</div>
+                            <div class="plaque-name">4AM</div>
+                        </div>
+                        <div class="plaque" onclick="showTeam('falcons')">
+                            <div class="plaque-emblem">队徽</div>
+                            <div class="plaque-name">Falcons</div>
+                        </div>
+                        <div class="plaque" onclick="showTeam('edg')">
+                            <div class="plaque-emblem">队徽</div>
+                            <div class="plaque-name">EDG</div>
+                        </div>
+                        <div class="plaque" onclick="showTeam('ag')">
+                            <div class="plaque-emblem">队徽</div>
+                            <div class="plaque-name">AG</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- DETAIL VIEW (v7) -->
+        <!-- =========================== -->
+        <div class="view" id="viewDetail">
+            <div class="detail-page-v7">
+                <div class="detail-tint"></div>
+                <div class="particles" id="detailParticles"></div>
+
+                <div class="detail-switch-overlay" id="detailSwitchOverlay">
+                    <div class="detail-switch-beam"></div>
+                </div>
+
+                <div class="back-btn" id="detailBackBtn" onclick="backFromDetail()">‹ 返回</div>
+
+                <aside class="nav-pane-v7">
+                    <nav class="nav-list">
+                        <div class="nav-item active" data-champ="xiaohai">曾卓君</div>
+                        <div class="nav-item" data-champ="aixleft">左梓轩</div>
+                        <div class="nav-item" data-champ="guo">郭永军</div>
+                    </nav>
+                </aside>
+
+                <section class="layer1-zone">
+                    <div class="portrait-bg">
+                        <div class="portrait-face">冠军形象</div>
+                        <div class="portrait-fade"></div>
+                    </div>
+                    <div class="identity-overlay">
+                        <div class="identity-meta">
+                            <span class="champ-id-v7" id="champId">XIAOHAI</span>
+                            <span class="meta-divider"></span>
+                            <span class="champ-name-v7" id="champName">曾卓君</span>
+                        </div>
+                        <div class="champ-tag-v7" id="champTag">中国格斗电竞传奇</div>
+                        <div class="combat-tags">
+                            <div class="combat-chip">
+                                <span class="chip-label">代表游戏</span>
+                                <span class="chip-value" id="champGame">街霸6</span>
+                            </div>
+                            <div class="combat-chip">
+                                <span class="chip-label" id="champRoleLabel">招牌角色</span>
+                                <span class="chip-value" id="champRoleValue">不知火舞</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="identity-bottom">
+                        <p class="champ-intro-v7" id="champIntro">六岁拿起手柄，从街机厅一路打进世界总决赛。曾卓君是少有能跨越游戏代际、在每一代格斗游戏都封王的人——也是国人心中"格斗大魔王"的代名词。</p>
+                        <div class="honors-row-v7" id="honorsRow"></div>
+                    </div>
+                </section>
+
+                <section class="layer2-zone">
+                    <div class="video-card">
+                        <div class="video-cover">
+                            <div class="video-cover-tint"></div>
+                            <div class="video-play-icon">▶</div>
+                        </div>
+                        <div class="video-card-meta">
+                            <div class="video-card-title" id="videoCardTitle">冠军专访</div>
+                            <div class="video-card-duration">0:30</div>
+                        </div>
+                    </div>
+                    <div class="section-rule"></div>
+                    <div class="coop-section">
+                        <div class="coop-credit" id="coopCredit">biubiu &times; <span class="credit-name">Xiaohai</span></div>
+                        <div class="coop-title">共研冠军专线</div>
+                        <p class="pain-lead" id="painLead">在《街霸6》的线上战场，Xiaohai 长期感受到这些痛点——</p>
+                        <div class="pain-list" id="painGrid"></div>
+                        <div class="coop-text-stack" id="coopText"></div>
+                        <button class="cta-btn-v7">
+                            <span id="ctaText">了解《街霸6》冠军专线</span>
+                            <span class="arrow">→</span>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- TEAM VIEW (branch page) -->
+        <!-- =========================== -->
+        <div class="view" id="viewTeam">
+            <div class="team-page">
+                <div class="atmosphere"></div>
+                <div class="particles" id="teamParticles"></div>
+
+                <div class="back-btn" onclick="showHall()">‹ 返回</div>
+
+                <div class="team-main">
+                    <div class="team-portrait-stage">
+                        <div class="team-name-block">
+                            <div class="team-name-cn" id="teamNameCn">PeRo 战队</div>
+                            <div class="team-tag" id="teamTag">无畏少年军团</div>
+                            <div class="team-partnership">
+                                <span class="partnership-label">biubiu 合作分部</span>
+                                <span class="partnership-game" id="teamPartnerDivision">《PUBG》</span>
+                            </div>
+                        </div>
+                        <div class="team-image-frame">
+                            <div class="team-image-halo"></div>
+                            <div class="team-image" id="teamImage">战队图片</div>
+                        </div>
+                    </div>
+
+                    <div class="team-content">
+                        <div class="team-section-block">
+                            <div class="team-section-title">战队荣誉</div>
+                            <div class="team-honors-list" id="teamHonors"></div>
+                        </div>
+                        <div class="team-section-block" id="teamPartnershipBlock">
+                            <div class="team-section-title">并肩同行</div>
+                            <div class="team-bridge" id="teamPartnership"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- ORDER PAGE (冠军专线下单详情页 占位) -->
+        <!-- =========================== -->
+        <div class="view" id="viewOrder">
+            <div class="order-page">
+                <div class="order-bg-glow"></div>
+                <div class="back-btn" onclick="backFromOrder()">‹ 返回</div>
+                <div class="order-main">
+                    <div class="order-header">
+                        <div class="order-badge">冠军专线</div>
+                        <h1 class="order-title" id="orderTitle">《街霸6》冠军专线</h1>
+                        <p class="order-sub">与世界冠军共研，为竞技而生的极致加速体验</p>
+                    </div>
+                    <div class="order-card">
+                        <div class="order-card-label">专线套餐</div>
+                        <div class="order-plan-row">
+                            <div class="order-plan is-active">
+                                <div class="plan-duration">月卡</div>
+                                <div class="plan-price"><span class="price-symbol">¥</span>30</div>
+                            </div>
+                            <div class="order-plan">
+                                <div class="plan-duration">季卡</div>
+                                <div class="plan-price"><span class="price-symbol">¥</span>78</div>
+                                <div class="plan-tag">热门</div>
+                            </div>
+                            <div class="order-plan">
+                                <div class="plan-duration">年卡</div>
+                                <div class="plan-price"><span class="price-symbol">¥</span>268</div>
+                                <div class="plan-tag">最划算</div>
+                            </div>
+                        </div>
+                        <div class="order-features">
+                            <div class="order-feature-item">✦ 冠军级低延迟线路</div>
+                            <div class="order-feature-item">✦ 专属节点优先接入</div>
+                            <div class="order-feature-item">✦ 赛事级抗丢包保障</div>
+                            <div class="order-feature-item">✦ 7×24 专线运维</div>
+                        </div>
+                        <button class="order-buy-btn">立即开通</button>
+                    </div>
+                    <p class="order-disclaimer">* 此页面为原型占位，仅供演示流程</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== Video Modal ===================== -->
+    <div class="video-modal" id="videoModal" aria-hidden="true">
+        <div class="video-modal-backdrop" data-close="1"></div>
+        <div class="video-modal-frame">
+            <button class="video-modal-close" id="videoModalClose" aria-label="关闭">×</button>
+            <div class="video-modal-stage" id="videoModalStage">
+                <div class="video-modal-placeholder">
+                    <div class="vmp-play">▶</div>
+                    <div>视频播放器</div>
+                </div>
+            </div>
+            <div class="video-modal-caption" id="videoModalCaption">0:30</div>
+        </div>
+    </div>
+
+    <script src="script.js?v=3"></script>
+</body>
+</html>
