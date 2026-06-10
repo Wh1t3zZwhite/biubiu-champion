@@ -39,10 +39,10 @@
                 accentBgOverlay: 'radial-gradient(ellipse at 50% 30%, rgba(110, 50, 170, 0.32) 0%, rgba(60, 25, 110, 0.22) 40%, rgba(20, 10, 38, 0.0) 80%), linear-gradient(160deg, rgba(80, 30, 130, 0.28) 0%, rgba(30, 15, 55, 0.18) 60%, rgba(8, 6, 15, 0.0) 100%)',
                 accentAtmosTop: 'radial-gradient(ellipse, rgba(190, 110, 230, 0.18) 0%, rgba(225, 208, 173, 0.08) 45%, transparent 75%)',
                 accentAtmosSide: 'radial-gradient(ellipse at 45% 60%, rgba(150, 90, 210, 0.16) 0%, transparent 70%)',
-                intro: '6岁入行，从拳皇到街霸再到饿狼传说，跨越三个游戏时代依然封王，53项国际冠军，让格斗游戏的中国冠军不止是头衔。',
+                intro: '生来为赢',
                 bridge: '对局正酣，画面忽然陷入慢放；指令明明按下，角色却纹丝不动。在街霸6的线上战场，每一位玩家都经历过这样的时刻——输不在判断，不在操作，而在你与对手之间，<em>那段不可控的距离</em>。<strong>从未在一帧上妥协的人</strong>，biubiu与 Xiaohai 联手深度共研，以世界冠军的严苛标准校准每一帧传输，为<strong>街霸6</strong>定制冠军专线。',
                 game: '街霸6', gameEn: 'STREET FIGHTER 6',
-                cta: '了解《街霸6》冠军专线',
+                cta: '打造小孩同款专线',
                 stats: [{n:'53', u:'项', l:'International Titles'}, {n:'18', u:'年', l:'Pro Career'}, {n:'3', u:'代', l:'Game Eras'}],
                 signatures: ['街霸6', '拳皇', '饿狼传说'],
                 plateNo: '01', plateYear: '2024',
@@ -65,10 +65,10 @@
                 accentBgOverlay: 'radial-gradient(ellipse at 50% 35%, rgba(180, 95, 40, 0.22) 0%, rgba(90, 60, 40, 0.18) 40%, rgba(20, 18, 14, 0.0) 80%), linear-gradient(160deg, rgba(70, 60, 50, 0.32) 0%, rgba(40, 32, 24, 0.22) 60%, rgba(10, 8, 6, 0.0) 100%)',
                 accentAtmosTop: 'radial-gradient(ellipse, rgba(235, 145, 75, 0.16) 0%, rgba(225, 208, 173, 0.08) 45%, transparent 75%)',
                 accentAtmosSide: 'radial-gradient(ellipse at 45% 60%, rgba(200, 120, 60, 0.14) 0%, transparent 70%)',
-                intro: '15岁守望先锋国服第一，转战 PUBG 后自建 PeRo 战队，PCS 三连冠、PCL 春季赛四项全满贯。永远在加速，永不止步。',
+                intro: '莫问少年凌云志，曾许天下第一流',
                 bridge: '决赛圈的对枪，从来不只是手速的较量。你先开镜、先扣下扳机，回放里却是对方先将你击倒。你明明已经贴进掩体，击杀提示却在下一刻传来。不是输给操作，是输给了你与对手之间，<em>那段看不见的时差</em>。<strong>从未在一发子弹上妥协的人</strong>，biubiu与 Aixleft 联手深度共研，以世界冠军的严苛标准校准每一次响应，为<strong>PUBG</strong>定制冠军专线。',
                 game: 'PUBG 绝地求生', gameEn: 'PUBG: BATTLEGROUNDS',
-                cta: '了解《PUBG》冠军专线',
+                cta: '打造Aixleft同款专线',
                 stats: [{n:'4', u:'冠', l:'PCL Grand Slam'}, {n:'3', u:'连', l:'PCS Champion'}, {n:'15', u:'岁', l:'OW No.1 China'}],
                 signatures: ['PUBG', '守望先锋', '无畏契约'],
                 plateNo: '02', plateYear: '2025',
@@ -90,10 +90,10 @@
                 accentBgOverlay: 'radial-gradient(ellipse at 50% 30%, rgba(70, 130, 210, 0.32) 0%, rgba(40, 80, 150, 0.22) 40%, rgba(10, 18, 38, 0.0) 80%), linear-gradient(160deg, rgba(40, 90, 160, 0.28) 0%, rgba(20, 45, 90, 0.18) 60%, rgba(6, 10, 20, 0.0) 100%)',
                 accentAtmosTop: 'radial-gradient(ellipse, rgba(130, 195, 245, 0.22) 0%, rgba(225, 208, 173, 0.09) 45%, transparent 75%)',
                 accentAtmosSide: 'radial-gradient(ellipse at 45% 60%, rgba(100, 170, 230, 0.16) 0%, transparent 70%)',
-                intro: '永恒之塔顶级玩家，多年深耕，经验丰富。',
+                intro: '十年一日，从未离场',
                 bridge: '团本副本进行到第三十分钟，技能循环刚跟上节奏——画面突然定格。等到回神时，整队已经躺在副本入口。对永恒之塔玩家来说，最难受的从来不是 BOSS，是那一秒不知道发生了什么的网络；<em>半小时的协作，毁于一瞬</em>。<strong>对每一次操作的精度极致要求</strong>，biubiu与郭永军联手深度共研，以世界冠军的严苛标准校准每一次响应，为<strong>永恒之塔</strong>定制冠军专线。',
                 game: '永恒之塔', gameEn: 'AION',
-                cta: '了解《永恒之塔》冠军专线',
+                cta: '打造郭永军同款专线',
                 stats: [{n:'12', u:'年', l:'In Aion'}, {n:'8', u:'冠', l:'Cross-Server Wins'}, {n:'1', u:'位', l:'National Top'}],
                 signatures: ['永恒之塔'],
                 plateNo: '03', plateYear: '2025',
@@ -113,22 +113,20 @@
                 honors: [
                     {y: '2025', t: 'PCL 春季赛 总冠军 / 大满贯'},
                     {y: '2024', t: 'PCS 三连冠 / 沙特电竞世界杯 PUBG 亚军'},
-                    {y: '2023', t: 'PCL 夏季赛 冠军'},
                     {y: '2022', t: '由 Aixleft 牵头自建，半年内夺冠'},
                 ],
-                bridge: '由 <strong>Aixleft</strong> 牵头自建，PeRo 用三年时间，把"少年队"打成了 PUBG 国内最难绕开的名字。<em>每一次决赛圈的呼吸、每一次落地成盒前的反扑</em>——biubiu 与 PeRo 一路同行，见证这群少年把不甘心打成一座座奖杯。'
+                bridge: '由 <strong>Aixleft</strong> 牵头自建，PeRo 用三年时间，把"少年队"打成了 PUBG 国内最难绕开的名字。<em>每一次决赛圈的呼吸、每一次落地成盒前的反扑</em>，都容不下一帧网络的犹豫。biubiu 与 PeRo 深度合作，为战队训练与赛事征战提供稳定流畅的专线网络保障——让少年们的天赋不被一毫秒的迟疑消耗。<strong>与 PeRo 并肩同行，见证他们把不甘心打成一座座奖杯，这就是 biubiu 服务中国电竞的方式。</strong>'
             },
             '4am': {
                 id: '4AM', name: '4 Angry Men', tag: '',
                 partnerDivision: '《PUBG》分部',
                 accentHalo: 'radial-gradient(circle, rgba(220, 170, 110, 0.20) 0%, rgba(220, 170, 110, 0.05) 35%, transparent 65%)',
                 honors: [
-                    {y: '2024', t: '多届国内 PUBG 顶级赛事决赛圈常客'},
                     {y: '2021', t: 'PGI.S 全球总决赛 亚军'},
                     {y: '2019', t: 'PCL 春季赛 冠军'},
-                    {y: '2017', t: '战队成立·由韦神等老将组建'},
+                    {y: '2017', t: '战队成立 · 由韦神等老将组建'},
                 ],
-                bridge: '从端游元年坚守到今天，4AM 是中国 PUBG 永远的"<em>四个愤怒的男人</em>"。八年起伏，他们从未真正离场。biubiu 与 4AM 一道，<strong>把每一份"再来一局"的执拗</strong>，托在身后。'
+                bridge: '从端游元年坚守到今天，4AM 是中国 PUBG 永远的"<em>四个愤怒的男人</em>"。八年起伏，他们从未真正离场——而每一次重新冲锋的背后，都需要一条稳得住的网络。biubiu 与 4AM 携手合作，用稳定流畅的加速专线托住战队的每一局训练和征战，<strong>把每一份"再来一局"的执拗，变成中国电竞赛场上最踏实的底气</strong>。'
             },
             falcons: {
                 id: 'FALCONS', name: 'Team Falcons', tag: '',
@@ -139,40 +137,7 @@
                     {y: '2024', t: 'EWC 街霸6 / Apex / CS 多项目登顶'},
                     {y: '2023', t: '收购多支顶级战队，组建全项目矩阵'},
                 ],
-                bridge: '从利雅得出发，Falcons 把猎鹰旗帜插上了格斗、FPS、MOBA 多个赛道。在《街霸6》分部，他们集结了世界顶级的格斗游戏选手——<em>一帧之差，便是冠亚之分</em>。biubiu 与 Falcons《街霸6》分部并肩，把每一次出招的专注，<strong>稳稳守在它该有的位置</strong>。'
-            },
-            '17': {
-                id: '17 GAMING', name: '17 战队', tag: '',
-                partnerDivision: '《PUBG》分部',
-                accentHalo: 'radial-gradient(circle, rgba(220, 170, 110, 0.20) 0%, rgba(220, 170, 110, 0.05) 35%, transparent 65%)',
-                honors: [
-                    {y: '2024', t: 'PCL 多站决赛圈入围 / 战术执行最优队伍'},
-                    {y: '2023', t: 'PCL 夏季赛 季军'},
-                    {y: '2022', t: '战队整编重组，确立战术核心打法'},
-                ],
-                bridge: '17 战队以战术见长——缩圈前的每一次转点、交火时的每一次卡位，都建立在毫秒级的判断之上。biubiu 与 17 一路同行，<strong>把这份冷静背后的那一秒不确定</strong>，从画面里抹去。'
-            },
-            ig: {
-                id: 'IG', name: 'Invictus Gaming', tag: '',
-                partnerDivision: '《英雄联盟》分部',
-                accentHalo: 'radial-gradient(circle, rgba(155, 140, 215, 0.20) 0%, rgba(155, 140, 215, 0.05) 35%, transparent 65%)',
-                honors: [
-                    {y: '2018', t: '英雄联盟 全球总决赛 冠军（S8）'},
-                    {y: '2017', t: 'LPL 春季赛 冠军'},
-                    {y: '2012', t: 'DOTA2 国际邀请赛 TI2 冠军'},
-                ],
-                bridge: '2018 年仁川，IG 把第一座银龙杯捧回中国。"<em>永不为奴</em>"——不是一句口号，是上头之前对操作上限的绝对自信。biubiu 与 IG《英雄联盟》分部并肩，<strong>让这份自信，永远敢于被兑现</strong>。'
-            },
-            rng: {
-                id: 'RNG', name: 'Royal Never Give Up', tag: '',
-                partnerDivision: '《英雄联盟》分部',
-                accentHalo: 'radial-gradient(circle, rgba(220, 130, 130, 0.20) 0%, rgba(220, 130, 130, 0.05) 35%, transparent 65%)',
-                honors: [
-                    {y: '2022', t: 'MSI 季中冠军赛 冠军（队史第三冠）'},
-                    {y: '2021', t: 'MSI 季中冠军赛 冠军'},
-                    {y: '2018', t: 'MSI 季中冠军赛 冠军 / LPL 春夏双冠'},
-                ],
-                bridge: '三座 MSI 奖杯，让 RNG 成为中国战队海外赛事的代名词。"<em>Never Give Up</em>"——从落后五千经济到翻盘水晶，靠的不只是心态，是每一次走位与技能释放的精准抵达。biubiu 与 RNG《英雄联盟》分部一路同行，<strong>把"永不言弃"稳稳兜住</strong>。'
+                bridge: '从利雅得出发，Falcons 把猎鹰旗帜插上了格斗、FPS、MOBA 多个赛道。在《街霸6》分部，他们集结了世界顶级的格斗游戏选手——<em>一帧之差，便是冠亚之分</em>。biubiu 与 Falcons《街霸6》分部达成合作，以稳定低延迟的专线网络守护每一帧的精准传达，<strong>把每一次出招的专注，稳稳守在它该有的位置</strong>——在国际顶级舞台上为电竞选手护航，是 biubiu 为中国电竞走向世界所做的努力。'
             },
             ag: {
                 id: 'AG', name: 'AG 超玩会', tag: '',
@@ -184,7 +149,7 @@
                     {y: '2019', t: 'KPL 春季赛 冠军 / 秋季赛 冠军'},
                     {y: '2017', t: 'KPL 秋季赛 冠军（首冠）'},
                 ],
-                bridge: 'AG 超玩会，是 KPL 历史上奖杯最多的战队之一。<em>5v5 的胜负，常常压在 0.3 秒的位移判断上</em>——一次走神，整波团灭。biubiu 与 AG 一路同行，<strong>把决胜瞬间的那 0.3 秒，稳稳还给选手</strong>。'
+                bridge: 'AG 超玩会，是 KPL 历史上奖杯最多的战队之一。<em>5v5 的胜负，常常压在 0.3 秒的位移判断上</em>——一次走神，整波团灭。biubiu 与 AG 合作，用稳定流畅的专线网络为战队的训练与比赛保驾护航，<strong>把决胜瞬间的那 0.3 秒，稳稳还给选手</strong>——中国电竞的冠军时刻，每一毫秒都值得被认真对待。'
             },
             edg: {
                 id: 'EDG', name: 'Edward Gaming', tag: '',
@@ -195,7 +160,7 @@
                     {y: '2017', t: 'MSI 季中冠军赛 冠军'},
                     {y: '2015', t: 'MSI 季中冠军赛 冠军 / LPL 五冠'},
                 ],
-                bridge: '2021 年冰岛，EDG 让全国玩家在凌晨的宿舍楼里集体沸腾。世界冠军的背后，是<em>无数次训练赛里对操作精度的极致打磨</em>。biubiu 与 EDG《英雄联盟》分部并肩，<strong>把训练场上的稳定，带进每一次出征</strong>。'
+                bridge: '2021 年冰岛，EDG 让全国玩家在凌晨的宿舍楼里集体沸腾。世界冠军的背后，是<em>无数次训练赛里对操作精度的极致打磨</em>。biubiu 与 EDG《英雄联盟》分部合作，为战队提供稳定流畅的专线网络支持，<strong>把训练场上的稳定，带进每一次出征</strong>——让每一次极限操作在赛场被完整还原，这是 biubiu 为中国电竞事业添砖加瓦的方式。'
             }
         };
 
@@ -472,7 +437,12 @@
             setTimeout(() => viewHall.classList.add('active'), 100);
         }
 
-        function showTeam(key) {
+        // ========== Team Navigation State ==========
+        var currentTeam = null;
+        var isTeamSwitching = false;
+
+        // 纯数据渲染：仅更新战队内容，不切视图
+        function applyTeamData(key) {
             const data = teams[key];
             if (!data) return;
             const teamPage = document.querySelector('#viewTeam .team-page');
@@ -490,7 +460,7 @@
                 `<div class="honor-item"><span class="honor-year">${h.y}</span><span>${h.t}</span></div>`
             ).join('');
 
-            // 并肩同行文案（直接复用 bridge 字段：讲战队底蕴 + biubiu 与战队的关系）
+            // 并肩同行文案
             const partnershipBlock = document.getElementById('teamPartnershipBlock');
             const partnershipEl = document.getElementById('teamPartnership');
             if (data.bridge) {
@@ -501,12 +471,64 @@
                 partnershipBlock.style.display = 'none';
             }
 
+            // 更新左侧导航 active 状态
+            document.querySelectorAll('.team-nav-pane .nav-item').forEach(n => n.classList.remove('active'));
+            const target = document.querySelector('.team-nav-pane .nav-item[data-team="' + key + '"]');
+            if (target) target.classList.add('active');
+
+            currentTeam = key;
+        }
+
+        function showTeam(key) {
+            const data = teams[key];
+            if (!data) return;
+
+            applyTeamData(key);
+
             clearAllViews();
             viewTeam.classList.add('active');
             void viewTeam.offsetWidth;
             viewTeam.classList.add('just-revealed');
             setTimeout(() => viewTeam.classList.remove('just-revealed'), 1200);
         }
+
+        // 战队导航切换（带过渡动效）
+        function switchTeam(key) {
+            if (isTeamSwitching) return;
+            if (key === currentTeam) return;
+            isTeamSwitching = true;
+
+            const teamMain = document.querySelector('#viewTeam .team-main');
+            if (!teamMain) {
+                applyTeamData(key);
+                isTeamSwitching = false;
+                return;
+            }
+
+            // Phase 1: 旧内容淡出 + 轻微上移
+            teamMain.classList.add('team-switching-out');
+
+            // Phase 2 (300ms): 切换数据 + 新内容淡入
+            setTimeout(() => {
+                applyTeamData(key);
+                teamMain.classList.remove('team-switching-out');
+                teamMain.classList.add('team-switching-in');
+
+                // Phase 3 (600ms): 清理
+                setTimeout(() => {
+                    teamMain.classList.remove('team-switching-in');
+                    isTeamSwitching = false;
+                }, 500);
+            }, 280);
+        }
+
+        // 战队导航点击事件
+        document.querySelectorAll('.team-nav-pane .nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const key = item.dataset.team;
+                if (key) switchTeam(key);
+            });
+        });
 
         // ========== Grand entrance (game page → champion detail) ==========
         // "金幕开启 · 圣堂驾临" — a vertical gold light beam sweeps right→left.
@@ -757,6 +779,60 @@
             }
         }
 
+        // ========== Tunnel Skip Button Logic ==========
+        // 隧道跳过按钮：点击后立即终止隧道动画，快速切换到目标视图
+        var _tunnelTimers = [];  // 存储所有隧道相关的 setTimeout id
+        var _tunnelOnSwitch = null;
+        var _tunnelOnSettled = null;
+
+        (function() {
+            var skipBtn = document.getElementById('tunnelSkipBtn');
+            if (!skipBtn) return;
+            skipBtn.addEventListener('click', function() {
+                // 清除所有待执行的定时器
+                _tunnelTimers.forEach(function(id) { clearTimeout(id); });
+                _tunnelTimers = [];
+
+                var tunnel = document.getElementById('grandTunnel');
+                var rings  = document.getElementById('tunnelRings');
+                var veil   = document.getElementById('tunnelVeil');
+
+                // 立即执行视图切换回调
+                if (typeof _tunnelOnSwitch === 'function') {
+                    _tunnelOnSwitch();
+                    _tunnelOnSwitch = null;
+                }
+
+                // 快速收尾：隧道淡出 + 短暂白幕闪现
+                if (tunnel) {
+                    tunnel.classList.remove('is-active');
+                }
+                if (rings) {
+                    rings.classList.remove('is-flying');
+                    rings.innerHTML = '';
+                }
+                var streaks = document.getElementById('tunnelStreaks');
+                if (streaks) streaks.innerHTML = '';
+
+                // 短暂白幕淡出（比正常快很多）
+                if (veil) {
+                    veil.classList.remove('is-rising');
+                    veil.classList.add('is-fading');
+                    setTimeout(function() {
+                        veil.classList.remove('is-fading');
+                    }, 600);
+                }
+
+                // 释放锁
+                pushBusy = false;
+
+                if (typeof _tunnelOnSettled === 'function') {
+                    _tunnelOnSettled();
+                    _tunnelOnSettled = null;
+                }
+            });
+        })();
+
         // 通用隧道入场过场（v6.1 暴力加速版）：
         // 调用方传入 onSwitch（在白光全屏时切视图的回调）和可选的 onSettled。
         //
@@ -781,6 +857,11 @@
             }
             pushBusy = true;
 
+            // 保存回调供跳过按钮使用
+            _tunnelOnSwitch = onSwitch;
+            _tunnelOnSettled = onSettled;
+            _tunnelTimers = [];
+
             // 清掉上次残留状态
             rings.classList.remove('is-flying');
             tunnel.classList.remove('is-active');
@@ -798,36 +879,43 @@
             });
 
             // Phase B (4700ms)：暖白幕迅速升起（0.35s ease-in），承接"突破白光"瞬间
-            setTimeout(() => {
+            _tunnelTimers.push(setTimeout(() => {
                 veil.classList.add('is-rising');
-            }, 4700);
+            }, 4700));
 
             // Phase C (5000ms)：切到目标视图（此时白幕已全屏，切换不可见）
-            setTimeout(() => {
-                if (typeof onSwitch === 'function') onSwitch();
-            }, 5000);
+            _tunnelTimers.push(setTimeout(() => {
+                if (typeof _tunnelOnSwitch === 'function') {
+                    _tunnelOnSwitch();
+                    _tunnelOnSwitch = null;
+                }
+            }, 5000));
 
             // Phase D (5200ms)：tunnel 退场（已被白幕盖住，玩家无感）
-            setTimeout(() => {
+            _tunnelTimers.push(setTimeout(() => {
                 tunnel.classList.remove('is-active');
-            }, 5200);
+            }, 5200));
 
             // Phase E (5400ms)：暖白幕开始 1.3s 慢淡出 — 名人堂"浮出"显形
-            setTimeout(() => {
+            _tunnelTimers.push(setTimeout(() => {
                 veil.classList.remove('is-rising');
                 veil.classList.add('is-fading');
-            }, 5400);
+            }, 5400));
 
             // Phase F (6700ms)：清理 DOM、释放 busy
-            setTimeout(() => {
+            _tunnelTimers.push(setTimeout(() => {
                 rings.classList.remove('is-flying');
                 rings.innerHTML = '';
                 const layer = document.getElementById('tunnelStreaks');
                 if (layer) layer.innerHTML = '';
                 veil.classList.remove('is-fading', 'is-rising');
                 pushBusy = false;
-                if (typeof onSettled === 'function') onSettled();
-            }, 6700);
+                _tunnelOnSwitch = null;
+                if (typeof _tunnelOnSettled === 'function') {
+                    _tunnelOnSettled();
+                    _tunnelOnSettled = null;
+                }
+            }, 6700));
         }
 
         // ========== MVP Dev Panel — direct view jumps ==========
@@ -1151,9 +1239,9 @@
         // 1. Extend xiaohai
         Object.assign(champions.xiaohai, {
             creditName: 'Xiaohai',
-            intro: '六岁拿起手柄，从街机厅一路打进世界总决赛——「生来为赢」是他给这条路最简短的注脚。曾卓君是少有能跨越游戏代际、在每一代格斗游戏都封王的人，也是国人心中「格斗大魔王」的代名词。',
+            intro: '生来为赢',
             roleLabel: '招牌角色', roleValue: '不知火舞',
-            cta: '了解《街霸6》冠军专线',
+            cta: '打造小孩同款专线',
             pains: [
                 {icon: '⏱', title: '出招延迟', sub: '帧级延迟，连招断点失败'},
                 {icon: '⚡', title: '联机断连', sub: '关键回合突然掉线'},
@@ -1174,9 +1262,9 @@
         // 2. Extend aixleft
         Object.assign(champions.aixleft, {
             creditName: 'Aixleft',
-            intro: '十五岁在守望先锋国服把天梯打到第一，转战 PUBG 后自建战队带新生军团夺冠——「莫问少年凌云志，曾许天下第一流」是他对自己最早的承诺。左梓轩把「少年感」和「统治力」长在了同一个人身上，也把「PeRo」这个名字钉进了 PUBG 中国十年里最难绕开的位置。',
+            intro: '莫问少年凌云志，曾许天下第一流',
             roleLabel: '队内位置', roleValue: '突破手 / IGL',
-            cta: '了解《PUBG》冠军专线',
+            cta: '打造Aixleft同款专线',
             pains: [
                 {icon: '◎', title: '射击命中卡顿', sub: '锁定瞬间画面延迟'},
                 {icon: '◇', title: '场景互动延迟', sub: '搜物资 / 上车 / 开门慢半拍'},
@@ -1197,9 +1285,9 @@
         // 3. Extend guo
         Object.assign(champions.guo, {
             creditName: '郭永军',
-            intro: '把每一个晚上都泡进永恒之塔的人。郭永军不是因为天赋耀眼被人记住——「团里的位置，是用时间一点一点熬出来的」，他用十年时间，把这句话熬成了团里那个永远在的位置。',
+            intro: '十年一日，从未离场',
             roleLabel: '招牌职业', roleValue: '剑星',
-            cta: '了解《永恒之塔》冠军专线',
+            cta: '打造郭永军同款专线',
             pains: [
                 {icon: '⊗', title: '团本掉线', sub: '副本进行中突然断连'},
                 {icon: '⌛', title: '技能延迟', sub: '技能释放慢半拍'},
@@ -1242,10 +1330,15 @@
                 else { quoteEl.style.display = 'none'; }
             }
 
-            setText('champGame', data.game);
-            setText('champRoleLabel', data.roleLabel || '招牌角色');
-            setText('champRoleValue', data.roleValue);
             setText('champIntro', data.intro);
+            // 根据文案长度动态调整格言字号
+            var introEl = document.getElementById('champIntro');
+            if (introEl) {
+                var len = (data.intro || '').length;
+                if (len <= 5) { introEl.style.fontSize = '30px'; introEl.style.letterSpacing = '12px'; }
+                else if (len <= 10) { introEl.style.fontSize = '28px'; introEl.style.letterSpacing = '9px'; }
+                else { introEl.style.fontSize = '26px'; introEl.style.letterSpacing = '8px'; }
+            }
             setText('ctaText', data.cta);
             setText('videoCardTitle', '冠军专访 · ' + (data.name || ''));
 
@@ -1564,22 +1657,15 @@
             });
         })();
 
-        // ========== 限免活动卡片内轮播 ==========
+        // ========== 限免活动卡片内轮播（右侧游戏列表控制） ==========
         (function() {
             var carousel = document.getElementById('promoCarousel');
-            var dotsWrap = document.getElementById('promoDots');
-            if (!carousel || !dotsWrap) return;
+            var sidebar  = document.getElementById('promoSidebar');
+            if (!carousel || !sidebar) return;
 
             var slides = carousel.querySelectorAll('.promo-slide');
-            var dots = dotsWrap.querySelectorAll('.promo-dot');
+            var items  = sidebar.querySelectorAll('.promo-sidebar-item');
             if (slides.length < 2) return;
-
-            // 每张活动卡对应的侧边栏 / peek-label 数据
-            var promoData = [
-                { icon: 'AION', title: '限免加速',  sub: 'EWC限免季进行中 ›', peek1: '限免加速', peek2: 'EWC限免季' },
-                { icon: 'PUBG', title: 'PUBG限免',  sub: '绝地求生限免加速 ›', peek1: 'PUBG',     peek2: '限免加速' },
-                { icon: 'SF6',  title: '街霸6限免', sub: '格斗冠军限免 ›',     peek1: '街霸6',    peek2: '限免加速' }
-            ];
 
             var currentSlide = 0;
             var autoTimer = null;
@@ -1590,12 +1676,10 @@
             function goToSlide(idx) {
                 if (idx === currentSlide || idx < 0 || idx >= slides.length) return;
                 slides[currentSlide].classList.remove('promo-slide-active');
-                if (dots[currentSlide]) dots[currentSlide].classList.remove('promo-dot-active');
+                if (items[currentSlide]) items[currentSlide].classList.remove('is-active');
                 currentSlide = idx;
                 slides[currentSlide].classList.add('promo-slide-active');
-                if (dots[currentSlide]) dots[currentSlide].classList.add('promo-dot-active');
-                syncPromoSidebar(idx);
-                syncPromoPeekLabel(idx);
+                if (items[currentSlide]) items[currentSlide].classList.add('is-active');
             }
 
             function nextSlide() {
@@ -1617,12 +1701,15 @@
                 pauseTimer = setTimeout(startAuto, PAUSE_RESUME);
             }
 
-            // 点击指示点切换
-            dots.forEach(function(dot, i) {
-                dot.addEventListener('click', function(e) {
+            // 点击右侧游戏列表项切换
+            items.forEach(function(item) {
+                item.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    goToSlide(i);
-                    pauseAndResume();
+                    var idx = parseInt(item.dataset.slide, 10);
+                    if (!isNaN(idx)) {
+                        goToSlide(idx);
+                        pauseAndResume();
+                    }
                 });
             });
 
@@ -1638,36 +1725,75 @@
                 });
             }
 
-            // 同步侧边栏 entry-2 的文案
-            function syncPromoSidebar(idx) {
-                var d = promoData[idx];
-                if (!d) return;
-                var stacks = document.querySelectorAll('#sidebarStack, #sidebarStackGame');
-                stacks.forEach(function(stack) {
-                    var entry2 = stack.querySelector('.sidebar-entry-2');
-                    if (!entry2) return;
-                    var icon  = entry2.querySelector('.promo-entry-icon');
-                    var title = entry2.querySelector('.hall-entry-title');
-                    var sub   = entry2.querySelector('.hall-entry-sub');
-                    if (icon)  icon.textContent  = d.icon;
-                    if (title) title.textContent = d.title;
-                    if (sub)   sub.textContent   = d.sub;
-                });
-            }
-
-            // 同步底层卡片露出区域的标签
-            function syncPromoPeekLabel(idx) {
-                var d = promoData[idx];
-                if (!d) return;
-                var line1 = document.getElementById('peekPromoLine1');
-                var line2 = document.getElementById('peekPromoLine2');
-                if (line1) line1.textContent = d.peek1;
-                if (line2) line2.textContent = d.peek2;
-            }
-
             // 启动自动轮播
             startAuto();
 
+            // ===== 单款 / 多款模式切换 =====
+            // mode: 'single' — 单款限免（无右侧列表、无轮播，只显示第一张 slide）
+            //        'pool'   — 多款福利池（右侧列表 + 自动轮播）
+            function setPromoMode(mode) {
+                var banner = document.querySelector('.banner-promo');
+                if (!banner) return;
+
+                if (mode === 'single') {
+                    // 停止轮播，重置到第一张
+                    stopAuto();
+                    if (pauseTimer) { clearTimeout(pauseTimer); pauseTimer = null; }
+                    // 先把所有 slide 关闭，只开第一张
+                    slides.forEach(function(s) { s.classList.remove('promo-slide-active'); });
+                    slides[0].classList.add('promo-slide-active');
+                    items.forEach(function(it) { it.classList.remove('is-active'); });
+                    currentSlide = 0;
+                    // 切换类名
+                    banner.classList.add('promo-single');
+
+                    // 侧栏联动：改为"xxx游戏限免"
+                    var stacks = document.querySelectorAll('#sidebarStack, #sidebarStackGame');
+                    stacks.forEach(function(stack) {
+                        var entry2 = stack.querySelector('.sidebar-entry-2');
+                        if (!entry2) return;
+                        var icon  = entry2.querySelector('.promo-entry-icon');
+                        var title = entry2.querySelector('.hall-entry-title');
+                        var sub   = entry2.querySelector('.hall-entry-sub');
+                        if (icon)  icon.textContent = 'AION';
+                        if (title) title.textContent = '永恒之塔2游戏限免';
+                        if (sub)   sub.textContent   = '限时免费加速 ›';
+                    });
+
+                    // peek-label 联动：显示"xxx游戏限免"
+                    var pk1 = document.getElementById('peekPromoLine1');
+                    var pk2 = document.getElementById('peekPromoLine2');
+                    if (pk1) pk1.textContent = '永恒之塔2';
+                    if (pk2) pk2.textContent = '加速限免';
+                } else {
+                    // 恢复福利池模式
+                    banner.classList.remove('promo-single');
+                    // 激活第一项 + 恢复轮播
+                    if (items[0]) items[0].classList.add('is-active');
+                    startAuto();
+
+                    // 侧栏联动：恢复为限免福利池
+                    var stacks = document.querySelectorAll('#sidebarStack, #sidebarStackGame');
+                    stacks.forEach(function(stack) {
+                        var entry2 = stack.querySelector('.sidebar-entry-2');
+                        if (!entry2) return;
+                        var icon  = entry2.querySelector('.promo-entry-icon');
+                        var title = entry2.querySelector('.hall-entry-title');
+                        var sub   = entry2.querySelector('.hall-entry-sub');
+                        if (icon)  icon.textContent = '🎁';
+                        if (title) title.textContent = '热游重磅限免';
+                        if (sub)   sub.textContent   = 'EWC限免季 · 20款游戏 ›';
+                    });
+
+                    // peek-label 联动：恢复为福利池
+                    var pk1 = document.getElementById('peekPromoLine1');
+                    var pk2 = document.getElementById('peekPromoLine2');
+                    if (pk1) pk1.textContent = '热游重磅限免';
+                    if (pk2) pk2.textContent = '';
+                }
+            }
+
             // 暴露给外部调试
             window.promoCarousel = { goTo: goToSlide, pause: stopAuto, resume: startAuto };
+            window.setPromoMode = setPromoMode;
         })();

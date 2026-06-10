@@ -1999,7 +1999,7 @@
             overflow: hidden;
             border-radius: var(--radius-lg);
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
         }
 
         .team-header-bar {
@@ -2009,15 +2009,69 @@
             flex-shrink: 0;
         }
 
+        /* Team left nav pane — mirrors .nav-pane-v7 from champion detail */
+        .team-nav-pane {
+            flex: 0 0 130px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            padding: 120px 0 36px;
+        }
+        .team-nav-pane .nav-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .team-nav-pane .nav-item {
+            padding: 12px 28px;
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            letter-spacing: 3px;
+            font-weight: 500;
+        }
+        .team-nav-pane .nav-item:hover { color: var(--gold-light); }
+        .team-nav-pane .nav-item.active {
+            color: var(--gold-light);
+            font-weight: 500;
+        }
+        .team-nav-pane .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 22px;
+            background: var(--gold);
+        }
+
         .team-main {
             flex: 1;
             display: flex;
             position: relative;
             z-index: 5;
             overflow: hidden;
-            padding: 12px 64px 56px 64px;
+            padding: 12px 64px 56px 32px;
             gap: 56px;
             min-height: 0;
+            transition: opacity 0.28s ease, transform 0.28s ease;
+        }
+
+        /* Team switching transition */
+        .team-main.team-switching-out {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+        .team-main.team-switching-in {
+            animation: teamSwitchIn 0.45s ease forwards;
+        }
+        @keyframes teamSwitchIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         /* Left column — team identity */
@@ -2246,6 +2300,10 @@
         }
 
         /* Team page entrance animation */
+        .view#viewTeam.just-revealed .team-nav-pane {
+            animation: navSlideIn 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+            animation-delay: 0.05s;
+        }
         .view#viewTeam.just-revealed .team-portrait-stage {
             animation: champFadeInUp 0.65s cubic-bezier(0.22, 0.61, 0.36, 1) both;
             animation-delay: 0.08s;
@@ -2634,6 +2692,24 @@
             justify-content: center;
             z-index: 0;
             opacity: 0.7;
+        }
+
+        /* 限免福利池统一样式 */
+        .promo-pool-icon {
+            background: linear-gradient(135deg, #7c5ce0, #5a3cb8) !important;
+            font-size: 18px !important;
+            opacity: 0.85 !important;
+            border-radius: 10px !important;
+        }
+
+        .promo-pool-entry {
+            background: linear-gradient(135deg, #1e1640 0%, #2a2050 50%, #1e1640 100%) !important;
+            border-color: rgba(124, 92, 224, 0.30) !important;
+        }
+
+        .promo-pool-entry:hover {
+            border-color: rgba(140, 110, 240, 0.45) !important;
+            box-shadow: 0 6px 16px rgba(100, 70, 200, 0.25);
         }
 
         .my-games-header {
@@ -3300,6 +3376,18 @@
             transition: opacity 0.4s ease 0.15s;
         }
 
+        /* v8: card-2（限免卡）切到底层时，隐藏轮播/游戏列表 */
+        .banner-stack.state-1 .stack-card-2 .promo-carousel,
+        .banner-stack.state-1 .stack-card-2 .promo-game-sidebar {
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .banner-stack.state-2 .stack-card-2 .promo-carousel,
+        .banner-stack.state-2 .stack-card-2 .promo-game-sidebar {
+            opacity: 1;
+            transition: opacity 0.4s ease 0.15s;
+        }
+
         /* ========== 切换按钮 ========== */
         .stack-switch-btn {
             position: absolute;
@@ -3456,44 +3544,141 @@
             letter-spacing: 1px;
         }
 
-        .promo-figures {
+        /* ========== 限免卡片右侧竖排游戏列表 ========== */
+        .promo-game-sidebar {
             position: absolute;
             right: 0;
             top: 0;
             bottom: 0;
-            width: 50%;
+            width: 190px;
+            z-index: 3;
             display: flex;
-            align-items: flex-end;
+            flex-direction: column;
             justify-content: center;
-            gap: 0;
-            padding-right: 30px;
-            z-index: 1;
+            gap: 10px;
+            padding: 18px 16px 18px 0;
+            /* 左侧分隔线 */
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(90deg, rgba(20, 18, 40, 0.0) 0%, rgba(20, 18, 40, 0.6) 30%);
         }
 
-        .promo-fig {
-            width: 160px;
-            height: 250px;
-            border-radius: 12px 12px 0 0;
-            border: 2px dashed rgba(255, 255, 255, 0.15);
-            background: repeating-linear-gradient(
-                45deg,
-                rgba(255, 255, 255, 0.03),
-                rgba(255, 255, 255, 0.03) 10px,
-                rgba(255, 255, 255, 0.06) 10px,
-                rgba(255, 255, 255, 0.06) 20px
-            );
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 12px;
+        .promo-sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .promo-sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .promo-sidebar-item.is-active {
+            background: rgba(100, 80, 220, 0.22);
+            border-color: rgba(130, 110, 240, 0.45);
+            box-shadow: 0 0 12px rgba(100, 80, 220, 0.18);
+        }
+
+        .promo-sidebar-cover {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 8px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.5px;
         }
 
-        .promo-fig + .promo-fig {
-            margin-left: -30px;
+        .promo-sidebar-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
         }
 
-        /* ========== 限免卡片内轮播 ========== */
+        .promo-sidebar-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.92);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .promo-sidebar-tag {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 旧的角色占位（已弃用） */
+        .promo-figures { display: none; }
+
+        /* ========== 单款限免模式 (.promo-single) ========== */
+        /* 默认隐藏单款角色图 */
+        .promo-figures-single {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 45%;
+            display: none;           /* 默认隐藏 */
+            align-items: flex-end;
+            justify-content: center;
+            padding-right: 30px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .promo-fig-single {
+            width: 220px;
+            height: 100%;
+            border-radius: 12px 12px 0 0;
+            border: 2px dashed rgba(255, 255, 255, 0.12);
+            background:
+                radial-gradient(ellipse at 50% 70%, rgba(100, 80, 220, 0.12) 0%, transparent 70%),
+                repeating-linear-gradient(
+                    45deg,
+                    rgba(255, 255, 255, 0.02),
+                    rgba(255, 255, 255, 0.02) 10px,
+                    rgba(255, 255, 255, 0.05) 10px,
+                    rgba(255, 255, 255, 0.05) 20px
+                );
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 2px;
+        }
+
+        /* 单款模式激活 */
+        .promo-single .promo-game-sidebar {
+            display: none !important;
+        }
+
+        .promo-single .promo-figures-single {
+            display: flex;
+        }
+
+        .promo-single .promo-body {
+            max-width: 52%;
+        }
+
+        /* ========== 限免卡片内轮播（指示点已迁移到右侧游戏列表） ========== */
         .promo-carousel {
             position: absolute;
             inset: 0;
@@ -4139,6 +4324,39 @@
         .grand-tunnel.is-active {
             opacity: 1;
             pointer-events: all;
+        }
+
+        /* 隧道动效跳过按钮：播放1s后淡入，右上角 */
+        .tunnel-skip-btn {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            z-index: 220;
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: var(--gold-light);
+            background: rgba(30, 26, 22, 0.65);
+            border: 1px solid rgba(225, 208, 173, 0.35);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            transition: opacity 0.4s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+        .grand-tunnel.is-active .tunnel-skip-btn {
+            animation: tunnelSkipFadeIn 0.4s ease 1s forwards;
+        }
+        .tunnel-skip-btn:hover {
+            background: rgba(50, 44, 36, 0.8);
+            border-color: var(--gold-light);
+        }
+        @keyframes tunnelSkipFadeIn {
+            from { opacity: 0; pointer-events: none; }
+            to   { opacity: 1; pointer-events: all; }
         }
 
         .tunnel-stage {
@@ -5096,8 +5314,8 @@
             gap: 14px;
             max-width: 540px;
         }
-        /* intro 在 bottom 区域不再靠 layer1-zone 顶部，仅保留左侧细金线提示 */
-        .identity-bottom .champ-intro-v7 { padding-left: 14px; }
+        /* intro 格言样式 */
+        .identity-bottom .champ-intro-v7 { padding-left: 0; }
         /* honors-row 在 identity-bottom 区域：跟 intro 之间留一点呼吸 */
         .identity-bottom .honors-row-v7 {
             margin-top: 4px;
@@ -5205,27 +5423,23 @@
             font-weight: 600;
         }
 
-        /* Intro 职业弧线 */
+        /* Intro 冠军格言 */
         .champ-intro-v7 {
-            font-size: 12.5px;
-            line-height: 1.85;
-            color: var(--text-light);
+            font-family: 'Cormorant Garamond', 'Noto Serif SC', 'Georgia', serif;
+            font-size: 26px;
+            line-height: 1.6;
+            color: var(--gold-light);
             font-weight: 300;
-            letter-spacing: 0.4px;
-            max-width: 540px;
-            padding-left: 14px;
+            letter-spacing: 8px;
+            max-width: 620px;
+            white-space: nowrap;
+            padding-left: 0;
             position: relative;
             margin: 0;
+            text-shadow: 0 0 24px rgba(225, 208, 173, 0.12);
         }
         .champ-intro-v7::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 6px;
-            bottom: 6px;
-            width: 1px;
-            background: var(--gold);
-            opacity: 0.5;
+            display: none;
         }
 
         /* Honors v7 — 竖向：标题 + 3 行详细成就（年份 + 完整标题） */

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biubiu 冠军名人堂</title>
     <link rel="stylesheet" href="style.css?v=3">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- MVP DEV PANEL — fixed outside the prototype -->
@@ -52,16 +55,20 @@
                 </div>
             </div>
             <div class="dev-section">
+                <div class="dev-label">限免卡片模式</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="window.setPromoMode && window.setPromoMode('single')">单款限免</button>
+                    <button class="dev-btn" onclick="window.setPromoMode && window.setPromoMode('pool')">多款福利池</button>
+                </div>
+            </div>
+            <div class="dev-section">
                 <div class="dev-label">战队详情</div>
                 <div class="dev-btn-row">
                     <button class="dev-btn" onclick="devGoto('team', 'pero')">PeRo</button>
                     <button class="dev-btn" onclick="devGoto('team', '4am')">4AM</button>
                     <button class="dev-btn" onclick="devGoto('team', 'falcons')">Falcons</button>
-                    <button class="dev-btn" onclick="devGoto('team', '17')">17</button>
-                    <button class="dev-btn" onclick="devGoto('team', 'ig')">IG</button>
-                    <button class="dev-btn" onclick="devGoto('team', 'rng')">RNG</button>
-                    <button class="dev-btn" onclick="devGoto('team', 'ag')">AG</button>
                     <button class="dev-btn" onclick="devGoto('team', 'edg')">EDG</button>
+                    <button class="dev-btn" onclick="devGoto('team', 'ag')">AG</button>
                 </div>
             </div>
         </div>
@@ -120,6 +127,7 @@
             </div>
             <div class="tunnel-streaks" id="tunnelStreaks"></div>
             <div class="tunnel-light"></div>
+            <button class="tunnel-skip-btn" id="tunnelSkipBtn" type="button">跳过 ›</button>
         </div>
         <!-- 暖白幕：跟 grand-tunnel 同级，独立淡入淡出，承接"突破白光 → 缓缓显形" -->
         <div class="tunnel-veil" id="tunnelVeil" aria-hidden="true"></div>
@@ -187,10 +195,10 @@
                                 <div class="hall-entry-title">Biubiu冠军名人堂</div>
                                 <div class="hall-entry-sub">探寻冠军之路</div>
                             </div>
-                            <div class="hall-entry-card sidebar-entry sidebar-entry-2 promo-entry" onclick="showPlaza()">
-                                <div class="promo-entry-icon">AION</div>
-                                <div class="hall-entry-title">限免加速</div>
-                                <div class="hall-entry-sub">EWC限免季进行中 ›</div>
+                            <div class="hall-entry-card sidebar-entry sidebar-entry-2 promo-entry promo-pool-entry" onclick="showPlaza()">
+                                <div class="promo-entry-icon promo-pool-icon">🎁</div>
+                                <div class="hall-entry-title">热游重磅限免</div>
+                                <div class="hall-entry-sub">EWC限免季 · 20款游戏 ›</div>
                             </div>
                         </div>
 
@@ -280,10 +288,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="promo-figures">
-                                            <div class="promo-fig">角色A</div>
-                                            <div class="promo-fig">角色B</div>
-                                        </div>
                                     </div>
 
                                     <!-- Slide 2: PUBG 限免加速 -->
@@ -304,10 +308,6 @@
                                                     <button class="promo-btn-alt">⊕ 活动详情</button>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="promo-figures">
-                                            <div class="promo-fig promo-fig-pubg">角色C</div>
-                                            <div class="promo-fig promo-fig-pubg">角色D</div>
                                         </div>
                                     </div>
 
@@ -330,24 +330,43 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="promo-figures">
-                                            <div class="promo-fig promo-fig-sf6">角色E</div>
-                                            <div class="promo-fig promo-fig-sf6">角色F</div>
+                                    </div>
+                                </div>
+
+                                <!-- 单款模式：右侧角色图占位（仅 .promo-single 时可见） -->
+                                <div class="promo-figures-single">
+                                    <div class="promo-fig-single">角色形象</div>
+                                </div>
+
+                                <!-- 右侧竖排游戏列表（兼做轮播切换控件，仅多款模式可见） -->
+                                <div class="promo-game-sidebar" id="promoSidebar">
+                                    <div class="promo-sidebar-item is-active" data-slide="0">
+                                        <div class="promo-sidebar-cover cover-aion">AION 2</div>
+                                        <div class="promo-sidebar-info">
+                                            <div class="promo-sidebar-name">永恒之塔2</div>
+                                            <div class="promo-sidebar-tag">AION 2</div>
+                                        </div>
+                                    </div>
+                                    <div class="promo-sidebar-item" data-slide="1">
+                                        <div class="promo-sidebar-cover cover-pubg">PUBG</div>
+                                        <div class="promo-sidebar-info">
+                                            <div class="promo-sidebar-name">绝地求生</div>
+                                            <div class="promo-sidebar-tag">PUBG</div>
+                                        </div>
+                                    </div>
+                                    <div class="promo-sidebar-item" data-slide="2">
+                                        <div class="promo-sidebar-cover cover-sf6">SF6</div>
+                                        <div class="promo-sidebar-info">
+                                            <div class="promo-sidebar-name">街头霸王6</div>
+                                            <div class="promo-sidebar-tag">STREET FIGHTER 6</div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- 轮播指示点 -->
-                                <div class="promo-dots" id="promoDots">
-                                    <span class="promo-dot promo-dot-active"></span>
-                                    <span class="promo-dot"></span>
-                                    <span class="promo-dot"></span>
-                                </div>
-
                                 <!-- 底层时右侧露出区域的标签（随轮播同步） -->
                                 <div class="peek-label" id="peekLabelPromo">
-                                    <div class="peek-label-line" id="peekPromoLine1">限免加速</div>
-                                    <div class="peek-label-line" id="peekPromoLine2">EWC限免季</div>
+                                    <div class="peek-label-line" id="peekPromoLine1">热游重磅限免</div>
+                                    <div class="peek-label-line" id="peekPromoLine2"></div>
                                 </div>
                             </div>
 
@@ -457,10 +476,10 @@
                                 <div class="hall-entry-title">Biubiu冠军名人堂</div>
                                 <div class="hall-entry-sub">探寻冠军之路</div>
                             </div>
-                            <div class="hall-entry-card sidebar-entry sidebar-entry-2 promo-entry" onclick="showPlaza()">
-                                <div class="promo-entry-icon">AION</div>
-                                <div class="hall-entry-title">限免加速</div>
-                                <div class="hall-entry-sub">EWC限免季进行中 ›</div>
+                            <div class="hall-entry-card sidebar-entry sidebar-entry-2 promo-entry promo-pool-entry" onclick="showPlaza()">
+                                <div class="promo-entry-icon promo-pool-icon">🎁</div>
+                                <div class="hall-entry-title">热游重磅限免</div>
+                                <div class="hall-entry-sub">EWC限免季 · 20款游戏 ›</div>
                             </div>
                         </div>
 
@@ -710,16 +729,6 @@
                             <span class="champ-name-v7" id="champName">曾卓君</span>
                         </div>
                         <div class="champ-tag-v7" id="champTag">中国格斗电竞传奇</div>
-                        <div class="combat-tags">
-                            <div class="combat-chip">
-                                <span class="chip-label">代表游戏</span>
-                                <span class="chip-value" id="champGame">街霸6</span>
-                            </div>
-                            <div class="combat-chip">
-                                <span class="chip-label" id="champRoleLabel">招牌角色</span>
-                                <span class="chip-value" id="champRoleValue">不知火舞</span>
-                            </div>
-                        </div>
                     </div>
                     <div class="identity-bottom">
                         <p class="champ-intro-v7" id="champIntro">六岁拿起手柄，从街机厅一路打进世界总决赛。曾卓君是少有能跨越游戏代际、在每一代格斗游戏都封王的人——也是国人心中"格斗大魔王"的代名词。</p>
@@ -763,6 +772,16 @@
                 <div class="particles" id="teamParticles"></div>
 
                 <div class="back-btn" onclick="showHall()">‹ 返回</div>
+
+                <aside class="team-nav-pane" id="teamNavPane">
+                    <nav class="nav-list">
+                        <div class="nav-item active" data-team="pero">PeRo</div>
+                        <div class="nav-item" data-team="4am">4AM</div>
+                        <div class="nav-item" data-team="falcons">Falcons</div>
+                        <div class="nav-item" data-team="edg">EDG</div>
+                        <div class="nav-item" data-team="ag">AG</div>
+                    </nav>
+                </aside>
 
                 <div class="team-main">
                     <div class="team-portrait-stage">
