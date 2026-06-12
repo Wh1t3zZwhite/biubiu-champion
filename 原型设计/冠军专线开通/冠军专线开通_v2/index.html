@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biubiu 冠军专线开通全流程</title>
+    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- MVP DEV PANEL -->
+    <div class="dev-panel" id="devPanel">
+        <div class="dev-panel-header">
+            <span class="dev-title">MVP 调试</span>
+            <button class="dev-toggle" onclick="document.getElementById('devPanel').classList.toggle('collapsed')">_</button>
+        </div>
+        <div class="dev-panel-body">
+            <div class="dev-section">
+                <div class="dev-label">开通流程</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devGoto('main')">主界面</button>
+                    <button class="dev-btn" onclick="devGoto('activation')">开通仪式</button>
+                    <button class="dev-btn" onclick="devGoto('delivery')">交付仪式</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">步骤跳转</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="devJumpToStep(0)">Intro</button>
+                    <button class="dev-btn" onclick="devJumpToStep(1)">① 本地网络检测</button>
+                    <button class="dev-btn" onclick="devJumpToStep(2)">② 本地网络优化</button>
+                    <div class="dev-btn-row" style="margin-top:4px">
+                        <button class="dev-btn dev-btn--sub" onclick="devJumpToStep2Sub(1)">2.1 优化</button>
+                        <button class="dev-btn dev-btn--sub" onclick="devJumpToStep2Sub(2)">2.2 总结</button>
+                    </div>
+                    <button class="dev-btn" onclick="devJumpToStep(3)">③ 节点匹配度检测</button>
+                    <button class="dev-btn" onclick="devJumpToStep(4)">④ 专属绑定</button>
+                </div>
+            </div>
+            <div class="dev-section">
+                <div class="dev-label">全流程串联</div>
+                <div class="dev-btn-row">
+                    <button class="dev-btn" onclick="playFullFlow()">一键演示</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app">
+
+        <!-- =========================== -->
+        <!-- MAIN CLIENT VIEW (主界面) -->
+        <!-- =========================== -->
+        <div class="view" id="viewMain">
+            <div class="main-client">
+                <!-- 顶部导航栏 (v8 plaza-topbar 原版) -->
+                <div class="plaza-topbar">
+                    <div class="plaza-brand">
+                        <span class="brand-logo">biubiu</span>
+                        <span class="brand-sub">灵犀互娱旗下产品</span>
+                    </div>
+
+                    <div class="plaza-user-promo" id="topbarAvatar" onclick="toggleAvatarDropdown()">
+                        <div class="avatar"></div>
+                        <div class="promo-text">
+                            <span class="promo-top">会员</span>
+                            <span class="promo-bottom">张先生<span class="countdown"> · 到期</span></span>
+                        </div>
+                    </div>
+
+                    <div class="plaza-search">
+                        <span class="search-icon">⌕</span>
+                        <input type="text" placeholder="搜索游戏" />
+                    </div>
+
+                    <div class="plaza-topbar-actions">
+                        <button class="plaza-btn-pill btn-exchange"><span class="pill-emoji">⇋</span> 兑换</button>
+                        <button class="plaza-btn-pill btn-student"><span class="btn-mascot"></span>学生优惠</button>
+                        <div class="plaza-win-ctrl">
+                            <span>▦</span>
+                            <span>◷</span>
+                            <span>—</span>
+                            <span>✕</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body: sidebar + main + tools -->
+                <div class="plaza-body">
+                    <!-- 左侧游戏列表侧栏 (v8 原版 280px) -->
+                    <aside class="plaza-sidebar">
+                        <div class="my-games-header">
+                            <span>我的游戏(3)</span>
+                            <span class="arrow-right">›</span>
+                        </div>
+
+                        <div class="my-games-list">
+                            <div class="game-card is-active" data-game="sf6">
+                                <div class="game-cover cover-sf6">STREET<br>FIGHTER 6</div>
+                                <div class="game-name">街头霸王6</div>
+                            </div>
+                            <div class="game-card" data-game="pubg">
+                                <div class="game-cover cover-pubg">PUBG<br>BATTLEGROUNDS</div>
+                                <div class="game-name">绝地求生</div>
+                            </div>
+                            <div class="game-card" data-game="aion2">
+                                <div class="game-cover cover-aion">AION 2</div>
+                                <div class="game-name">永恒之塔2</div>
+                            </div>
+                        </div>
+
+                        <button class="all-games-btn">+ 添加游戏</button>
+                    </aside>
+
+                    <!-- 中央主内容区 -->
+                    <main class="plaza-main">
+                        <div class="client-hero">
+                            <div class="hero-bg hero-bg-sf6"></div>
+                            <div class="hero-overlay">
+                                <div class="hero-logo-block">
+                                    <div class="hero-logo">STREET FIGHTER 6</div>
+                                    <div class="hero-tagline">电竞加速 · 冠军级低延迟</div>
+                                </div>
+                                <div class="hero-launch-block">
+                                    <div class="hero-name-row">
+                                        <span class="hero-game-name">街头霸王6</span>
+                                        <span class="hero-mode-pill">排位赛 · 冠军专线可用</span>
+                                    </div>
+                                    <div class="hero-platforms">同步加速 Steam / Epic</div>
+                                    <div class="hero-launch-row">
+                                        <button class="launch-btn">
+                                            <span class="launch-bolt">⚡</span>
+                                            <span>电竞加速</span>
+                                        </button>
+                                        <button class="champion-line-btn" onclick="goToOrderFromMain()">
+                                            <span>前往冠军专线</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-bottom-strip">
+                            <span class="strip-icon">⚠</span>
+                            <span>biubiu联动PCL送福利，瓜分100万G币！每周三周四免费加速！</span>
+                        </div>
+                    </main>
+
+                    <!-- 右侧工具面板 -->
+                    <aside class="client-tools-panel">
+                        <div class="tools-title">工具</div>
+                        <div class="tools-list">
+                            <div class="tool-item">
+                                <div class="tool-icon tool-icon-orange">🎁</div>
+                                <span class="tool-label">送好友加速卡</span>
+                                <span class="tool-arrow">›</span>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-icon tool-icon-blue">🎯</div>
+                                <span class="tool-label">外置准星</span>
+                                <span class="tool-status tool-status-off">未开启</span>
+                                <span class="tool-arrow">›</span>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-icon tool-icon-gold">💰</div>
+                                <span class="tool-label">赏金行动</span>
+                                <span class="tool-arrow">›</span>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-icon tool-icon-purple">🎁</div>
+                                <span class="tool-label">直播掉宝</span>
+                                <span class="tool-arrow">›</span>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-icon tool-icon-green">👣</div>
+                                <span class="tool-label">脚步声增强</span>
+                                <span class="tool-arrow">›</span>
+                            </div>
+                            <div class="tool-item">
+                                <div class="tool-icon tool-icon-gray">⚙</div>
+                                <span class="tool-label">卡大厅修复</span>
+                                <span class="tool-status tool-status-on">已开启</span>
+                                <span class="tool-arrow">›</span>
+                            </div>
+                        </div>
+                        <button class="all-tools-btn">▦ 全部工具</button>
+                        <div class="faq-row">
+                            <span class="faq-tag">FAQ</span>
+                            <span>常见问题解答</span>
+                        </div>
+                    </aside>
+                </div>
+
+                <!-- ★ 头像下拉菜单 (核心入口) -->
+                <div class="avatar-dropdown" id="avatarDropdown">
+                    <!-- 用户信息区 -->
+                    <div class="dropdown-user-info">
+                        <div class="dropdown-avatar"></div>
+                        <div class="dropdown-user-detail">
+                            <div class="dropdown-user-phone">185****9602</div>
+                            <div class="dropdown-user-id">ID: 1127895802</div>
+                        </div>
+                        <span class="dropdown-account-link">账号与安全 ›</span>
+                    </div>
+                    <!-- 会员状态 -->
+                    <div class="dropdown-member-bar">
+                        <span class="dropdown-member-icon">♛</span>
+                        <span class="dropdown-member-text">全平台会员</span>
+                        <span class="dropdown-member-date">2026-09-11到期</span>
+                    </div>
+                    <div class="dropdown-renew-hint">
+                        <span class="renew-price">低至0.4元/天</span>
+                        <span class="renew-btn">续费全平台会员 ›</span>
+                    </div>
+                    <!-- 分隔线 -->
+                    <div class="dropdown-divider"></div>
+                    <!-- ★ 冠军专线入口 (高亮) -->
+                    <div class="dropdown-champion-entry" onclick="goToOrderFromMain()">
+                        <div class="dce-icon">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+                                <path d="M4 20 L7 10 L12 14 L17 6 L22 14 L25 10 L28 20 Z" fill="url(#dceGrad)" stroke="#e1d0ad" stroke-width="0.8"/>
+                                <defs><linearGradient id="dceGrad" x1="0" y1="0" x2="0" y2="24"><stop offset="0" stop-color="#e1d0ad"/><stop offset="1" stop-color="#978363"/></linearGradient></defs>
+                            </svg>
+                        </div>
+                        <div class="dce-text">
+                            <span class="dce-title">冠军专线</span>
+                            <span class="dce-desc">专属加速通道 · 冠军级低延迟</span>
+                        </div>
+                        <span class="dce-badge">开通</span>
+                        <span class="dce-arrow">›</span>
+                    </div>
+                    <!-- 分隔线 -->
+                    <div class="dropdown-divider"></div>
+                    <!-- 其他菜单项 -->
+                    <div class="dropdown-menu-item">
+                        <div class="dmi-icon dmi-icon-orange">📅</div>
+                        <span class="dmi-label">每日签到</span>
+                        <span class="dmi-hint">再签4天得抽奖券</span>
+                        <span class="dmi-arrow">›</span>
+                    </div>
+                    <div class="dropdown-menu-item">
+                        <div class="dmi-icon dmi-icon-blue">🎫</div>
+                        <span class="dmi-label">我的优惠券</span>
+                        <span class="dmi-count">1张</span>
+                        <span class="dmi-arrow">›</span>
+                    </div>
+                    <div class="dropdown-menu-item">
+                        <div class="dmi-icon dmi-icon-purple">📊</div>
+                        <span class="dmi-label">加速报告</span>
+                        <span class="dmi-arrow">›</span>
+                    </div>
+                    <div class="dropdown-menu-item">
+                        <div class="dmi-icon dmi-icon-gray">⚙</div>
+                        <span class="dmi-label">设置</span>
+                        <span class="dmi-arrow">›</span>
+                    </div>
+                    <!-- 分隔线 -->
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-menu-item dropdown-logout">
+                        <div class="dmi-icon dmi-icon-red">⏻</div>
+                        <span class="dmi-label">退出账号</span>
+                    </div>
+                </div>
+                <!-- 下拉菜单遮罩 -->
+                <div class="dropdown-backdrop" id="dropdownBackdrop" onclick="closeAvatarDropdown()"></div>
+            </div>
+        </div>
+
+
+        <!-- =========================== -->
+        <!-- ACTIVATION PAGE (开通仪式) -->
+        <!-- =========================== -->
+        <div class="view" id="viewActivation">
+            <div class="activation-page">
+                <!-- 开场画面 -->
+                <div class="activation-intro is-visible" id="actIntro">
+                    <div class="back-btn" onclick="backFromActivation()">‹ 返回</div>
+                    <div class="intro-spotlight"></div>
+                    <div class="intro-particles" id="actIntroParticles"></div>
+                    <div class="intro-content">
+                        <div class="intro-badge">CHAMPION LINE</div>
+                        <h1 class="intro-title">冠军专线</h1>
+                        <div class="intro-subtitle">专属开通服务</div>
+                        <div class="intro-divider">
+                            <span class="divider-line"></span>
+                            <span class="divider-diamond">◆</span>
+                            <span class="divider-line"></span>
+                        </div>
+                        <p class="intro-desc">为您专属定制加速通道</p>
+                        <div class="intro-info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Biubiu ID</span>
+                                <span class="info-value">1127895802</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">冠军专线游戏类型</span>
+                                <span class="info-value">街头霸王6</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">冠军专线席位</span>
+                                <span class="info-value">CHAMPION-SF6-042</span>
+                            </div>
+                        </div>
+                        <p class="intro-ritual-hint">以下流程将针对您的本地网络与游戏偏好进行专属配置</p>
+                        <button class="intro-start-btn" onclick="actStartCeremony()">
+                            <span class="btn-text">开始开通</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 七步剧场 -->
+                <div class="activation-ceremony" id="actCeremony">
+                    <div class="side-nav">
+                        <div class="side-nav-header">
+                            <div class="side-nav-title">配置流程</div>
+                            <div class="side-nav-sub">Champion Line Setup</div>
+                        </div>
+                        <div class="nav-steps" id="actNavSteps">
+                            <div class="nav-step" data-step="1"><div class="nav-step-indicator">1</div><div class="nav-step-text"><span class="nav-step-name">本地网络检测</span><span class="nav-step-status">等待中</span></div></div>
+                            <div class="nav-step" data-step="2"><div class="nav-step-indicator">2</div><div class="nav-step-text"><span class="nav-step-name">本地网络优化</span><span class="nav-step-status">等待中</span></div></div>
+                            <div class="nav-step" data-step="3"><div class="nav-step-indicator">3</div><div class="nav-step-text"><span class="nav-step-name">节点匹配度检测</span><span class="nav-step-status">等待中</span></div></div>
+                            <div class="nav-step" data-step="4"><div class="nav-step-indicator">4</div><div class="nav-step-text"><span class="nav-step-name">专属绑定</span><span class="nav-step-status">等待中</span></div></div>
+                        </div>
+                        <div class="side-nav-footer">
+                            <div class="nav-progress-text" id="actNavProgressText">0 / 4</div>
+                            <div class="nav-progress-bar"><div class="nav-progress-fill" id="actNavProgressFill"></div></div>
+                        </div>
+                    </div>
+                    <div class="main-content">
+                        <div class="content-atmosphere"></div>
+                        <div class="scan-line"></div>
+                        <div class="gold-particles" id="actGoldParticles"></div>
+                        <div class="step-stage" id="actStepStage">
+                            <!-- Step 1 --><div class="step-panel" id="actStep1"><div class="step-header"><div class="step-number">01</div><div class="step-title">本地网络环境检测</div></div><div class="step-body"><div class="radar-layout"><div class="radar-chart-wrap"><svg viewBox="0 0 280 280" class="radar-svg" id="actRadarSvg"><circle class="radar-bg" cx="140" cy="140" r="95" /><g class="radar-scan-group" id="actRadarScanGroup"><line class="radar-scan-line" x1="140" y1="140" x2="140" y2="48" /></g><g class="radar-grid-group" id="actRadarGridGroup"><circle class="radar-grid-ring" cx="140" cy="140" r="30" /><circle class="radar-grid-ring" cx="140" cy="140" r="60" /><circle class="radar-grid-ring radar-grid-outer" cx="140" cy="140" r="90" /><line class="radar-axis" x1="140" y1="140" x2="140" y2="50" /><line class="radar-axis" x1="140" y1="140" x2="217.94" y2="95" /><line class="radar-axis" x1="140" y1="140" x2="217.94" y2="185" /><line class="radar-axis" x1="140" y1="140" x2="140" y2="230" /><line class="radar-axis" x1="140" y1="140" x2="62.06" y2="185" /><line class="radar-axis" x1="140" y1="140" x2="62.06" y2="95" /></g><polygon class="radar-data" id="actRadarData" points="140,140 140,140 140,140 140,140 140,140 140,140" /><g class="radar-labels-group" id="actRadarLabelsGroup"><text class="radar-label" x="140" y="34" text-anchor="middle">延迟表现</text><text class="radar-label" x="232" y="82" text-anchor="start">下行带宽</text><text class="radar-label" x="232" y="198" text-anchor="start">上行带宽</text><text class="radar-label" x="140" y="258" text-anchor="middle">NAT 开放度</text><text class="radar-label" x="48" y="198" text-anchor="end">丢包抑制</text><text class="radar-label" x="48" y="82" text-anchor="end">抖动控制</text></g></svg><div class="radar-center-score"><div class="radar-score-num" id="actRadarScore">—</div><div class="radar-score-label">综合评级</div></div></div><div class="radar-legend" id="actRadarLegend"><div class="radar-legend-item"><span class="legend-dot"></span><span class="legend-label">延迟表现</span><span class="legend-val" id="actLegendPing">—</span></div><div class="radar-legend-item"><span class="legend-dot"></span><span class="legend-label">下行带宽</span><span class="legend-val" id="actLegendBW">—</span></div><div class="radar-legend-item"><span class="legend-dot"></span><span class="legend-label">上行带宽</span><span class="legend-val" id="actLegendBWUp">—</span></div><div class="radar-legend-item"><span class="legend-dot"></span><span class="legend-label">NAT 开放度</span><span class="legend-val" id="actLegendNAT">—</span></div><div class="radar-legend-item"><span class="legend-dot"></span><span class="legend-label">丢包抑制</span><span class="legend-val" id="actLegendLoss">—</span></div><div class="radar-legend-item"><span class="legend-dot"></span><span class="legend-label">抖动控制</span><span class="legend-val" id="actLegendJitter">—</span></div></div></div><div class="identity-cards" id="actIdentityCards"><div class="id-card" id="actIdCardIP"><div class="id-card-icon-wrap"><span class="id-card-icon">🌐</span></div><div class="id-card-body"><div class="id-card-label">公网 IP</div><div class="id-card-value" id="actValIP">扫描中...</div><div class="id-card-desc" id="actSubIP"></div></div></div><div class="id-card" id="actIdCardISP"><div class="id-card-icon-wrap"><span class="id-card-icon">📡</span></div><div class="id-card-body"><div class="id-card-label">运营商</div><div class="id-card-value" id="actValISP">检测中...</div><div class="id-card-desc" id="actSubISP"></div></div></div></div><div class="detect-privacy" id="actDetectPrivacy"><span class="detect-privacy-icon">◇</span><span class="detect-privacy-text">我们始终在意您的隐私数据保护，相关检测数据仅用于冠军专线调优，不会用于其他目的</span></div></div></div>
+                            <!-- Step 2 --><div class="step-panel" id="actStep2"><div class="step-header"><div class="step-number">02</div><div class="step-title">本地网络优化</div></div><div class="step-body" id="actStep2Body"><div class="act-stage" id="act2Stage2"><div class="opt-progress" id="act2OptProgress"><div class="opt-progress-bar"><div class="opt-progress-fill" id="act2OptProgressFill"></div></div><div class="opt-progress-text"><span id="act2OptProgressPct">0%</span> · <span id="act2OptProgressLabel">准备优化</span></div></div><div class="opt-banner"><span class="opt-banner-icon">◇</span><span class="opt-banner-text">针对您的本地网络监测结果，特地为您执行以下5项专属优化</span></div><div class="opt-exec-list"><div class="opt-exec-item" id="act2OptExec1"><div class="opt-exec-left"><span class="opt-exec-icon">◈</span><div class="opt-exec-info"><span class="opt-exec-name">TCP 窗口调优</span><span class="opt-exec-reason">基于 942Mbps 高带宽适配</span></div></div><div class="opt-exec-right"><span class="opt-exec-before">65535</span><span class="opt-exec-arrow">→</span><span class="opt-exec-after" id="act2OptAfter1">—</span></div><div class="opt-exec-status" id="act2OptStatus1">等待中</div></div><div class="opt-exec-item" id="act2OptExec2"><div class="opt-exec-left"><span class="opt-exec-icon">◈</span><div class="opt-exec-info"><span class="opt-exec-name">Nagle 算法优化</span><span class="opt-exec-reason">消除小包延迟，适配格斗游戏</span></div></div><div class="opt-exec-right"><span class="opt-exec-before">启用</span><span class="opt-exec-arrow">→</span><span class="opt-exec-after" id="act2OptAfter2">—</span></div><div class="opt-exec-status" id="act2OptStatus2">等待中</div></div><div class="opt-exec-item" id="act2OptExec3"><div class="opt-exec-left"><span class="opt-exec-icon">◈</span><div class="opt-exec-info"><span class="opt-exec-name">QoS 优先级策略</span><span class="opt-exec-reason">游戏数据包优先转发</span></div></div><div class="opt-exec-right"><span class="opt-exec-before">未配置</span><span class="opt-exec-arrow">→</span><span class="opt-exec-after" id="act2OptAfter3">—</span></div><div class="opt-exec-status" id="act2OptStatus3">等待中</div></div><div class="opt-exec-item" id="act2OptExec4"><div class="opt-exec-left"><span class="opt-exec-icon">◈</span><div class="opt-exec-info"><span class="opt-exec-name">BBR 拥塞控制</span><span class="opt-exec-reason">基于 0.00% 低丢包率特征</span></div></div><div class="opt-exec-right"><span class="opt-exec-before">CUBIC</span><span class="opt-exec-arrow">→</span><span class="opt-exec-after" id="act2OptAfter4">—</span></div><div class="opt-exec-status" id="act2OptStatus4">等待中</div></div><div class="opt-exec-item" id="act2OptExec5"><div class="opt-exec-left"><span class="opt-exec-icon">◈</span><div class="opt-exec-info"><span class="opt-exec-name">DNS 智能路由</span><span class="opt-exec-reason">优化域名解析延迟</span></div></div><div class="opt-exec-right"><span class="opt-exec-before">默认</span><span class="opt-exec-arrow">→</span><span class="opt-exec-after" id="act2OptAfter5">—</span></div><div class="opt-exec-status" id="act2OptStatus5">等待中</div></div></div><div class="opt-summary" id="act2OptSummary"><span class="opt-summary-icon">✓</span><span class="opt-summary-text">5 项优化全部完成 · 相当于专业网络工程师上门调优服务</span></div></div><div class="act-stage" id="act2Stage3"><div class="summ-title">优化总结</div><div class="summ-section"><div class="summ-section-title">已优化事项</div><div class="summ-opt-grid"><div class="summ-opt-card"><div class="summ-opt-card-icon">◈</div><div class="summ-opt-card-title">帧级同步</div><div class="summ-opt-card-desc">TCP窗口调优后帧数据精准同步——街霸中6帧技确反时机分毫不差</div></div><div class="summ-opt-card"><div class="summ-opt-card-icon">◆</div><div class="summ-opt-card-title">指令即达</div><div class="summ-opt-card-desc">禁用Nagle后小包零排队，轻拳确认、复合指令即刻响应，无延迟感</div></div><div class="summ-opt-card"><div class="summ-opt-card-icon">◇</div><div class="summ-opt-card-title">稳定如磐</div><div class="summ-opt-card-desc">BBR智能适应波动，Drive Impact对撞、超必杀连段关键时刻不掉链子</div></div><div class="summ-opt-card"><div class="summ-opt-card-icon">⬥</div><div class="summ-opt-card-title">独占优先</div><div class="summ-opt-card-desc">QoS确保游戏数据优先，家中看视频下载时排位对战依然流畅</div></div></div></div><div class="summ-section"><div class="summ-section-title">待优化建议</div><div class="summ-hw-hint">建议您对以下硬件环境进行优化，以获得良好的网络体验.</div><div class="summ-hw-wrap"><button class="summ-hw-arrow summ-hw-arrow--left" onclick="scrollHW(-1)" aria-label="向左滚动">‹</button><div class="summ-hw-scroll"><div class="summ-hw-track"><div class="summ-hw-card"><span class="summ-hw-card-icon">▸</span><span class="summ-hw-card-text">使用有线连接（网线直连路由器），避免WiFi干扰导致延迟波动</span></div><div class="summ-hw-card"><span class="summ-hw-card-icon">▸</span><span class="summ-hw-card-text">开启路由器游戏加速/QoS功能，路由层面为游戏设备优先转发</span></div><div class="summ-hw-card"><span class="summ-hw-card-icon">▸</span><span class="summ-hw-card-text">确认光猫为千兆端口，匹配当前942Mbps高带宽，避免端口瓶颈</span></div><div class="summ-hw-card"><span class="summ-hw-card-icon">▸</span><span class="summ-hw-card-text">NAT类型已为Open，联机匹配无限制，无需额外调整</span></div></div></div><button class="summ-hw-arrow summ-hw-arrow--right" onclick="scrollHW(1)" aria-label="向右滚动">›</button></div></div></div></div></div>
+                            <!-- Step 3 --><div class="step-panel" id="actStep3"><div class="step-header"><div class="step-number">03</div><div class="step-title">专线节点匹配度检测</div></div><div class="step-body"><div class="match-visual"><div class="match-topology" id="actMatchTopology"><div class="match-local-wrap"><div class="match-endpoint match-local"><div class="endpoint-dot"></div><div class="endpoint-label">您的设备</div><div class="endpoint-sub" id="actMatchLocalInfo">广东 · 电信</div></div></div><div class="match-star-area"><div class="match-candidate" data-node="0" id="actMatchNode0"><div class="candidate-line" id="actMatchLine0"><div class="candidate-pulse" id="actMatchPulse0"></div></div><div class="candidate-node-wrap"><div class="candidate-dot" id="actMatchDot0"></div><div class="candidate-info"><div class="candidate-name">广州·竞技专线节点</div><div class="candidate-detail">Biubiu-CN-GZ-07</div></div><div class="candidate-metric" id="actMatchMetric0"></div></div></div><div class="match-candidate" data-node="1" id="actMatchNode1"><div class="candidate-line" id="actMatchLine1"><div class="candidate-pulse" id="actMatchPulse1"></div></div><div class="candidate-node-wrap"><div class="candidate-dot" id="actMatchDot1"></div><div class="candidate-info"><div class="candidate-name">深圳·华南加速节点</div><div class="candidate-detail">Biubiu-CN-SZ-03</div></div><div class="candidate-metric" id="actMatchMetric1"></div></div></div><div class="match-candidate" data-node="2" id="actMatchNode2"><div class="candidate-line" id="actMatchLine2"><div class="candidate-pulse" id="actMatchPulse2"></div></div><div class="candidate-node-wrap"><div class="candidate-dot" id="actMatchDot2"></div><div class="candidate-info"><div class="candidate-name">上海·华东骨干节点</div><div class="candidate-detail">Biubiu-CN-SH-12</div></div><div class="candidate-metric" id="actMatchMetric2"></div></div></div><div class="match-candidate" data-node="3" id="actMatchNode3"><div class="candidate-line" id="actMatchLine3"><div class="candidate-pulse" id="actMatchPulse3"></div></div><div class="candidate-node-wrap"><div class="candidate-dot" id="actMatchDot3"></div><div class="candidate-info"><div class="candidate-name">成都·西部备用节点</div><div class="candidate-detail">Biubiu-CN-CD-05</div></div><div class="candidate-metric" id="actMatchMetric3"></div></div></div></div></div><div class="match-result" id="actMatchResult"><div class="match-result-main"><div class="match-score-ring"><svg viewBox="0 0 120 120"><circle class="ring-bg" cx="60" cy="60" r="52" /><circle class="ring-fill" cx="60" cy="60" r="52" id="actMatchRing" /></svg><div class="match-score-text"><span class="score-num" id="actMatchScoreNum">—</span><span class="score-unit">%</span></div></div><div class="match-score-label">综合匹配度</div></div><div class="match-detail-cards" id="actMatchDetailCards"><div class="match-detail-card"><div class="match-detail-label">链路 RTT</div><div class="match-detail-value" id="actMatchDetailRTT">—</div><div class="match-detail-desc">往返延迟，越低越流畅</div></div><div class="match-detail-card"><div class="match-detail-label">预计游戏延迟</div><div class="match-detail-value" id="actMatchDetailGameLatency">—</div><div class="match-detail-desc">含服务器处理时延</div></div><div class="match-detail-card"><div class="match-detail-label">链路稳定性</div><div class="match-detail-value" id="actMatchDetailStability">—</div><div class="match-detail-desc">抖动越低越稳定</div></div><div class="match-detail-card"><div class="match-detail-label">带宽保障</div><div class="match-detail-value" id="actMatchDetailBW">—</div><div class="match-detail-desc">独享带宽，不共享</div></div></div><div class="match-explain" id="actMatchExplain"><span class="match-explain-icon">◆</span><span class="match-explain-text" id="actMatchExplainText"></span></div></div></div></div></div>
+                            <!-- Step 4 --><div class="step-panel" id="actStep4"><div class="step-header"><div class="step-number">04</div><div class="step-title">专线服务器专属建联绑定</div></div><div class="step-body"><div class="bind-progress-wrap"><div class="bind-progress-bar"><div class="bind-progress-fill" id="actBindProgressFill"></div></div><div class="bind-progress-pct" id="actBindProgressPct">0%</div><div class="bind-tech-log" id="actBindTechLog"></div></div><div class="bind-visual" id="actBindVisual"><div class="bind-ceremony" id="actBindCeremony"><div class="bind-ring bind-ring-outer"></div><div class="bind-ring bind-ring-inner"></div><div class="bind-core"><div class="bind-icon">🔗</div></div></div><div class="bind-status-text" id="actBindStatusText">准备建立专属通道...</div><div class="bind-info-grid"><div class="bind-info-card"><div class="bind-info-label">专属节点</div><div class="bind-info-value" id="actBindNodeName">—</div><div class="bind-info-desc" id="actBindNodeNameDesc"></div></div><div class="bind-info-card"><div class="bind-info-label">专属 IP</div><div class="bind-info-value" id="actBindNodeIP">—</div><div class="bind-info-desc" id="actBindNodeIPDesc"></div></div><div class="bind-info-card"><div class="bind-info-label">通道类型</div><div class="bind-info-value" id="actBindEncrypt">—</div><div class="bind-info-desc" id="actBindEncryptDesc"></div></div><div class="bind-info-card bind-status-card"><div class="bind-info-label">绑定状态</div><div class="bind-info-value" id="actBindStatus">—</div></div></div><div class="bind-exclusive" id="actBindExclusive"><span class="bind-exclusive-icon">⬥</span><span class="bind-exclusive-text">此专线通道仅为您服务，不与其他用户共享任何网络资源</span></div><div class="bind-metrics" id="actBindMetrics"><div class="bind-metric-item"><div class="bind-metric-label">隧道协议</div><div class="bind-metric-value" id="actBindMetricProto">—</div><div class="bind-metric-desc">加密传输协议，保障数据安全</div></div><div class="bind-metric-sep"></div><div class="bind-metric-item"><div class="bind-metric-label">独享带宽</div><div class="bind-metric-value" id="actBindMetricBW">—</div><div class="bind-metric-desc">仅供您一人使用</div></div><div class="bind-metric-sep"></div><div class="bind-metric-item"><div class="bind-metric-label">路由跳数</div><div class="bind-metric-value" id="actBindMetricHops">—</div><div class="bind-metric-desc">数据直达游戏服务器</div></div><div class="bind-metric-sep"></div><div class="bind-metric-item"><div class="bind-metric-label">链路 RTT</div><div class="bind-metric-value" id="actBindMetricRTT">—</div><div class="bind-metric-desc">远低于普通网络</div></div></div><div class="bind-safety" id="actBindSafety">◇ 虚拟通道，不修改系统配置，卸载即可还原</div></div></div></div>
+                        </div>
+                        <button class="step-next-btn" id="actStepNextBtn" onclick="actGoNextStep()"><span class="btn-text" id="actNextBtnText">下一步：配置优化</span></button>
+                        <div class="step-transition-overlay" id="actStepTransitionOverlay"><div class="transition-beam"></div></div>
+                        <div class="step-toast" id="actStepToast"><span class="toast-check">✓</span><span class="toast-text" id="actToastText"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================== -->
+        <!-- DELIVERY PAGE (交付仪式) -->
+        <!-- =========================== -->
+        <div class="view" id="viewDelivery">
+            <div class="delivery-page" id="deliveryPage">
+                <div class="delivery-dark" id="deliveryDark"></div>
+                <canvas class="delivery-particles-canvas" id="deliveryCanvas" width="1400" height="800"></canvas>
+                <div class="delivery-card-stage" id="deliveryCardStage">
+                    <div class="delivery-spotlight"></div>
+                    <div class="delivery-card" id="deliveryCard">
+                        <div class="dcard-crown">
+                            <svg viewBox="0 0 60 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 22 L10 8 L18 16 L30 3 L42 16 L50 8 L56 22 Z" fill="url(#dCrownFill)" stroke="#e1d0ad" stroke-width="1" stroke-linejoin="round"/>
+                                <circle cx="30" cy="3.5" r="2" fill="#e1d0ad"/>
+                                <circle cx="10" cy="8" r="1.5" fill="#e1d0ad"/>
+                                <circle cx="50" cy="8" r="1.5" fill="#e1d0ad"/>
+                                <defs><linearGradient id="dCrownFill" x1="0" y1="0" x2="0" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#e1d0ad"/><stop offset="1" stop-color="#978363"/></linearGradient></defs>
+                            </svg>
+                        </div>
+                        <div class="dcard-header">
+                            <span class="dcard-badge">CHAMPION LINE</span>
+                            <span class="dcard-series" id="dlvSeries">街霸6 · 冠军专线</span>
+                        </div>
+                        <div class="dcard-body">
+                            <div class="dcard-user-row">
+                                <div class="dcard-avatar"></div>
+                                <div class="dcard-user-info">
+                                    <div class="dcard-user-name">张先生</div>
+                                    <div class="dcard-user-id">UID: 88****46</div>
+                                </div>
+                            </div>
+                            <div class="dcard-divider"><span class="dcard-diamond">◆</span></div>
+                            <div class="dcard-specs">
+                                <div class="dcard-spec"><span class="spec-label">专属节点</span><span class="spec-value" id="dlvNode">—</span></div>
+                                <div class="dcard-spec"><span class="spec-label">实测延迟</span><span class="spec-value" id="dlvLatency">—</span></div>
+                                <div class="dcard-spec"><span class="spec-label">匹配度</span><span class="spec-value" id="dlvMatch">—</span></div>
+                            </div>
+                            <div class="dcard-signature">
+                                <div class="signature-portrait">选手形象</div>
+                                <div>
+                                    <div class="signature-text" id="dlvSignature">Xiaohai</div>
+                                    <div class="signature-title">世界冠军 · 共研伙伴</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dcard-footer">
+                            <span class="dcard-date" id="dlvDate">开通日期: 2026-06-12</span>
+                            <span class="dcard-valid" id="dlvValid">有效期至: 2026-07-12</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="delivery-cta" id="deliveryCta">
+                    <button class="delivery-enable-btn" id="deliveryEnableBtn" onclick="finishDelivery()">
+                        一键启用冠军专线
+                    </button>
+                    <div class="delivery-hint">点击启用后，将自动切换至冠军专线加速通道</div>
+                </div>
+                <div class="delivery-flash" id="deliveryFlash"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=4"></script>
+</body>
+</html>

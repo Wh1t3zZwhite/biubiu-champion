@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>冠军专线 · 开通服务</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- ===== 窗口标题栏（模拟桌面应用） ===== -->
+        <div class="title-bar">
+            <div class="title-bar-left">
+                <span class="tb-logo">biubiu</span>
+                <span class="tb-sep">|</span>
+                <span class="tb-title">冠军专线 · 开通服务</span>
+            </div>
+            <div class="title-bar-right">
+                <span class="tb-ctrl" title="最小化"></span>
+                <span class="tb-ctrl" title="最大化"></span>
+                <span class="tb-ctrl tb-close" title="关闭"></span>
+            </div>
+        </div>
+
+        <!-- ===== 开场画面 ===== -->
+        <div class="screen screen-intro active" id="screenIntro">
+            <div class="intro-spotlight"></div>
+            <div class="intro-particles" id="introParticles"></div>
+            <div class="intro-content">
+                <div class="intro-badge">CHAMPION LINE</div>
+                <h1 class="intro-title">冠军专线</h1>
+                <div class="intro-subtitle">开通服务</div>
+                <div class="intro-divider">
+                    <span class="divider-line"></span>
+                    <span class="divider-diamond">◆</span>
+                    <span class="divider-line"></span>
+                </div>
+                <p class="intro-desc">即将为您部署专属加速通道</p>
+                <div class="intro-info-grid">
+                    <div class="info-item">
+                        <span class="info-label">用户</span>
+                        <span class="info-value">张先生</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">专线类型</span>
+                        <span class="info-value">街霸6 · 冠军专线</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">服务工程师</span>
+                        <span class="info-value">李明（工号 B-2046）</span>
+                    </div>
+                </div>
+                <button class="intro-start-btn" id="btnStart" onclick="startCeremony()">
+                    <span class="btn-text">开始开通</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== 七步剧场（左右分栏） ===== -->
+        <div class="screen screen-ceremony" id="screenCeremony">
+            <!-- 左侧导航 -->
+            <div class="side-nav">
+                <div class="side-nav-header">
+                    <div class="side-nav-title">配置流程</div>
+                    <div class="side-nav-sub">Champion Line Setup</div>
+                </div>
+                <div class="nav-steps" id="navSteps">
+                    <div class="nav-step" data-step="1">
+                        <div class="nav-step-indicator">1</div>
+                        <div class="nav-step-text">
+                            <span class="nav-step-name">网络检测</span>
+                            <span class="nav-step-status">等待中</span>
+                        </div>
+                    </div>
+                    <div class="nav-step" data-step="2">
+                        <div class="nav-step-indicator">2</div>
+                        <div class="nav-step-text">
+                            <span class="nav-step-name">配置优化</span>
+                            <span class="nav-step-status">等待中</span>
+                        </div>
+                    </div>
+                    <div class="nav-step" data-step="3">
+                        <div class="nav-step-indicator">3</div>
+                        <div class="nav-step-text">
+                            <span class="nav-step-name">服务器匹配</span>
+                            <span class="nav-step-status">等待中</span>
+                        </div>
+                    </div>
+                    <div class="nav-step" data-step="4">
+                        <div class="nav-step-indicator">4</div>
+                        <div class="nav-step-text">
+                            <span class="nav-step-name">专属绑定</span>
+                            <span class="nav-step-status">等待中</span>
+                        </div>
+                    </div>
+                    <div class="nav-step" data-step="5">
+                        <div class="nav-step-indicator">5</div>
+                        <div class="nav-step-text">
+                            <span class="nav-step-name">联调测试</span>
+                            <span class="nav-step-status">等待中</span>
+                        </div>
+                    </div>
+                    <div class="nav-step" data-step="6">
+                        <div class="nav-step-indicator">6</div>
+                        <div class="nav-step-text">
+                            <span class="nav-step-name">环境就绪</span>
+                            <span class="nav-step-status">等待中</span>
+                        </div>
+                    </div>
+                    <div class="nav-step" data-step="7">
+                        <div class="nav-step-indicator">7</div>
+                        <div class="nav-step-text">
+                            <span class="nav-step-name">售后保障</span>
+                            <span class="nav-step-status">等待中</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-nav-footer">
+                    <div class="nav-progress-text" id="navProgressText">0 / 7</div>
+                    <div class="nav-progress-bar">
+                        <div class="nav-progress-fill" id="navProgressFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧内容区 -->
+            <div class="main-content">
+                <div class="content-atmosphere"></div>
+                <div class="scan-line"></div>
+                <div class="gold-particles" id="goldParticles"></div>
+
+                <!-- 步骤展示舞台 -->
+                <div class="step-stage" id="stepStage">
+                    <!-- Step 1: 网络检测 -->
+                    <div class="step-panel" id="step1">
+                        <div class="step-header">
+                            <div class="step-number">01</div>
+                            <div class="step-title">本地网络环境检测</div>
+                        </div>
+                        <div class="step-body">
+                            <div class="network-detect-grid">
+                                <div class="detect-card" id="detectIP">
+                                    <div class="detect-label">公网 IP</div>
+                                    <div class="detect-value scanning" id="valIP">扫描中...</div>
+                                    <div class="detect-sub" id="subIP"></div>
+                                </div>
+                                <div class="detect-card" id="detectISP">
+                                    <div class="detect-label">运营商</div>
+                                    <div class="detect-value scanning" id="valISP">检测中...</div>
+                                    <div class="detect-sub" id="subISP"></div>
+                                </div>
+                                <div class="detect-card" id="detectBW">
+                                    <div class="detect-label">下行带宽</div>
+                                    <div class="detect-value scanning" id="valBW">测量中...</div>
+                                    <div class="detect-sub" id="subBW"></div>
+                                </div>
+                                <div class="detect-card" id="detectPing">
+                                    <div class="detect-label">基准延迟</div>
+                                    <div class="detect-value scanning" id="valPing">探测中...</div>
+                                    <div class="detect-sub" id="subPing"></div>
+                                </div>
+                                <div class="detect-card" id="detectLoss">
+                                    <div class="detect-label">丢包率</div>
+                                    <div class="detect-value scanning" id="valLoss">检测中...</div>
+                                    <div class="detect-sub" id="subLoss"></div>
+                                </div>
+                                <div class="detect-card" id="detectNAT">
+                                    <div class="detect-label">NAT 类型</div>
+                                    <div class="detect-value scanning" id="valNAT">识别中...</div>
+                                    <div class="detect-sub" id="subNAT"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: 配置优化 -->
+                    <div class="step-panel" id="step2">
+                        <div class="step-header">
+                            <div class="step-number">02</div>
+                            <div class="step-title">本地网络环境配置优化</div>
+                        </div>
+                        <div class="step-body">
+                            <div class="optimize-list" id="optimizeList">
+                                <div class="opt-item">
+                                    <div class="opt-left">
+                                        <span class="opt-icon">◈</span>
+                                        <span class="opt-name">TCP 窗口大小调优</span>
+                                    </div>
+                                    <div class="opt-compare">
+                                        <span class="opt-before">65535</span>
+                                        <span class="opt-arrow">→</span>
+                                        <span class="opt-after" id="optAfter1">—</span>
+                                    </div>
+                                    <div class="opt-status" id="optStatus1">待优化</div>
+                                </div>
+                                <div class="opt-item">
+                                    <div class="opt-left">
+                                        <span class="opt-icon">◈</span>
+                                        <span class="opt-name">DNS 缓存策略优化</span>
+                                    </div>
+                                    <div class="opt-compare">
+                                        <span class="opt-before">默认</span>
+                                        <span class="opt-arrow">→</span>
+                                        <span class="opt-after" id="optAfter2">—</span>
+                                    </div>
+                                    <div class="opt-status" id="optStatus2">待优化</div>
+                                </div>
+                                <div class="opt-item">
+                                    <div class="opt-left">
+                                        <span class="opt-icon">◈</span>
+                                        <span class="opt-name">Nagle 算法优化</span>
+                                    </div>
+                                    <div class="opt-compare">
+                                        <span class="opt-before">启用</span>
+                                        <span class="opt-arrow">→</span>
+                                        <span class="opt-after" id="optAfter3">—</span>
+                                    </div>
+                                    <div class="opt-status" id="optStatus3">待优化</div>
+                                </div>
+                                <div class="opt-item">
+                                    <div class="opt-left">
+                                        <span class="opt-icon">◈</span>
+                                        <span class="opt-name">MTU 最佳适配值</span>
+                                    </div>
+                                    <div class="opt-compare">
+                                        <span class="opt-before">1500</span>
+                                        <span class="opt-arrow">→</span>
+                                        <span class="opt-after" id="optAfter4">—</span>
+                                    </div>
+                                    <div class="opt-status" id="optStatus4">待优化</div>
+                                </div>
+                                <div class="opt-item">
+                                    <div class="opt-left">
+                                        <span class="opt-icon">◈</span>
+                                        <span class="opt-name">QoS 带宽预留策略</span>
+                                    </div>
+                                    <div class="opt-compare">
+                                        <span class="opt-before">未配置</span>
+                                        <span class="opt-arrow">→</span>
+                                        <span class="opt-after" id="optAfter5">—</span>
+                                    </div>
+                                    <div class="opt-status" id="optStatus5">待优化</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: 服务器匹配 -->
+                    <div class="step-panel" id="step3">
+                        <div class="step-header">
+                            <div class="step-number">03</div>
+                            <div class="step-title">专线服务器匹配度检测</div>
+                        </div>
+                        <div class="step-body">
+                            <div class="match-visual">
+                                <div class="match-topology">
+                                    <div class="match-endpoint match-local">
+                                        <div class="endpoint-dot"></div>
+                                        <div class="endpoint-label">您的设备</div>
+                                        <div class="endpoint-sub" id="matchLocalInfo">广东 · 电信</div>
+                                    </div>
+                                    <div class="match-line" id="matchLine">
+                                        <div class="match-line-pulse"></div>
+                                        <div class="match-line-data" id="matchLineData">探测中...</div>
+                                    </div>
+                                    <div class="match-endpoint match-server">
+                                        <div class="endpoint-dot"></div>
+                                        <div class="endpoint-label" id="matchServerName">专线节点</div>
+                                        <div class="endpoint-sub" id="matchServerInfo">匹配中...</div>
+                                    </div>
+                                </div>
+                                <div class="match-result" id="matchResult">
+                                    <div class="match-score-ring">
+                                        <svg viewBox="0 0 120 120">
+                                            <circle class="ring-bg" cx="60" cy="60" r="52" />
+                                            <circle class="ring-fill" cx="60" cy="60" r="52" id="matchRing" />
+                                        </svg>
+                                        <div class="match-score-text">
+                                            <span class="score-num" id="matchScoreNum">—</span>
+                                            <span class="score-unit">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="match-score-label">综合匹配度</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: 专属绑定 -->
+                    <div class="step-panel" id="step4">
+                        <div class="step-header">
+                            <div class="step-number">04</div>
+                            <div class="step-title">专线服务器专属建联绑定</div>
+                        </div>
+                        <div class="step-body">
+                            <div class="bind-visual">
+                                <!-- 绑定仪式动画 -->
+                                <div class="bind-ceremony" id="bindCeremony">
+                                    <div class="bind-ring bind-ring-outer"></div>
+                                    <div class="bind-ring bind-ring-inner"></div>
+                                    <div class="bind-core">
+                                        <div class="bind-icon">🔗</div>
+                                    </div>
+                                </div>
+                                <div class="bind-status-text" id="bindStatusText">准备建立专属通道...</div>
+
+                                <!-- 专属绑定凭证 -->
+                                <div class="bind-info-grid">
+                                    <div class="bind-info-card">
+                                        <div class="bind-info-label">专属节点</div>
+                                        <div class="bind-info-value" id="bindNodeName">—</div>
+                                        <div class="bind-info-desc" id="bindNodeNameDesc"></div>
+                                    </div>
+                                    <div class="bind-info-card">
+                                        <div class="bind-info-label">专属 IP</div>
+                                        <div class="bind-info-value" id="bindNodeIP">—</div>
+                                        <div class="bind-info-desc" id="bindNodeIPDesc"></div>
+                                    </div>
+                                    <div class="bind-info-card">
+                                        <div class="bind-info-label">通道类型</div>
+                                        <div class="bind-info-value" id="bindEncrypt">—</div>
+                                        <div class="bind-info-desc" id="bindEncryptDesc"></div>
+                                    </div>
+                                    <div class="bind-info-card bind-status-card">
+                                        <div class="bind-info-label">绑定状态</div>
+                                        <div class="bind-info-value" id="bindStatus">—</div>
+                                    </div>
+                                </div>
+
+                                <!-- 独占声明 -->
+                                <div class="bind-exclusive" id="bindExclusive">
+                                    <span class="bind-exclusive-icon">⬥</span>
+                                    <span class="bind-exclusive-text">此专线通道仅为您服务，不与其他用户共享任何网络资源</span>
+                                </div>
+
+                                <!-- 链路指标 -->
+                                <div class="bind-metrics" id="bindMetrics">
+                                    <div class="bind-metric-item">
+                                        <div class="bind-metric-label">隧道协议</div>
+                                        <div class="bind-metric-value" id="bindMetricProto">—</div>
+                                        <div class="bind-metric-desc">加密传输协议，保障数据安全</div>
+                                    </div>
+                                    <div class="bind-metric-sep"></div>
+                                    <div class="bind-metric-item">
+                                        <div class="bind-metric-label">独享带宽</div>
+                                        <div class="bind-metric-value" id="bindMetricBW">—</div>
+                                        <div class="bind-metric-desc">仅供您一人使用</div>
+                                    </div>
+                                    <div class="bind-metric-sep"></div>
+                                    <div class="bind-metric-item">
+                                        <div class="bind-metric-label">路由跳数</div>
+                                        <div class="bind-metric-value" id="bindMetricHops">—</div>
+                                        <div class="bind-metric-desc">数据直达游戏服务器</div>
+                                    </div>
+                                    <div class="bind-metric-sep"></div>
+                                    <div class="bind-metric-item">
+                                        <div class="bind-metric-label">链路 RTT</div>
+                                        <div class="bind-metric-value" id="bindMetricRTT">—</div>
+                                        <div class="bind-metric-desc">远低于普通网络</div>
+                                    </div>
+                                </div>
+
+                                <!-- 兜底承诺 -->
+                                <div class="bind-safety" id="bindSafety">◇ 虚拟通道，不修改系统配置，卸载即可还原</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: 联调测试 -->
+                    <div class="step-panel" id="step5">
+                        <div class="step-header">
+                            <div class="step-number">05</div>
+                            <div class="step-title">冠军专线联调测试</div>
+                        </div>
+                        <div class="step-body">
+                            <div class="latency-test">
+                                <div class="latency-chart">
+                                    <div class="chart-grid">
+                                        <div class="chart-y-axis">
+                                            <span>100ms</span>
+                                            <span>50ms</span>
+                                            <span>0ms</span>
+                                        </div>
+                                        <div class="chart-area">
+                                            <canvas id="latencyCanvas" width="680" height="180"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="latency-stats">
+                                    <div class="lat-stat">
+                                        <div class="lat-label">平均延迟</div>
+                                        <div class="lat-value" id="latAvg">—</div>
+                                    </div>
+                                    <div class="lat-stat">
+                                        <div class="lat-label">最低延迟</div>
+                                        <div class="lat-value" id="latMin">—</div>
+                                    </div>
+                                    <div class="lat-stat">
+                                        <div class="lat-label">抖动</div>
+                                        <div class="lat-value" id="latJitter">—</div>
+                                    </div>
+                                    <div class="lat-stat">
+                                        <div class="lat-label">测试结果</div>
+                                        <div class="lat-value lat-result" id="latResult">—</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 6: 清理就绪 -->
+                    <div class="step-panel" id="step6">
+                        <div class="step-header">
+                            <div class="step-number">06</div>
+                            <div class="step-title">环境清理 · 就绪确认</div>
+                        </div>
+                        <div class="step-body">
+                            <div class="cleanup-list" id="cleanupList">
+                                <div class="cleanup-item">
+                                    <span class="cleanup-icon">◇</span>
+                                    <span class="cleanup-name">清理临时配置文件</span>
+                                    <span class="cleanup-status" id="clean1">等待中</span>
+                                </div>
+                                <div class="cleanup-item">
+                                    <span class="cleanup-icon">◇</span>
+                                    <span class="cleanup-name">移除诊断工具</span>
+                                    <span class="cleanup-status" id="clean2">等待中</span>
+                                </div>
+                                <div class="cleanup-item">
+                                    <span class="cleanup-icon">◇</span>
+                                    <span class="cleanup-name">校验服务组件完整性</span>
+                                    <span class="cleanup-status" id="clean3">等待中</span>
+                                </div>
+                                <div class="cleanup-item">
+                                    <span class="cleanup-icon">◇</span>
+                                    <span class="cleanup-name">确认加密通道状态</span>
+                                    <span class="cleanup-status" id="clean4">等待中</span>
+                                </div>
+                            </div>
+                            <div class="ready-badge" id="readyBadge">
+                                <span class="ready-icon">✓</span>
+                                <span class="ready-text">环境就绪，仅保留冠军专线服务组件</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 7: 售后服务 -->
+                    <div class="step-panel" id="step7">
+                        <div class="step-header">
+                            <div class="step-number">07</div>
+                            <div class="step-title">售后服务保障</div>
+                        </div>
+                        <div class="step-body">
+                            <div class="service-grid">
+                                <div class="service-card">
+                                    <div class="service-icon">🛡</div>
+                                    <div class="service-title">专属运维保障</div>
+                                    <div class="service-desc">7×24 小时专线运维监控，异常自动预警</div>
+                                </div>
+                                <div class="service-card">
+                                    <div class="service-icon">👤</div>
+                                    <div class="service-title">专属客服通道</div>
+                                    <div class="service-desc">VIP 一对一客服，响应时间 ≤ 5 分钟</div>
+                                </div>
+                                <div class="service-card">
+                                    <div class="service-icon">⟳</div>
+                                    <div class="service-title">免费续期调优</div>
+                                    <div class="service-desc">续期时免费重新检测与优化，保持最佳状态</div>
+                                </div>
+                                <div class="service-card">
+                                    <div class="service-icon">☰</div>
+                                    <div class="service-title">服务报告</div>
+                                    <div class="service-desc">每月生成专线运行报告，数据透明可查</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 手动推进按钮 -->
+                <button class="step-next-btn" id="stepNextBtn" onclick="goNextStep()">
+                    <span class="btn-text" id="nextBtnText">下一步：配置优化</span>
+                </button>
+
+                <!-- 转场覆盖层 -->
+                <div class="step-transition-overlay" id="stepTransitionOverlay">
+                    <div class="transition-beam"></div>
+                </div>
+
+                <!-- 步骤完成提示 -->
+                <div class="step-toast" id="stepToast">
+                    <span class="toast-check">✓</span>
+                    <span class="toast-text" id="toastText"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 完成画面 ===== -->
+        <div class="screen screen-complete" id="screenComplete">
+            <div class="complete-spotlight"></div>
+            <div class="complete-particles" id="completeParticles"></div>
+            <div class="complete-content">
+                <div class="complete-badge">
+                    <div class="complete-ring"></div>
+                    <div class="complete-check">✓</div>
+                </div>
+                <h1 class="complete-title">开通完成</h1>
+                <div class="complete-subtitle">您的冠军专线已成功部署</div>
+                <div class="complete-divider">
+                    <span class="divider-line"></span>
+                    <span class="divider-diamond">◆</span>
+                    <span class="divider-line"></span>
+                </div>
+                <div class="complete-summary">
+                    <div class="summary-row">
+                        <span class="summary-label">专属节点</span>
+                        <span class="summary-value" id="summaryNode">—</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">专属 IP</span>
+                        <span class="summary-value" id="summaryIP">—</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">实测延迟</span>
+                        <span class="summary-value" id="summaryLatency">—</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">匹配度</span>
+                        <span class="summary-value" id="summaryMatch">—</span>
+                    </div>
+                </div>
+                <p class="complete-hint">接下来将进入交付仪式环节</p>
+                <button class="complete-btn" onclick="resetAll()">
+                    <span>重新演示</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
