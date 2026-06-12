@@ -685,11 +685,7 @@
             document.getElementById('actBindMetricRTT').textContent = ACT_MOCK.linkRTT;
             document.getElementById('actBindMetrics').classList.add('visible');
 
-            // 兆底承诺
-            await actSleep(300);
-            document.getElementById('actBindSafety').classList.add('visible');
-
-            await actSleep(400); actCompleteCurrentStep(); actShowNextButton();
+            await actSleep(300); actCompleteCurrentStep(); actShowNextButton();
         }
 
         function actResetAll() {
@@ -786,7 +782,6 @@
             ['actBindMetricProto','actBindMetricBW','actBindMetricHops','actBindMetricRTT'].forEach(function(id) {
                 var el = document.getElementById(id); if (el) el.textContent = '—';
             });
-            if (document.getElementById('actBindSafety')) document.getElementById('actBindSafety').classList.remove('visible');
             // 重置进度条和技术事项
             var progressWrap = document.querySelector('.bind-progress-wrap');
             if (progressWrap) progressWrap.classList.remove('fade-out');

@@ -763,8 +763,8 @@
 
         /* Step 1 */
         /* 雷达图布局 */
-        .activation-page .radar-layout { display: flex; align-items: flex-start; gap: 28px; }
-        .activation-page .radar-chart-wrap { position: relative; flex-shrink: 0; width: 210px; height: 210px; }
+        .activation-page .radar-layout { display: flex; align-items: flex-start; gap: 16px; }
+        .activation-page .radar-chart-wrap { position: relative; flex-shrink: 0; width: 260px; height: 260px; }
         .activation-page .radar-svg { width: 100%; height: 100%; }
         /* 雷达扫描动画 */
         .activation-page .radar-bg { fill: rgba(28,22,16,.5); stroke: rgba(180,160,120,.1); stroke-width: 1; }
@@ -786,21 +786,21 @@
         .activation-page .radar-label { font-size: 9px; letter-spacing: 1.5px; fill: var(--text-muted); }
         /* 中心分数 */
         .activation-page .radar-center-score { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
-        .activation-page .radar-score-num { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei',serif; font-size: 30px; font-weight: 500; color: var(--gold-bright); letter-spacing: 1px; opacity: 0; transition: all .6s ease; }
+        .activation-page .radar-score-num { font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei',serif; font-size: 36px; font-weight: 500; color: var(--gold-bright); letter-spacing: 1px; opacity: 0; transition: all .6s ease; }
         .activation-page .radar-score-num.visible { opacity: 1; }
         .activation-page .radar-score-label { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); margin-top: 2px; opacity: 0; transition: all .6s ease .2s; }
         .activation-page .radar-score-label.visible { opacity: 1; }
         /* 图例 */
-        .activation-page .radar-legend { flex: 1; display: flex; flex-direction: column; gap: 3px; justify-content: center; min-width: 0; }
-        .activation-page .radar-legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 10px; border-radius: 3px; background: rgba(28,22,16,.4); border: 1px solid rgba(180,160,120,.04); transition: all .5s ease; opacity: .35; }
+        .activation-page .radar-legend { flex: 1; display: flex; flex-direction: column; gap: 2px; justify-content: center; min-width: 0; }
+        .activation-page .radar-legend-item { display: flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 3px; background: rgba(28,22,16,.4); border: 1px solid rgba(180,160,120,.04); transition: all .5s ease; opacity: .35; }
         .activation-page .radar-legend-item.revealed { opacity: 1; border-color: rgba(180,160,120,.14); }
         .activation-page .radar-legend-item .legend-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
-        .activation-page .radar-legend-item .legend-label { font-size: 11px; letter-spacing: 1px; color: var(--text-muted); flex: 1; }
-        .activation-page .radar-legend-item .legend-val { font-size: 15px; letter-spacing: .5px; color: var(--gold); }
+        .activation-page .radar-legend-item .legend-label { font-size: 10px; letter-spacing: 1px; color: var(--text-muted); flex: 1; }
+        .activation-page .radar-legend-item .legend-val { font-size: 13px; letter-spacing: .5px; color: var(--gold); }
 
         /* 信息安全承诺 */
         .activation-page .detect-privacy {
-            margin-top: 10px; padding: 10px 16px;
+            margin-top: 14px; padding: 10px 16px;
             background: rgba(28,22,16,.4); border: 1px solid rgba(180,160,120,.1);
             border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px;
             opacity: 0; transform: translateY(8px); transition: all .6s ease;
@@ -810,7 +810,7 @@
         .activation-page .detect-privacy-text { font-size: 13px; letter-spacing: 1px; color: var(--text-muted); }
 
         /* 身份信息卡片 */
-        .activation-page .identity-cards { margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; opacity: 0; transform: translateY(8px); transition: all .6s ease; }
+        .activation-page .identity-cards { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; opacity: 0; transform: translateY(8px); transition: all .6s ease; }
         .activation-page .identity-cards.visible { opacity: 1; transform: translateY(0); }
         .activation-page .id-card { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: rgba(28,22,16,.5); border: 1px solid rgba(180,160,120,.08); border-radius: var(--radius-sm); transition: all .5s ease; }
         .activation-page .id-card.revealed { border-color: rgba(200,178,130,.22); background: rgba(200,178,130,.04); }
@@ -1156,7 +1156,7 @@
             opacity: 0;
         }
         .activation-page .bind-tech-log {
-            width: 100%; max-height: 160px;
+            width: 100%; flex: 1; min-height: 0;
             overflow-y: auto; display: flex; flex-direction: column; gap: 4px;
             padding: 8px 0; transition: opacity 0.4s ease;
         }
@@ -1219,8 +1219,6 @@
         .activation-page .bind-metric-label { font-size: 11px; letter-spacing: 2px; color: var(--gold); margin-bottom: 2px; }
         .activation-page .bind-metric-value { font-size: 15px; color: var(--text-white); font-family: 'SF Mono', 'Consolas', 'Monaco', monospace; letter-spacing: 0.5px; }
         .activation-page .bind-metric-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-        .activation-page .bind-safety { font-size: 12px; color: rgba(220,200,170,.3); letter-spacing: 1.5px; opacity: 0; transition: opacity .5s ease; }
-        .activation-page .bind-safety.visible { opacity: 1; }
 
         /* Step 5 */
         .activation-page .latency-test { display: flex; flex-direction: column; gap: 28px; }
